@@ -17,19 +17,16 @@ user_interface *uiInstance;
 player *playerInstance;
 game *gameInstance;
 config *configInstance;
-
-// Resources path
-#ifdef __LOCAL_RESOURCES__
-std::string path = "/home/carlosrdrz/dev/bure/";
-#else
-std::string path = "/usr/share/bure/";
-#endif
+std::string path;
 
 // Funciones de eventos
 void manageEvent();
 
-int main() {
+int main(int argc, char *argv[]) {
     atexit(SDL_Quit);
+
+    // Copy local resources from command line
+    path = argv[1];
 
     // Init SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -83,10 +80,6 @@ int main() {
 
     return 0;
 }
-
-///////////////////////////////////////////////////
-///////////////// HILO DE EVENTOS /////////////////
-///////////////////////////////////////////////////
 
 void manageEvent() {
     int x = event.button.x / 2;

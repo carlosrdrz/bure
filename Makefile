@@ -1,18 +1,4 @@
-# Connect to a local server
-# CXX=g++ -D "__LOCAL_NETWORK__"
-
-# Read resource files using relative paths from where the
-# executable is in. Useful for Windows builds.
-# CXX=g++ -D "__LOCAL_RESOURCES__"
-
-# Debug mode
-# CXX=g++ -g
-
-# You can combine these options
-# CXX=g++ -g  -D "__LOCAL_RESOURCES__" -D "__LOCAL_NETWORK__"
-
-# Dev environment. Local network and relative paths.
-CXX=g++ -g -D "__LOCAL_RESOURCES__" -D "__LOCAL_NETWORK__"
+CXX=g++ -g
 CPPFLAGS=`sdl-config --cflags` `xml2-config --cflags`
 LDLIBS=`sdl-config --libs` `xml2-config --libs` -lSDLmain -lSDL_image -lSDL_ttf -lSDL_net
 
