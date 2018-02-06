@@ -17,13 +17,12 @@ using namespace std::placeholders;
 using namespace ui;
 
 user_interface::user_interface() {
-	// EMPEZAMOS CREANDO EL MENU PRINCIPAL
-	// Crear el contenedor principal
-	container *men = new container(362, 309, 300, 185);
+	// Create main menu
+	container *men = new container(362, 309, 130, 60);
 
 	// Botones
-	button *enviar = new button("ENTRAR");
-		enviar->Set(25, 110, 70, 20);
+	button *enviar = new button("START GAME");
+		enviar->Set(20, 20, 90, 20);
 		enviar->function = bind(&user_interface::e_loadMap, this, _1);
 
 	men->Add(enviar);

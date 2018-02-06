@@ -21,7 +21,7 @@ graphics::graphics() {
     // Init video at 1024x768
     Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
     if (configInstance->getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_OPENGL;
-    window = SDL_CreateWindow("Bure Online 2.0", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920, 1440, flags);
+    window = SDL_CreateWindow("Bure", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920, 1440, flags);
     renderer = SDL_CreateRenderer(window, -1, 0);
 
     SDL_RenderSetScale(renderer, 2, 2);
