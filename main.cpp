@@ -4,18 +4,15 @@
 
 #include "SDL.h"
 #include "graphics.h"
-#include "network.h"
 #include "game.h"
 #include "error.h"
 #include "config.h"
 
 // Threads
-SDL_Thread *sendThread, *receiveThread;
 SDL_Event event;
 
 // Main objects
 graphics *pantalla;
-network *net;
 user_interface *uiInstance;
 player *playerInstance;
 game *gameInstance;
@@ -31,17 +28,6 @@ std::string path = "/usr/share/bure/";
 // Funciones de eventos
 void manageEvent();
 
-// Funciones de threads
-int enviar(void *unused) {
-    net->sendLoop();
-    return 0;
-}
-
-int recibir(void *unused) {
-    net->recieveLoop();
-    return 0;
-}
-
 int main() {
     atexit(SDL_Quit);
 
@@ -49,8 +35,6 @@ int main() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         Error::Log(SDL_GetError(), 3);
     }
-
-    // SDL_EnableKeyRepeat(400, 100);
 
     // Init objects
     auto configUniquePtr = std::make_unique<config>();
@@ -63,19 +47,17 @@ int main() {
     uiInstance = userInterfaceUniquePtr.get();
 
     auto playerUniquePtr = std::make_unique<player>();
-    playerInstance = playerUniquePtr.get();
 
-    auto networkUniquePtr = std::make_unique<network>();
-    net = networkUniquePtr.get();
+    // Ignoring these for now, so hardcoding them here
+    playerInstance = playerUniquePtr.get();
+    playerInstance->nombre = "Carlos";
+    playerInstance->hp = playerInstance->mp = playerInstance->nivel = 100;
+    playerInstance->traje = playerInstance->clase = 1;
 
     auto gameUniquePtr = std::make_unique<game>();
     gameInstance = gameUniquePtr.get();
 
     uiInstance->changeIBFocus(0);
-
-    // Creating sending thread and receiving thread.
-    sendThread = SDL_CreateThread(enviar, "sendThread", nullptr);
-    receiveThread = SDL_CreateThread(recibir, "receiveThread", nullptr);
 
     while (gameInstance->abierto) {
         if (gameInstance->princp) {
@@ -94,8 +76,6 @@ int main() {
             pantalla->flipBuffer();
 
             while (SDL_PollEvent(&event)) manageEvent();
-            if (net->intentoConexion > 0) net->intentoConexion++;
-            if (net->intentoConexion > 150) net->traducirPaquete("1_0_NOTSERVER");
 
             SDL_Delay(10);
         } else {
@@ -103,11 +83,6 @@ int main() {
             SDL_Delay(100);
         }
     }
-
-    int result = 0;
-    // TODO: Let threads know they need to exit
-    SDL_WaitThread(sendThread, &result);
-    SDL_WaitThread(receiveThread, &result);
 
     SDL_Quit();
 
@@ -124,8 +99,6 @@ void manageEvent() {
 
     switch (event.type) {
         case SDL_QUIT:
-            if (gameInstance->logged) net->sendPacket("0_0_NOTHING");
-            SDL_Delay(250);
             gameInstance->cerrar();
             break;
 
@@ -159,7 +132,7 @@ void manageEvent() {
             break;
 
         case SDL_MOUSEBUTTONUP:
-            if (!uiInstance->blocked && uiInstance->writing && uiInstance->getContainerFocused() != NULL) {
+            if (!uiInstance->blocked && uiInstance->writing && uiInstance->getContainerFocused() != nullptr) {
                 if (uiInstance->getContainerFocused()->boton_pulsado) {
                     uiInstance->getButtonFocused()->press = 0;
                     uiInstance->getContainerFocused()->boton_pulsado = false;
@@ -174,55 +147,16 @@ void manageEvent() {
         case SDL_KEYDOWN:
             if (!uiInstance->blocked) {
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
-                    if (gameInstance->logged) net->sendPacket("0_0_NOTHING");
-                    SDL_Delay(250);
                     gameInstance->cerrar();
                 } else if (event.key.keysym.sym == SDLK_BACKSPACE) {
                     uiInstance->getInputBoxFocused()->Borrar();
-                } else if (event.key.keysym.sym == SDLK_RETURN) {
-                    if (uiInstance->writing) {
-                        if (uiInstance->getInputBoxFocused() != NULL &&
-                            uiInstance->getInputBoxFocused()->function != NULL) {
-                            uiInstance->ejecutarBoton(uiInstance->getInputBoxFocused());
-                        }
-                    } else if (gameInstance->playing) {
-                        // MOSTRAR INPUT BOX PARA ENVIAR MENSAJE
-                        // SDL_EnableKeyRepeat(400, 100);
-
-                        container *con = new container(0, 0, 1024, 768);
-                        con->SetInvisible();
-
-                        input_box *user = new input_box("Mensaje:", "", 60);
-                        user->Set(80, 748, 400);
-                        user->function = &user_interface::e_enviarMensaje;
-                        user->escapeable(true);
-                        con->Add(user);
-
-                        uiInstance->addContainer(con);
-                        uiInstance->writing = true;
-                    }
                 } else if (event.key.keysym.sym == SDLK_TAB) {
                     // Se focusea al input box siguiente en la std::lista
                     uiInstance->changeIBFocus(uiInstance->getInputBoxFocused()->index + 1);
                 } else if (event.key.keysym.sym == SDLK_F12) {
-                    static container *id = NULL;
+                    static container *id = nullptr;
                     if (uiInstance->containerExists(id)) {
-                        // SI ESTA CREADO GUARDAR OPCIONES Y SALIR
-                        if (!id->getSelector(0)->getSelected().compare("SI")) {
-                            if (!configInstance->getValueOf("user").compare("0")) {
-                                configInstance->setValueOf("user", "User");
-                            }
-                        } else {
-                            configInstance->setValueOf("user", "0");
-                        }
-                        if (!id->getSelector(1)->getSelected().compare("SI")) {
-                            if (!configInstance->getValueOf("pass").compare("0")) {
-                                configInstance->setValueOf("pass", "Pass");
-                            }
-                        } else {
-                            configInstance->setValueOf("pass", "0");
-                        }
-                        if (!id->getSelector(2)->getSelected().compare("SI")) {
+                        if (id->getSelector(2)->getSelected() == "SI") {
                             configInstance->setValueOf("fullscreen", "1");
                         } else {
                             configInstance->setValueOf("fullscreen", "0");
@@ -230,30 +164,10 @@ void manageEvent() {
                         uiInstance->closeContainer(id);
                     } else {
                         // SI NO ESTA CREADO CONSTRUIR MENU OPCIONES
-                        container *settingsContainer = new container(362, 180, 300, 100);
-                        label *rememberUser = new label("RECORDAR USUARIO", 8);
-                        rememberUser->Set(35, 25);
-                        label *rememberPassword = new label("RECORDAR PASSWORD", 8);
-                        rememberPassword->Set(35, 45);
-                        label *fullscreen = new label("PANTALLA COMPLETA", 8);
+                        auto* settingsContainer = new container(362, 180, 300, 100);
+                        auto* fullscreen = new label("PANTALLA COMPLETA", 8);
                         fullscreen->Set(35, 65);
-                        ui_selector *rememberUserSelector = new ui_selector(220, 25);
-                        if (configInstance->getBoolValueOf("user")) {
-                            rememberUserSelector->addOption("SI");
-                            rememberUserSelector->addOption("NO");
-                        } else {
-                            rememberUserSelector->addOption("NO");
-                            rememberUserSelector->addOption("SI");
-                        }
-                        ui_selector *rememberPassSelector = new ui_selector(220, 45);
-                        if (configInstance->getBoolValueOf("pass")) {
-                            rememberPassSelector->addOption("SI");
-                            rememberPassSelector->addOption("NO");
-                        } else {
-                            rememberPassSelector->addOption("NO");
-                            rememberPassSelector->addOption("SI");
-                        }
-                        ui_selector *fullScreenSelector = new ui_selector(220, 65);
+                        auto* fullScreenSelector = new ui_selector(220, 65);
                         if (configInstance->getBoolValueOf("fullscreen")) {
                             fullScreenSelector->addOption("SI");
                             fullScreenSelector->addOption("NO");
@@ -261,11 +175,7 @@ void manageEvent() {
                             fullScreenSelector->addOption("NO");
                             fullScreenSelector->addOption("SI");
                         }
-                        settingsContainer->Add(rememberUser);
-                        settingsContainer->Add(rememberPassword);
                         settingsContainer->Add(fullscreen);
-                        settingsContainer->Add(rememberUserSelector);
-                        settingsContainer->Add(rememberPassSelector);
                         settingsContainer->Add(fullScreenSelector);
                         uiInstance->addContainer(settingsContainer);
                         id = settingsContainer;
@@ -304,6 +214,9 @@ void manageEvent() {
                 }
             }
 
+            break;
+
+        default:
             break;
     }
 }

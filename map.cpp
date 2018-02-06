@@ -6,10 +6,9 @@
 #include <fstream>
 #include <stdlib.h>
 #include <libxml/parser.h>
-#include <libxml/tree.h>
 
 extern game *gameInstance;
-extern std::string path;
+extern const std::string path;
 
 map::map(std::string archivo) {
 	mapa = NULL;

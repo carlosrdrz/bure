@@ -4,7 +4,7 @@
 extern std::string path;
 
 config::config() {
-	if ((doc = xmlParseFile((path+"data/config.xml").c_str())) == NULL) {
+	if ((doc = xmlParseFile((path+"data/config.xml").c_str())) == nullptr) {
 		Error::Log("No se pudo cargar el archivo config.xml", 3);
 	}
 
@@ -24,7 +24,7 @@ std::string config::getValueOf(std::string of) {
 	std::string toreturn;
 	xmlChar *temp;
 
-	while(node != NULL) {
+	while(node != nullptr) {
 		if(!of.compare((char*)node->name)) {
 			temp = xmlGetProp(node, (xmlChar*)"value");
 			toreturn =  (char*)temp;
@@ -53,7 +53,7 @@ bool config::getBoolValueOf(std::string of) {
 	std::string cero = "0";
 	xmlChar *temp;
 
-	while(node != NULL) {
+	while(node != nullptr) {
 		if(!of.compare((char*)node->name)) {
 			xmlChar *temp = xmlGetProp(node, (xmlChar*)"value");
 			if(!cero.compare((char*)temp)) {
@@ -79,7 +79,7 @@ bool config::getBoolValueOf(std::string of) {
 }
 
 void config::setValueOf(std::string of, std::string on) {
-	while(node != NULL) {
+	while(node != nullptr) {
 		if(!of.compare((char*)node->name)) {
 			// Cambiar
 			xmlSetProp(node, (xmlChar*)"value", (xmlChar*)on.c_str());

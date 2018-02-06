@@ -1,11 +1,6 @@
 #include "player.h"
-#include "network.h"
 #include "game.h"
 
-#include <string>
-#include <sstream>
-
-extern network *net;
 extern game *gameInstance;
 
 player::player()
@@ -67,15 +62,6 @@ void player::moveLeft()
 		this->x--;
 		spriteState = 6;
 		h_offset = 1;
-		std::string buffer = "2_0_";
-		std::stringstream aux;
-		aux << this->x;
-		buffer.append(aux.str());
-		buffer.append("_");
-		aux.str("");
-		aux << this->y;
-		buffer.append(aux.str());
-		net->sendPacket(buffer);
     }
 }
 
@@ -86,15 +72,6 @@ void player::moveRight()
 		this->x++;
 		spriteState = 9;
 		h_offset = -1;
-		std::string buffer = "2_0_";
-		std::stringstream aux;
-		aux << this->x;
-		buffer.append(aux.str());
-		buffer.append("_");
-		aux.str("");
-		aux << this->y;
-		buffer.append(aux.str());
-		net->sendPacket(buffer);
 	}
 }
 
@@ -105,15 +82,6 @@ void player::moveUp()
 		this->y--;
 		spriteState = 0;
 		v_offset = 1;
-		std::string buffer = "2_0_";
-		std::stringstream aux;
-		aux << this->x;
-		buffer.append(aux.str());
-		buffer.append("_");
-		aux.str("");
-		aux << this->y;
-		buffer.append(aux.str());
-		net->sendPacket(buffer);
     }
 }
 
@@ -124,14 +92,5 @@ void player::moveDown()
 		spriteState = 3;
 		this->y++;
 		v_offset = -1;
-		std::string buffer = "2_0_";
-		std::stringstream aux;
-		aux << this->x;
-		buffer.append(aux.str());
-		buffer.append("_");
-		aux.str("");
-		aux << this->y;
-		buffer.append(aux.str());
-		net->sendPacket(buffer);
     }
 }

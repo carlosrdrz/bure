@@ -50,13 +50,7 @@ class user_interface {
 		void ejecutarBoton(button *a_ejecutar);
 		void ejecutarBoton(input_box *a_ejecutar);
 		void e_cerrarJuego(int param);
-		void e_crearCuenta(int param);
-		void e_enviarCuentaNueva(int param);
-		void e_hacerLogin(int param);
-		void e_pantallaNuevoPersonaje(int param);
-		void e_enviarNuevoPersonaje(int param);
-		void e_conectarConPersonaje(int param);
-		void e_enviarMensaje(int param);
+		void e_loadMap(int param);
 
 	private:
 		std::list<container*> containers;
