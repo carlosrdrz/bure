@@ -1,0 +1,5 @@
+- Create dir in personal folder for configs and files
+- Move maps and images to resources
+- Remove uses of c_str()
+- shared_ptr and unique_ptr
+- migrate to libsdl2 namespace
