@@ -1,28 +1,8 @@
-//////////////////////////////////////////////////////////////////////////
-//  Bure Online 0.2.0
-//  Copyright (C) 2010 Carlos Rodriguez Reyes
-//////////////////////////////////////////////////////////////////////////
-//
-//  Bure Online is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  Bure Online is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with Bure Online. If not, see <http://www.gnu.org/licenses/>.
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include "container.h"
 
 #include <list>
 
-container::container()
+ui::container::container()
 {
     this->boton_pulsado = false;
 	this->focus = 0;
@@ -30,7 +10,7 @@ container::container()
 	this->invisible = 0;
 }
 
-container::container(int x, int y, int ancho, int alto) {
+ui::container::container(int x, int y, int ancho, int alto) {
 	this->x = x;
 	this->y = y;
 	this->width = ancho;
@@ -42,24 +22,24 @@ container::container(int x, int y, int ancho, int alto) {
     this->boton_pulsado = false;
 }
 
-container::~container() {
+ui::container::~container() {
 	etiq.clear();
 	cajas.clear();
 	pul.clear();
 	images.clear();
 }
 
-void container::Add(label *w) {
+void ui::container::Add(label *w) {
 	w->index = (int)etiq.size();
 	etiq.push_back(w);
 }
 
-void container::Add(button *w) {
+void ui::container::Add(button *w) {
 	w->index = (int)pul.size();
 	pul.push_back(w);
 }
 
-void container::Add(input_box *w) {
+void ui::container::Add(input_box *w) {
 	w->index = (int)cajas.size();
 	cajas.push_back(w);
 	if((int)cajas.size() == 1) {
@@ -69,17 +49,17 @@ void container::Add(input_box *w) {
 	
 }
 
-void container::Add(image *w) {
+void ui::container::Add(image *w) {
 	w->index = (int)images.size();
 	images.push_back(w);
 }
 
-void container::Add(ui_selector *w) {
+void ui::container::Add(selector *w) {
 	w->index = (int)selectores.size();
 	selectores.push_back(w);
 }
 
-void container::SetCont(int x, int y, int ancho, int alto) {
+void ui::container::SetCont(int x, int y, int ancho, int alto) {
 	this->x = x;
 	this->y = y;
 	this->width = ancho;
@@ -94,7 +74,7 @@ void container::SetCont(int x, int y, int ancho, int alto) {
 /////
 ///// int num: 			Elemento a borrar
 /////////////////////////////////////////////////////////////
-void container::CloseWidget(int elem, int num) {
+void ui::container::CloseWidget(int elem, int num) {
 	if(!elem) {
 		std::list<label*>::iterator it;
 		for(it = etiq.begin(); it != etiq.end(); ++it) {
@@ -130,7 +110,7 @@ void container::CloseWidget(int elem, int num) {
 	}
 }
 
-void container::changeButtonFocus(int num)
+void ui::container::changeButtonFocus(int num)
 {	
 	std::list<button*>::iterator it;
 	for (it = pul.begin(); it != pul.end(); ++it) {
@@ -141,7 +121,7 @@ void container::changeButtonFocus(int num)
 	}
 }
 
-void container::changeIBFocus(int num)
+void ui::container::changeIBFocus(int num)
 {
 	if((int)cajas.size() > 0) {
 		(*inputboxOnFocus)->noFocus();
@@ -163,7 +143,7 @@ void container::changeIBFocus(int num)
 
 }
 
-input_box *container::getIB(int ib)
+ui::input_box *ui::container::getIB(int ib)
 {
 	if(ib > (int)cajas.size()-1) return NULL;
 	
@@ -177,7 +157,7 @@ input_box *container::getIB(int ib)
 	return NULL;
 }
 
-label *container::getLabel(int lb)
+ui::label *ui::container::getLabel(int lb)
 {
 	if(lb > (int)etiq.size()-1) return NULL;
 	
@@ -191,7 +171,7 @@ label *container::getLabel(int lb)
 	return NULL;
 }
 
-button *container::getBoton(int b)
+ui::button *ui::container::getBoton(int b)
 {
 	if(b > (int)pul.size()-1) return NULL;
 	
@@ -205,7 +185,7 @@ button *container::getBoton(int b)
 	return NULL;
 }
 
-image *container::getImagen(int im)
+ui::image *ui::container::getImagen(int im)
 {
 	if(im > (int)images.size()-1) return NULL;
 	
@@ -219,11 +199,11 @@ image *container::getImagen(int im)
 	return NULL;
 }
 
-ui_selector *container::getSelector(int sel)
+ui::selector *ui::container::getSelector(int sel)
 {
 	if(sel > (int)selectores.size()-1) return NULL;
 	
-	std::list<ui_selector*>::iterator selec;
+	std::list<selector*>::iterator selec;
 	for(selec = selectores.begin(); selec != selectores.end(); ++selec) {
 		if((*selec)->index == sel) { 
 			return (*selec);

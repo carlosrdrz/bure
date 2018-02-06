@@ -1,20 +1,16 @@
-#ifndef __H_INTERFACE__
-#define __H_INTERFACE__
+#pragma once
 
-#include "GUI/container.h"
-#include "GUI/button.h"
-#include "GUI/input_box.h"
-#include "GUI/ui_selector.h"
+#include "ui/container.h"
+#include "ui/button.h"
+#include "ui/input_box.h"
+#include "ui/selector.h"
 
 #include <list>
 
-class container;
-class button;
-class input_box;
-class ui_selector;
+using namespace ui;
 
 class user_interface {
-	public:
+    public:
 		user_interface();
 		~user_interface();
 
@@ -40,7 +36,7 @@ class user_interface {
 		container *getContainerClicked(int x, int y);
 		input_box *getInputBoxClicked(int x, int y);
 		button *getButtonClicked(int x, int y);
-		ui_selector *getSelectorClicked(int x, int y);
+		selector *getSelectorClicked(int x, int y);
 
 		container *getContainerFocused();
 		input_box *getInputBoxFocused();
@@ -58,5 +54,3 @@ class user_interface {
 
 		void actualizarIndex();
 };
-
-#endif

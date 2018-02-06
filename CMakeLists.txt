@@ -20,7 +20,7 @@ include_directories(${SDL2_INCLUDE_DIRS}
         ${SDL2_TTF_INCLUDE_DIRS}
         ${LIBXML2_INCLUDE_DIR})
 
-file(GLOB sources ./*.cpp ./GUI/*.cpp ./GUI/button.h ./GUI/image.h ./GUI/widget.h)
+file(GLOB sources ./*.cpp ui/*.cpp ui/button.h ui/image.h ui/widget.h)
 
 add_executable(client
         ${sources})

@@ -5,19 +5,24 @@
 #include <list>
 #include <string>
 
-class ui_selector : public widget {
+namespace ui {
+	class selector : public widget {
 	public:
-		ui_selector(int x, int y);
-		~ui_selector();
-		
+		selector(int x, int y);
+
+		~selector();
+
 		void addOption(std::string toadd);
+
 		std::string getSelected();
-		
+
 		void next();
+
 		void previous();
-		
+
 		std::list<std::string>::iterator opcionesit;
-				
+
 	private:
 		std::list<std::string> opciones;
+	};
 };

@@ -162,7 +162,7 @@ void manageEvent() {
                         auto* settingsContainer = new container(362, 180, 300, 100);
                         auto* fullscreen = new label("PANTALLA COMPLETA", 8);
                         fullscreen->Set(35, 65);
-                        auto* fullScreenSelector = new ui_selector(220, 65);
+                        auto* fullScreenSelector = new selector(220, 65);
                         if (configInstance->getBoolValueOf("fullscreen")) {
                             fullScreenSelector->addOption("SI");
                             fullScreenSelector->addOption("NO");

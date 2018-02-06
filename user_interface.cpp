@@ -1,18 +1,20 @@
 #include "SDL.h"
 #include "error.h"
-#include "GUI/container.h"
+#include "ui/container.h"
 #include "game.h"
 #include "graphics.h"
 #include "config.h"
 
 #include <sstream>
 
-typedef void (user_interface::*InterfaceFunc)(int param);
-
 extern game *gameInstance;
 extern graphics *pantalla;
 extern config *configInstance;
 extern player *playerInstance;
+
+using namespace std;
+using namespace std::placeholders;
+using namespace ui;
 
 user_interface::user_interface() {
 	// EMPEZAMOS CREANDO EL MENU PRINCIPAL
@@ -22,7 +24,7 @@ user_interface::user_interface() {
 	// Botones
 	button *enviar = new button("ENTRAR");
 		enviar->Set(25, 110, 70, 20);
-		enviar->function = &user_interface::e_loadMap;
+		enviar->function = bind(&user_interface::e_loadMap, this, _1);
 
 	men->Add(enviar);
 
@@ -282,10 +284,10 @@ button *user_interface::getButtonClicked(int x, int y)
 	return toreturn;
 }
 
-ui_selector *user_interface::getSelectorClicked(int x, int y)
+selector *user_interface::getSelectorClicked(int x, int y)
 {
 	int z;
-	ui_selector *toreturn = NULL;
+	selector *toreturn = NULL;
 	for(z = 0; getContainerFocused()->getSelector(z) != NULL; ++z) {
 		if(( x > (getContainerFocused()->x + getContainerFocused()->getSelector(z)->x) && x < (getContainerFocused()->x
 		+ getContainerFocused()->getSelector(z)->x + 9) && y > (getContainerFocused()->y + getContainerFocused()->getSelector(z)->y)
@@ -304,16 +306,12 @@ ui_selector *user_interface::getSelectorClicked(int x, int y)
 //////////////////////////
 void user_interface::ejecutarBoton(button *a_ejecutar)
 {
-    InterfaceFunc ejec;
-    ejec = a_ejecutar->function;
-    (this->*ejec)(a_ejecutar->parametro);
+    a_ejecutar->function(a_ejecutar->parametro);
 }
 
 void user_interface::ejecutarBoton(input_box *a_ejecutar)
 {
-    InterfaceFunc ejec;
-    ejec = a_ejecutar->function;
-    (this->*ejec)(a_ejecutar->parametro);
+    a_ejecutar->function(a_ejecutar->parametro);
 }
 
 
