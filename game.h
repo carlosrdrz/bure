@@ -47,10 +47,6 @@ class game {
         // Animaciones
         void nextAnimationFrame();
 
-        // Banderas de threads
-        bool princp;
-        bool princp_parado;
-
    private:
         list<player*> demas;
         list<Mensaje*> mensajes;

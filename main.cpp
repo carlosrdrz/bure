@@ -60,28 +60,23 @@ int main() {
     uiInstance->changeIBFocus(0);
 
     while (gameInstance->abierto) {
-        if (gameInstance->princp) {
-            gameInstance->princp_parado = false;
-            if (gameInstance->playing) {
-                pantalla->clean();
-                pantalla->draw(gameInstance->currentMap, false);
-                pantalla->drawPlayers();
-                pantalla->draw(gameInstance->currentMap, true);
-                gameInstance->MensajesLoop();
-                gameInstance->nextAnimationFrame();
-            } else {
-                pantalla->renderBackground();
-            }
-            pantalla->draw(uiInstance);
-            pantalla->flipBuffer();
-
-            while (SDL_PollEvent(&event)) manageEvent();
-
-            SDL_Delay(10);
+        if (gameInstance->playing) {
+            pantalla->clean();
+            pantalla->draw(gameInstance->currentMap, false);
+            pantalla->drawPlayers();
+            pantalla->draw(gameInstance->currentMap, true);
+            gameInstance->MensajesLoop();
+            gameInstance->nextAnimationFrame();
         } else {
-            gameInstance->princp_parado = true;
-            SDL_Delay(100);
+            pantalla->renderBackground();
         }
+
+        pantalla->draw(uiInstance);
+        pantalla->flipBuffer();
+
+        while (SDL_PollEvent(&event)) manageEvent();
+
+        SDL_Delay(10);
     }
 
     SDL_Quit();

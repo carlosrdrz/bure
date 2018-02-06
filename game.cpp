@@ -16,8 +16,6 @@ game::game()
     playing = false;
     loopMsgActivo = true;
     logged = false;
-    princp = true;
-    princp_parado = false;
 }
 
 game::~game()
@@ -34,12 +32,8 @@ void game::cerrar()
 
 void game::cambiarMapa(std::string archivo)
 {
-	// Paramos thread principal de dibujo
-	// princp = false;
-	// while(!princp_parado);
 	delete currentMap;
 	currentMap = new map(archivo);
-	princp = true;
 }
 
 void game::newPlayer(player *pl)
