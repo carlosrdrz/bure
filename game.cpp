@@ -1,54 +1,54 @@
-#include "Juego.h"
-#include "Mapa.h"
-#include "Graficos.h"
-#include "Jugador.h"
-#include "Error.h"
+#include "game.h"
+#include "map.h"
+#include "graphics.h"
+#include "player.h"
+#include "error.h"
 
 #include <string>
 
-extern Graficos *pantalla;
-extern Jugador *player;
+extern graphics *pantalla;
+extern player *playerInstance;
 
-Juego::Juego()
+game::game()
 {
-    mapaActual = NULL;
+    currentMap = nullptr;
     abierto = true;
-    jugando = false;
+    playing = false;
     loopMsgActivo = true;
     logged = false;
     princp = true;
     princp_parado = false;
 }
 
-Juego::~Juego()
+game::~game()
 {
 	demas.clear();
 	mensajes.clear();
 }
 
-void Juego::cerrar()
+void game::cerrar()
 {
     abierto = false;
-    jugando = false;
+    playing = false;
 }
 
-void Juego::cambiarMapa(std::string archivo)
+void game::cambiarMapa(std::string archivo)
 {
 	// Paramos thread principal de dibujo
 	princp = false;
 	while(!princp_parado);
-	delete mapaActual;
-	mapaActual = new Mapa(archivo);
+	delete currentMap;
+	currentMap = new map(archivo);
 	princp = true;
 }
 
-void Juego::nuevoJugador(Jugador *pl)
+void game::newPlayer(player *pl)
 {
     pl->index = (int)demas.size();
     demas.push_back(pl);
 }
 
-void Juego::quitarJugador(Jugador *pl)
+void game::removePlayer(player *pl)
 {
 	loopMsgActivo = false;
 	if(mensajes.size() > 0) {
@@ -67,15 +67,15 @@ void Juego::quitarJugador(Jugador *pl)
 	loopMsgActivo = true;
 }
 
-int Juego::jugadores()
+int game::jugadores()
 {
     return (int)demas.size();
 }
 
-Jugador *Juego::getJugadorByIndex(int num)
+player *game::getPlayerByIndex(int num)
 {
     if(demas.size() > 0) {
-		std::list<Jugador*>::iterator i;
+		std::list<player*>::iterator i;
 		for(i = demas.begin(); i != demas.end(); i++) {
 		    if((*i)->index == num) {
 			    return (*i);
@@ -86,10 +86,10 @@ Jugador *Juego::getJugadorByIndex(int num)
 	return NULL;
 }
 
-Jugador *Juego::getJugadorByNombre(std::string nombre)
+player *game::getPlayerByNombre(std::string nombre)
 {
     if(demas.size() > 0) {
-		std::list<Jugador*>::iterator i;
+		std::list<player*>::iterator i;
 		for(i = demas.begin(); i != demas.end(); i++) {
 		    if(!(*i)->nombre.compare(nombre)) {
 			    return (*i);
@@ -100,29 +100,29 @@ Jugador *Juego::getJugadorByNombre(std::string nombre)
 	return NULL;
 }
 
-void Juego::addMensaje(Mensaje *msg)
+void game::addMensaje(Mensaje *msg)
 {
 	mensajes.push_back(msg);
 }
 
-void Juego::quitMensaje(Mensaje *msg)
+void game::quitMensaje(Mensaje *msg)
 {
 	mensajes.remove(msg);
 }
 
-void Juego::MensajesLoop()
+void game::MensajesLoop()
 {
 	if(loopMsgActivo) {
-		std::list<Jugador*>::iterator i;
+		std::list<player*>::iterator i;
 		for(i = demas.begin(); i != demas.end(); i++) {
 			(*i)->mensajesMostrados = 0;
 		}
-		player->mensajesMostrados = 0;
+		playerInstance->mensajesMostrados = 0;
 
 		if(mensajes.size() > 0) {
 			std::list<Mensaje*>::reverse_iterator i;
 			for(i = mensajes.rbegin(); i != mensajes.rend(); i++) {
-				pantalla->DibujarMensaje((*i)->msg, (*i)->jg);
+                pantalla->drawMessage((*i)->msg, (*i)->jg);
 				(*i)->jg->mensajesMostrados++;
 			}
 		}
@@ -141,11 +141,11 @@ void Juego::MensajesLoop()
 	}
 }
 
-void Juego::nextAnimationFrame()
+void game::nextAnimationFrame()
 {
-	player->nextWalkingFrame();
+	playerInstance->nextWalkingFrame();
 
-	std::list<Jugador*>::iterator i;
+	std::list<player*>::iterator i;
 	for(i = demas.begin(); i != demas.end(); i++) {
 		(*i)->nextWalkingFrame();
 	}

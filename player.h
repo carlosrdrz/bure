@@ -1,11 +1,10 @@
-#ifndef __H_JUGADOR__
-#define __H_JUGADOR__
+#pragma once
 
 #include <string>
 
 using namespace std;
 
-class Jugador {
+class player {
   public:
   	// Caracteristicas del personaje
 	int x, y, hp, mp, nivel, traje, clase;
@@ -21,8 +20,8 @@ class Jugador {
 	// Nombre del personaje
 	string nombre;
 
-	Jugador();
-	~Jugador() {}
+	player();
+	~player() {}
 
 	void nextWalkingFrame();
 	void setPosition(int nx, int ny);
@@ -32,5 +31,3 @@ class Jugador {
 	void moveUp();
 	void moveDown();
 };
-
-#endif

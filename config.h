@@ -1,13 +1,15 @@
 #ifndef __H_CONFIG__
 #define __H_CONFIG__
 
-#include "libxml/tree.h"
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+
 #include <string>
 
-class Config {
+class config {
 	public:
-		Config();
-		~Config();
+		config();
+		~config();
 
 		std::string getValueOf(std::string of);
 		bool getBoolValueOf(std::string of);

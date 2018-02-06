@@ -1,4 +1,4 @@
-#include "Error.h"
+#include "error.h"
 
 #include <fstream>
 #include <time.h>

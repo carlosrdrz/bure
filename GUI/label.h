@@ -21,13 +21,13 @@
 #ifndef __H_GUI_LABEL__
 #define __H_GUI_LABEL__
 
-#include "Widget.h"
+#include "widget.h"
 #include <string>
 
-class Label : public Widget {
+class label : public widget {
 	public:
-		Label(std::string title, int tam = 16);
-		~Label() {}
+		label(std::string title, int tam = 16);
+		~label() {}
 
 		void Set(int x, int y);
 		const char *getText() { return texto.c_str(); }

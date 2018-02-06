@@ -4,16 +4,16 @@
 #include <list>
 #include <string>
 
-class Mapa {
+class map {
 public:
-	int mapa_ancho, mapa_alto;
+	int width, height;
 
 	int *mapa;
 	int *elementos;
 	bool *pisable;
 
-	Mapa(std::string archivo);
-	~Mapa();
+	map(std::string archivo);
+	~map();
 
 	bool comprobarTilePisable(int x, int y);
 };

@@ -18,28 +18,55 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __H_GUI_SELECTOR__
-#define __H_GUI_SELECTOR__
-
-#include "Widget.h"
+#include "ui_selector.h"
 
 #include <list>
 #include <string>
 
-class Selector : public Widget {
-	public:
-		Selector(int x, int y);
-		~Selector();
-		
-		void addOption(std::string toadd);
-		std::string getSelected();
-		
-		void next();
-		void previous();
-		
-		std::list<std::string>::iterator opcionesit;
-				
-	private:
-		std::list<std::string> opciones;
-};
-#endif
+ui_selector::ui_selector(int x, int y)
+{
+	opciones.push_back("DEFAULT");
+	opcionesit = opciones.begin();
+	this->x = x;
+	this->y = y;
+	this->height = 14;
+	this->width = 0;
+}
+
+ui_selector::~ui_selector()
+{
+	opciones.clear();
+}
+
+void ui_selector::addOption(std::string toadd)
+{
+	if(opciones.front().compare("DEFAULT") == 0) {
+		opciones.clear();
+	}
+	opciones.push_back(toadd);
+}
+
+std::string ui_selector::getSelected()
+{
+	return (*opcionesit);
+}
+
+void ui_selector::next()
+{
+	if(opciones.size() > 1) {
+		if((*opcionesit).compare(opciones.back()) == 0) opcionesit = opciones.begin();
+		else opcionesit++;
+	}
+}
+
+void ui_selector::previous()
+{
+	if(opciones.size() > 1) {
+		if(opcionesit == opciones.begin()) {
+			opcionesit = opciones.end();
+			opcionesit--;
+		} else {
+			opcionesit--;
+		}
+	}
+}

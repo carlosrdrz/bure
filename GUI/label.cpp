@@ -18,55 +18,22 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "Selector.h"
-
-#include <list>
 #include <string>
+#include "label.h"
 
-Selector::Selector(int x, int y)
+label::label(std::string title, int tam)
 {
-	opciones.push_back("DEFAULT");
-	opcionesit = opciones.begin();
+	texto = title;
+    tamano = tam;
+}
+
+void label::Set(int x, int y)
+{
 	this->x = x;
 	this->y = y;
-	this->alto = 14;
-	this->ancho = 0;
 }
 
-Selector::~Selector()
+void label::cambiarTexto(std::string que)
 {
-	opciones.clear();
-}
-
-void Selector::addOption(std::string toadd)
-{
-	if(opciones.front().compare("DEFAULT") == 0) {
-		opciones.clear();
-	}
-	opciones.push_back(toadd);
-}
-
-std::string Selector::getSelected()
-{
-	return (*opcionesit);
-}
-
-void Selector::next()
-{
-	if(opciones.size() > 1) {
-		if((*opcionesit).compare(opciones.back()) == 0) opcionesit = opciones.begin();
-		else opcionesit++;
-	}
-}
-
-void Selector::previous()
-{
-	if(opciones.size() > 1) {
-		if(opcionesit == opciones.begin()) {
-			opcionesit = opciones.end();
-			opcionesit--;
-		} else {
-			opcionesit--;
-		}
-	}
+	this->texto = que;
 }

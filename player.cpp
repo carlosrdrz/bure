@@ -1,14 +1,14 @@
-#include "Jugador.h"
-#include "Network.h"
-#include "Juego.h"
+#include "player.h"
+#include "network.h"
+#include "game.h"
 
 #include <string>
 #include <sstream>
 
-extern Network *net;
-extern Juego *game;
+extern network *net;
+extern game *gameInstance;
 
-Jugador::Jugador()
+player::player()
 {
 	x = y = hp = mp = nivel = traje = clase = mensajesMostrados = mensajesActuales = 0;
 	index = -1;
@@ -18,7 +18,7 @@ Jugador::Jugador()
 	h_offset = 0;
 }
 
-void Jugador::nextWalkingFrame()
+void player::nextWalkingFrame()
 {
 	if(h_offset == 17 || v_offset == 17 || h_offset == -17 || v_offset == -17) {
 		switch(spriteState) {
@@ -54,16 +54,16 @@ void Jugador::nextWalkingFrame()
 	}
 }
 
-void Jugador::setPosition(int nx, int ny)
+void player::setPosition(int nx, int ny)
 {
     this->x = nx;
     this->y = ny;
 }
 
-void Jugador::moveLeft()
+void player::moveLeft()
 {
 	moviendo = true;
-	if(game->mapaActual->comprobarTilePisable(x-1, y) && h_offset == 0 && v_offset == 0) {
+	if(gameInstance->currentMap->comprobarTilePisable(x-1, y) && h_offset == 0 && v_offset == 0) {
 		this->x--;
 		spriteState = 6;
 		h_offset = 1;
@@ -79,10 +79,10 @@ void Jugador::moveLeft()
     }
 }
 
-void Jugador::moveRight()
+void player::moveRight()
 {
 	moviendo = true;
-	if(game->mapaActual->comprobarTilePisable(x+1, y) && h_offset == 0 && v_offset == 0) {
+	if(gameInstance->currentMap->comprobarTilePisable(x+1, y) && h_offset == 0 && v_offset == 0) {
 		this->x++;
 		spriteState = 9;
 		h_offset = -1;
@@ -98,10 +98,10 @@ void Jugador::moveRight()
 	}
 }
 
-void Jugador::moveUp()
+void player::moveUp()
 {
 	moviendo = true;
-	if(game->mapaActual->comprobarTilePisable(x, y-1) && v_offset == 0 && h_offset == 0) {
+	if(gameInstance->currentMap->comprobarTilePisable(x, y-1) && v_offset == 0 && h_offset == 0) {
 		this->y--;
 		spriteState = 0;
 		v_offset = 1;
@@ -117,10 +117,10 @@ void Jugador::moveUp()
     }
 }
 
-void Jugador::moveDown()
+void player::moveDown()
 {
 	moviendo = true;
-	if(game->mapaActual->comprobarTilePisable(x, y+1) && v_offset == 0 && h_offset == 0) {
+	if(gameInstance->currentMap->comprobarTilePisable(x, y+1) && v_offset == 0 && h_offset == 0) {
 		spriteState = 3;
 		this->y++;
 		v_offset = -1;

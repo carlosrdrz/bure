@@ -5,13 +5,13 @@
 #include <string>
 #include <list>
 
-class Network {
+class network {
 public:
 	int status;
 	int intentoConexion;
 
-	Network(void);
-	~Network(void);
+	network(void);
+	~network(void);
 
 	int connectToTheServer();
 	void sendPacket(std::string pa);

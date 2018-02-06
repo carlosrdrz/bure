@@ -1,29 +1,29 @@
-#include "Network.h"
-#include "Error.h"
-#include "Interface.h"
-#include "Jugador.h"
-#include "Mapa.h"
-#include "Juego.h"
-#include "Graficos.h"
+#include "network.h"
+#include "error.h"
+#include "user_interface.h"
+#include "player.h"
+#include "map.h"
+#include "game.h"
+#include "graphics.h"
 
 #include <list>
 #include <string>
 #include <SDL_net.h>
 
-extern Interface *interfaz;
-extern Jugador *player;
-extern Mapa *mapaActual;
-extern Juego *game;
-extern Graficos *pantalla;
+extern user_interface *uiInstance;
+extern player *playerInstance;
+extern map *mapaActual;
+extern game *gameInstance;
+extern graphics *pantalla;
 extern std::string path;
 
-Network::Network(void) {
+network::network(void) {
 	this->status = 0;
 	this->sock = NULL;
 	this->intentoConexion = 0;
 }
 
-Network::~Network(void) {
+network::~network(void) {
     if(this->status > 0) {
    	    SDLNet_UDP_Close(sock);
    	    sock = NULL;
@@ -35,7 +35,7 @@ Network::~Network(void) {
 	SDLNet_Quit();
 }
 
-int Network::connectToTheServer() {
+int network::connectToTheServer() {
 	this->status = 1;
 
 	if(SDLNet_Init() < 0) {
@@ -80,8 +80,8 @@ int Network::connectToTheServer() {
 	return 1;
 }
 
-void Network::sendLoop() {
-    while(game->abierto) {
+void network::sendLoop() {
+    while(gameInstance->abierto) {
 
         if((int)this->paraEnviar.size() > 0 && this->sock != NULL) {
             std::list<std::string>::iterator it = this->paraEnviar.begin();
@@ -97,8 +97,8 @@ void Network::sendLoop() {
 	}
 }
 
-void Network::recieveLoop() {
-    while(game->abierto) {
+void network::recieveLoop() {
+    while(gameInstance->abierto) {
         if(status != 0 && this->sock != NULL) {
 	        while(SDLNet_UDP_Recv(this->sock, this->packrec)) {
 		        this->traducirPaquete((char *)this->packrec->data);
@@ -109,14 +109,14 @@ void Network::recieveLoop() {
 	}
 }
 
-void Network::sendPacket(std::string pa) {
+void network::sendPacket(std::string pa) {
 	this->paraEnviar.push_back(pa);
 }
 
 ////////////////////////////////////////////
 //// TRADUCIR PAQUETES
 ////////////////////////////////////////////
-void Network::traducirPaquete(std::string data) {
+void network::traducirPaquete(std::string data) {
     std::string buffer = data.substr(4);
     int tipo = (data.at(0)-48)*10 + (data.at(2)-48);
 
@@ -145,35 +145,35 @@ void Network::traducirPaquete(std::string data) {
 	}
 }
 
-void Network::t_personajeSeFue(std::string data) {
-	game->quitarJugador(game->getJugadorByNombre(data));
+void network::t_personajeSeFue(std::string data) {
+	gameInstance->removePlayer(gameInstance->getPlayerByNombre(data));
 }
 
-void Network::t_respuestaLogin(std::string data) {
+void network::t_respuestaLogin(std::string data) {
 	intentoConexion = 0;
 
 	if(!data.compare("TRUE")) {
-		interfaz->bloqueado = false;
-		interfaz->getContainer(1)->getLabel(0)->cambiarTexto("HA INGRESADO CORRECTAMENTE");
-		interfaz->closeContainer(0);
-		game->logged = true;
+		uiInstance->blocked = false;
+		uiInstance->getContainer(1)->getLabel(0)->cambiarTexto("HA INGRESADO CORRECTAMENTE");
+		uiInstance->closeContainer(0);
+		gameInstance->logged = true;
 	    sendPacket("1_1_NOTHING");
-	    Container *ch = new Container;
+	    container *ch = new container;
 	    ch->SetCont(260, 250, 500, 300);
-	    interfaz->addContainer(ch);
+	    uiInstance->addContainer(ch);
 	} else if(!data.compare("FALSE")) {
-		interfaz->getContainer(1)->getLabel(0)->cambiarTexto("DATOS DE IDENTIFICACION INCORRECTOS");
-		interfaz->bloqueado = false;
+		uiInstance->getContainer(1)->getLabel(0)->cambiarTexto("DATOS DE IDENTIFICACION INCORRECTOS");
+		uiInstance->blocked = false;
 	} else if(!data.compare("NOTVERSION")) {
-		interfaz->getContainer(1)->getLabel(0)->cambiarTexto("VERSION DEL CLIENTE INCORRECTA");
-		interfaz->bloqueado = false;
+		uiInstance->getContainer(1)->getLabel(0)->cambiarTexto("VERSION DEL CLIENTE INCORRECTA");
+		uiInstance->blocked = false;
 	} else { // NOTSERVER
-		interfaz->getContainer(1)->getLabel(0)->cambiarTexto("EL SERVIDOR ESTA DESCONECTADO");
-		interfaz->bloqueado = false;
+		uiInstance->getContainer(1)->getLabel(0)->cambiarTexto("EL SERVIDOR ESTA DESCONECTADO");
+		uiInstance->blocked = false;
 	}
 }
 
-void Network::t_obtenerlistaPersonajes(std::string data) {
+void network::t_obtenerlistaPersonajes(std::string data) {
 	// Variables de datos
 	string resto, nombre, clase, traje, hp, mp;
     // Personaje numero...
@@ -194,90 +194,90 @@ void Network::t_obtenerlistaPersonajes(std::string data) {
 	int nivel = 30;
 	///////////////////////
 
-    Container *ch = interfaz->getContainer(1);
+    container *ch = uiInstance->getContainer(1);
 
 	if(!nombre.compare("NULL")) {
-		Imagen *n = new Imagen(path+"data/chars_avatar/nada.png");
-		n->Set(25+(charnum*155), 20);
+		image *n = new image(path+"data/chars_avatar/nada.png");
+        n->set(25 + (charnum * 155), 20);
 		ch->Add(n);
 
-		Boton *ne = new Boton("Nuevo personaje");
+		button *ne = new button("Nuevo personaje");
 		ne->Set(25+(charnum*155), 265, 137, 20);
-		ne->function = &Interface::e_pantallaNuevoPersonaje;
+		ne->function = &user_interface::e_pantallaNuevoPersonaje;
 		ch->Add(ne);
 	} else {
 		char *buffer = new char[128];
 		strcpy(buffer, nombre.c_str());
-		Label *nm = new Label(buffer, 8);
+		label *nm = new label(buffer, 8);
 		nm->Set(25+(charnum*155), 205);
 		ch->Add(nm);
 
-		Label *where = new Label("MAPA CENTRAL", 8);
+		label *where = new label("MAPA CENTRAL", 8);
 		where->Set(25+(charnum*155), 215);
 		ch->Add(where);
 
-		Imagen *n = new Imagen(path+"data/chars_avatar/" + traje + ".png");
-		n->Set(25+(charnum*155), 20);
+		image *n = new image(path+"data/chars_avatar/" + traje + ".png");
+        n->set(25 + (charnum * 155), 20);
 		ch->Add(n);
 
 		if(!atoi(clase.c_str())) {
-			Label *claselb = new Label("GUERRERO", 8);
+			label *claselb = new label("GUERRERO", 8);
 			claselb->Set(25+(charnum*155), 225);
 			ch->Add(claselb);
 		} else {
-			Label *claselb = new Label("MAGO", 8);
+			label *claselb = new label("MAGO", 8);
 			claselb->Set(25+(charnum*155), 225);
 			ch->Add(claselb);
 		}
 
 		char *lvl = new char[64];
 		sprintf(lvl, "Nivel: %d", nivel);
-		Label *niv = new Label(lvl, 8);
+		label *niv = new label(lvl, 8);
 		niv->Set(25+(charnum*155), 235);
 		ch->Add(niv);
 
 		char *vym = new char[64];
 		sprintf(vym, "HP: %s MP: %s", hp.c_str(), mp.c_str());
-		Label *hm = new Label(vym, 8);
+		label *hm = new label(vym, 8);
 		hm->Set(25+(charnum*155), 245);
 		ch->Add(hm);
 
-		Boton *ent = new Boton("Entrar");
+		button *ent = new button("Entrar");
 		ent->Set(45+(charnum*155), 265, 100, 20);
-		ent->function = &Interface::e_conectarConPersonaje;
+		ent->function = &user_interface::e_conectarConPersonaje;
 		ent->parametro = charnum;
 		ch->Add(ent);
 	}
 
-	interfaz->getContainer(0)->getLabel(0)->cambiarTexto("ELIGE UN PERSONAJE PARA COMENZAR");
+	uiInstance->getContainer(0)->getLabel(0)->cambiarTexto("ELIGE UN PERSONAJE PARA COMENZAR");
 
 	if(charnum == 2) {
-	    Container *salir = new Container(800, 700, 200, 50);
-	    Boton *exit = new Boton("Salir del juego");
+	    container *salir = new container(800, 700, 200, 50);
+	    button *exit = new button("Salir del juego");
 		    exit->Set(25, 15, 150, 20);
-		    exit->function = &Interface::e_cerrarJuego;
+		    exit->function = &user_interface::e_cerrarJuego;
 	    salir->Add(exit);
-	    interfaz->addContainer(salir);
+	    uiInstance->addContainer(salir);
 	}
 }
 
-void Network::t_respuestaCrearPersonaje(std::string data) {
+void network::t_respuestaCrearPersonaje(std::string data) {
 	if(!data.compare("TRUE")) {
-		interfaz->getContainer(3)->getLabel(0)->cambiarTexto("PERSONAJE CREADO CORRECTAMENTE");
-		interfaz->closeContainer(3);
-		interfaz->closeContainer(2);
-		interfaz->closeContainer(1);
+		uiInstance->getContainer(3)->getLabel(0)->cambiarTexto("PERSONAJE CREADO CORRECTAMENTE");
+		uiInstance->closeContainer(3);
+		uiInstance->closeContainer(2);
+		uiInstance->closeContainer(1);
 
-		Container *ch = new Container;
+		container *ch = new container;
 	    ch->SetCont(260, 250, 500, 300);
-	    interfaz->addContainer(ch);
+	    uiInstance->addContainer(ch);
 	} else {
-		interfaz->getContainer(3)->getLabel(0)->cambiarTexto("ERROR AL CREAR EL PERSONAJE");
-		interfaz->closeContainer(3);
+		uiInstance->getContainer(3)->getLabel(0)->cambiarTexto("ERROR AL CREAR EL PERSONAJE");
+		uiInstance->closeContainer(3);
 	}
 }
 
-void Network::t_respuestaIdentificado(std::string data) {
+void network::t_respuestaIdentificado(std::string data) {
 	string resto, xpos, ypos, clase, traje, mapa, nombre;
 	xpos = data.substr(0, data.find("_"));
 	resto = data.substr(data.find("_")+1);
@@ -290,19 +290,19 @@ void Network::t_respuestaIdentificado(std::string data) {
 	mapa = resto.substr(0, resto.find("_"));
 	nombre = resto.substr(resto.find("_")+1);
 
-	player->nombre = nombre;
-	player->clase = atoi(clase.c_str());
-	player->traje = atoi(traje.c_str());
-	player->setPosition(atoi(xpos.c_str()), atoi(ypos.c_str()));
-	interfaz->closeContainer(0);
+	playerInstance->nombre = nombre;
+	playerInstance->clase = atoi(clase.c_str());
+	playerInstance->traje = atoi(traje.c_str());
+	playerInstance->setPosition(atoi(xpos.c_str()), atoi(ypos.c_str()));
+	uiInstance->closeContainer(0);
 
-	game->cambiarMapa(mapa);
-	game->jugando = true;
-	interfaz->writing = false;
-	SDL_EnableKeyRepeat(100, 30);
+	gameInstance->cambiarMapa(mapa);
+	gameInstance->playing = true;
+	uiInstance->writing = false;
+	// SDL_EnableKeyRepeat(100, 30);
 }
 
-void Network::t_nuevoJugadorConectado(std::string data) {
+void network::t_nuevoJugadorConectado(std::string data) {
 	string resto, xpos, ypos, clase, traje, nombre;
 	xpos = data.substr(0, data.find("_"));
 	resto = data.substr(data.find("_")+1);
@@ -313,21 +313,21 @@ void Network::t_nuevoJugadorConectado(std::string data) {
 	traje = resto.substr(0, resto.find("_"));
 	nombre = resto.substr(resto.find("_")+1);
 
-	Jugador *charac = new Jugador;
+	player *charac = new player;
 	charac->setPosition(atoi(xpos.c_str()), atoi(ypos.c_str()));
 	charac->nombre = nombre;
 	charac->traje = atoi(traje.c_str());
 	charac->clase = atoi(clase.c_str());
-	game->nuevoJugador(charac);
+	gameInstance->newPlayer(charac);
 }
 
-void Network::t_jugadorSeMovio(std::string data) {
+void network::t_jugadorSeMovio(std::string data) {
 	size_t found = data.find("_");
 	size_t foundtwo = data.rfind("_");
 	int newx, newy;
 	std::string name = data.substr(foundtwo+1);
 
-	Jugador *jd = game->getJugadorByNombre(name);
+	player *jd = gameInstance->getPlayerByNombre(name);
 	if(jd != NULL) {
 		newx = atoi(data.substr(0, found).c_str());
 		newy = atoi(data.substr(found+1, foundtwo).c_str());
@@ -339,49 +339,49 @@ void Network::t_jugadorSeMovio(std::string data) {
 	}
 }
 
-void Network::t_mensajeEnviado(std::string data) {
+void network::t_mensajeEnviado(std::string data) {
 	Mensaje *tosend = new Mensaje;
 
 	size_t found = data.rfind("_");
 	std::string msg = data.substr(0, found);
 	std::string name = data.substr(found+1);
-	if(!name.compare(player->nombre)) {
-		tosend->jg = player;
+	if(!name.compare(playerInstance->nombre)) {
+		tosend->jg = playerInstance;
 	} else {
-		tosend->jg = game->getJugadorByNombre(name);
+		tosend->jg = gameInstance->getPlayerByNombre(name);
 	}
 
 	char *buffer = new char[256];
 	strcpy(buffer, msg.c_str());
 	tosend->msg = buffer;
 	tosend->vida = 0;
-	game->addMensaje(tosend);
+	gameInstance->addMensaje(tosend);
 
 	tosend->jg->mensajesActuales++;
 }
 
-void Network::t_cambiarMapa(std::string data) {
+void network::t_cambiarMapa(std::string data) {
 	string resto, mapa, xpos,  ypos;
 	mapa = data.substr(0, data.find("_"));
 	resto = data.substr(data.find("_")+1);
 	xpos = resto.substr(0, resto.find("_"));
 	ypos = resto.substr(resto.find("_")+1);
 
-	for(int x = 0; x < game->jugadores(); x++) {
-	    	game->quitarJugador(game->getJugadorByIndex(x));
+	for(int x = 0; x < gameInstance->jugadores(); x++) {
+		gameInstance->removePlayer(gameInstance->getPlayerByIndex(x));
 
 	}
-	game->cambiarMapa(mapa);
-	player->setPosition(atoi(xpos.c_str()), atoi(ypos.c_str()));
+	gameInstance->cambiarMapa(mapa);
+	playerInstance->setPosition(atoi(xpos.c_str()), atoi(ypos.c_str()));
 }
 
-void Network::t_expulsadoDelServer(std::string data) {
-	game->jugando = false;
-	game->logged = false;
+void network::t_expulsadoDelServer(std::string data) {
+	gameInstance->playing = false;
+	gameInstance->logged = false;
 
-	Container *cn = new Container(260, 320, 500, 50);
-	Label *a = new Label("HA SIDO EXPULSADO DEL SERVIDOR", 16);
+	container *cn = new container(260, 320, 500, 50);
+	label *a = new label("HA SIDO EXPULSADO DEL SERVIDOR", 16);
 		a->Set(19, 19);
 		cn->Add(a);
-	interfaz->addContainer(cn);
+	uiInstance->addContainer(cn);
 }

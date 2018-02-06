@@ -18,11 +18,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "Container.h"
+#include "container.h"
 
 #include <list>
 
-Container::Container() 
+container::container()
 {
     this->boton_pulsado = false;
 	this->focus = 0;
@@ -30,11 +30,11 @@ Container::Container()
 	this->invisible = 0;
 }
 
-Container::Container(int x, int y, int ancho, int alto) {
+container::container(int x, int y, int ancho, int alto) {
 	this->x = x;
 	this->y = y;
-	this->ancho = ancho;
-	this->alto = alto;
+	this->width = ancho;
+	this->height = alto;
 	
 	this->focus = 0;
 	this->index = 0;
@@ -42,24 +42,24 @@ Container::Container(int x, int y, int ancho, int alto) {
     this->boton_pulsado = false;
 }
 
-Container::~Container() {
+container::~container() {
 	etiq.clear();
 	cajas.clear();
 	pul.clear();
 	images.clear();
 }
 
-void Container::Add(Label *w) {
+void container::Add(label *w) {
 	w->index = (int)etiq.size();
 	etiq.push_back(w);
 }
 
-void Container::Add(Boton *w) {
+void container::Add(button *w) {
 	w->index = (int)pul.size();
 	pul.push_back(w);
 }
 
-void Container::Add(InputBox *w) {
+void container::Add(input_box *w) {
 	w->index = (int)cajas.size();
 	cajas.push_back(w);
 	if((int)cajas.size() == 1) {
@@ -69,21 +69,21 @@ void Container::Add(InputBox *w) {
 	
 }
 
-void Container::Add(Imagen *w) {
+void container::Add(image *w) {
 	w->index = (int)images.size();
 	images.push_back(w);
 }
 
-void Container::Add(Selector *w) {
+void container::Add(ui_selector *w) {
 	w->index = (int)selectores.size();
 	selectores.push_back(w);
 }
 
-void Container::SetCont(int x, int y, int ancho, int alto) {
+void container::SetCont(int x, int y, int ancho, int alto) {
 	this->x = x;
 	this->y = y;
-	this->ancho = ancho;
-	this->alto = alto;
+	this->width = ancho;
+	this->height = alto;
 }
 
 ///////////////////////////////////////////////////////////
@@ -94,9 +94,9 @@ void Container::SetCont(int x, int y, int ancho, int alto) {
 /////
 ///// int num: 			Elemento a borrar
 /////////////////////////////////////////////////////////////
-void Container::CloseWidget(int elem, int num) {
+void container::CloseWidget(int elem, int num) {
 	if(!elem) {
-		std::list<Label*>::iterator it;
+		std::list<label*>::iterator it;
 		for(it = etiq.begin(); it != etiq.end(); ++it) {
 			if((*it)->index == num) {
 				etiq.erase(it);
@@ -104,7 +104,7 @@ void Container::CloseWidget(int elem, int num) {
 			}
 		}
 	} else if(1 == elem) {
-		std::list<InputBox*>::iterator it;
+		std::list<input_box*>::iterator it;
 		for(it = cajas.begin(); it != cajas.end(); ++it) {
 			if((*it)->index == num) {
 				cajas.erase(it);
@@ -112,7 +112,7 @@ void Container::CloseWidget(int elem, int num) {
 			}
 		}
 	} else if(2 == elem) {
-		std::list<Boton*>::iterator it;
+		std::list<button*>::iterator it;
 		for(it = pul.begin(); it != pul.end(); ++it) {
 			if((*it)->index == num) {
 				pul.erase(it);
@@ -120,7 +120,7 @@ void Container::CloseWidget(int elem, int num) {
 			}
 		}
 	} else if(3 == elem) {
-		std::list<Imagen*>::iterator it;
+		std::list<image*>::iterator it;
 		for(it = images.begin(); it != images.end(); ++it) {
 			if((*it)->index == num) {
 				images.erase(it);
@@ -130,9 +130,9 @@ void Container::CloseWidget(int elem, int num) {
 	}
 }
 
-void Container::changeButtonFocus(int num)
+void container::changeButtonFocus(int num)
 {	
-	std::list<Boton*>::iterator it;
+	std::list<button*>::iterator it;
 	for (it = pul.begin(); it != pul.end(); ++it) {
 		if((*it)->index == num) {
 			buttonOnFocus = it;
@@ -141,7 +141,7 @@ void Container::changeButtonFocus(int num)
 	}
 }
 
-void Container::changeIBFocus(int num)
+void container::changeIBFocus(int num)
 {
 	if((int)cajas.size() > 0) {
 		(*inputboxOnFocus)->noFocus();
@@ -150,7 +150,7 @@ void Container::changeIBFocus(int num)
 			num -= (int)cajas.size();	
 		}
 	
-		std::list<InputBox*>::iterator it;
+		std::list<input_box*>::iterator it;
 		for (it = cajas.begin(); it != cajas.end(); ++it) {
 			if((*it)->index == num) {
 				inputboxOnFocus = it;
@@ -163,11 +163,11 @@ void Container::changeIBFocus(int num)
 
 }
 
-InputBox *Container::getIB(int ib)
+input_box *container::getIB(int ib)
 {
 	if(ib > (int)cajas.size()-1) return NULL;
 	
-	std::list<InputBox*>::iterator lb;
+	std::list<input_box*>::iterator lb;
 	for(lb = cajas.begin(); lb != cajas.end(); ++lb) {
 	if((*lb)->index == ib) { 
 		return (*lb);
@@ -177,11 +177,11 @@ InputBox *Container::getIB(int ib)
 	return NULL;
 }
 
-Label *Container::getLabel(int lb)
+label *container::getLabel(int lb)
 {
 	if(lb > (int)etiq.size()-1) return NULL;
 	
-	std::list<Label*>::iterator eti;
+	std::list<label*>::iterator eti;
 	for(eti = etiq.begin(); eti != etiq.end(); ++eti) {
 	if((*eti)->index == lb) {
 		return (*eti);
@@ -191,11 +191,11 @@ Label *Container::getLabel(int lb)
 	return NULL;
 }
 
-Boton *Container::getBoton(int b)
+button *container::getBoton(int b)
 {
 	if(b > (int)pul.size()-1) return NULL;
 	
-	std::list<Boton*>::iterator bu;
+	std::list<button*>::iterator bu;
 	for(bu = pul.begin(); bu != pul.end(); ++bu) {
 	if((*bu)->index == b) { 
 		return (*bu);
@@ -205,11 +205,11 @@ Boton *Container::getBoton(int b)
 	return NULL;
 }
 
-Imagen *Container::getImagen(int im)
+image *container::getImagen(int im)
 {
 	if(im > (int)images.size()-1) return NULL;
 	
-	std::list<Imagen*>::iterator imag;
+	std::list<image*>::iterator imag;
 	for(imag = images.begin(); imag != images.end(); ++imag) {
 	if((*imag)->index == im) { 
 		return (*imag);
@@ -219,11 +219,11 @@ Imagen *Container::getImagen(int im)
 	return NULL;
 }
 
-Selector *Container::getSelector(int sel)
+ui_selector *container::getSelector(int sel)
 {
 	if(sel > (int)selectores.size()-1) return NULL;
 	
-	std::list<Selector*>::iterator selec;
+	std::list<ui_selector*>::iterator selec;
 	for(selec = selectores.begin(); selec != selectores.end(); ++selec) {
 		if((*selec)->index == sel) { 
 			return (*selec);

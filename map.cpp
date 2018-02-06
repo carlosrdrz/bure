@@ -1,6 +1,6 @@
-#include "Error.h"
-#include "Mapa.h"
-#include "Juego.h"
+#include "error.h"
+#include "map.h"
+#include "game.h"
 
 #include <iostream>
 #include <fstream>
@@ -8,10 +8,10 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-extern Juego *game;
+extern game *gameInstance;
 extern std::string path;
 
-Mapa::Mapa(std::string archivo) {
+map::map(std::string archivo) {
 	mapa = NULL;
 	elementos = NULL;
 	pisable = NULL;
@@ -30,12 +30,12 @@ Mapa::Mapa(std::string archivo) {
 	node = xmlDocGetRootElement(doc);
 	while(xmlNodeIsText(node)) node = node->next;
 
-	mapa_ancho = atoi((char*)xmlGetProp(node, (xmlChar*)"width"));
-	mapa_alto = atoi((char*)xmlGetProp(node, (xmlChar*)"height"));
+	width = atoi((char*)xmlGetProp(node, (xmlChar*)"width"));
+	height = atoi((char*)xmlGetProp(node, (xmlChar*)"height"));
 
-	mapa = new int[mapa_alto*mapa_ancho];
-	elementos = new int[mapa_alto*mapa_ancho];
-	pisable = new bool[mapa_alto*mapa_ancho];
+	mapa = new int[height*width];
+	elementos = new int[height*width];
+	pisable = new bool[height*width];
 
 	node = node->xmlChildrenNode;
 	while(xmlNodeIsText(node)) node = node->next;
@@ -143,18 +143,18 @@ Mapa::Mapa(std::string archivo) {
 	xmlFreeDoc(doc);
 }
 
-Mapa::~Mapa() {
+map::~map() {
 	delete[] mapa;
 	delete[] elementos;
 	delete[] pisable;
 }
 
-bool Mapa::comprobarTilePisable(int x, int y)
+bool map::comprobarTilePisable(int x, int y)
 {
-	bool pisabler = pisable[x+(y*mapa_ancho)];
+	bool pisabler = pisable[x+(y*width)];
 
-	for(int t = 0; t < game->jugadores(); t++) {
-		Jugador *jd = game->getJugadorByIndex(t);
+	for(int t = 0; t < gameInstance->jugadores(); t++) {
+		player *jd = gameInstance->getPlayerByIndex(t);
 		if(jd->x == x && jd->y == y) {
 			pisabler = false;
 		}

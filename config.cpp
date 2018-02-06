@@ -1,13 +1,9 @@
-#include "Config.h"
-#include "Error.h"
-
-#include "libxml/parser.h"
-#include "libxml/tree.h"
-#include <string>
+#include "config.h"
+#include "error.h"
 
 extern std::string path;
 
-Config::Config() {
+config::config() {
 	if ((doc = xmlParseFile((path+"data/config.xml").c_str())) == NULL) {
 		Error::Log("No se pudo cargar el archivo config.xml", 3);
 	}
@@ -19,12 +15,12 @@ Config::Config() {
 	}
 }
 
-Config::~Config() {
+config::~config() {
 	xmlFreeNode(node);
 	xmlFreeDoc(doc);
 }
 
-std::string Config::getValueOf(std::string of) {
+std::string config::getValueOf(std::string of) {
 	std::string toreturn;
 	xmlChar *temp;
 
@@ -52,7 +48,7 @@ std::string Config::getValueOf(std::string of) {
 	return toreturn;
 }
 
-bool Config::getBoolValueOf(std::string of) {
+bool config::getBoolValueOf(std::string of) {
 	bool toreturn = true;
 	std::string cero = "0";
 	xmlChar *temp;
@@ -82,7 +78,7 @@ bool Config::getBoolValueOf(std::string of) {
 	return toreturn;
 }
 
-void Config::setValueOf(std::string of, std::string on) {
+void config::setValueOf(std::string of, std::string on) {
 	while(node != NULL) {
 		if(!of.compare((char*)node->name)) {
 			// Cambiar

@@ -1,42 +1,42 @@
 #ifndef __H_JUEGO__
 #define __H_JUEGO__
 
-#include "Jugador.h"
-#include "Mapa.h"
+#include "player.h"
+#include "map.h"
 
 #include <list>
 #include <string>
 
 typedef struct {
 	char *msg;
-	Jugador *jg;
+	player *jg;
 	int vida;
 } Mensaje;
 
-class Juego {
+class game {
     public:
     	// Constructor y destructor
-        Juego();
-        ~Juego();
+        game();
+        ~game();
 
     	// Variables de estado
         bool abierto;
-        bool jugando;
+        bool playing;
         bool logged;
 
         // Funciones sobre el cliente
         void cerrar();
 
         // Mapas
-        Mapa *mapaActual;
+        map *currentMap;
         void cambiarMapa(std::string archivo);
 
         // Jugadores
-        void nuevoJugador(Jugador *pl);
-        void quitarJugador(Jugador *pl);
+        void newPlayer(player *pl);
+        void removePlayer(player *pl);
         int jugadores();
-        Jugador *getJugadorByIndex(int num);
-        Jugador *getJugadorByNombre(string nombre);
+        player *getPlayerByIndex(int num);
+        player *getPlayerByNombre(string nombre);
 
         // Loop de mensajes
         bool loopMsgActivo;
@@ -52,7 +52,7 @@ class Juego {
         bool princp_parado;
 
    private:
-        list<Jugador*> demas;
+        list<player*> demas;
         list<Mensaje*> mensajes;
 };
 #endif
