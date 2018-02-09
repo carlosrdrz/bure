@@ -1,49 +1,31 @@
 #include "input_box.h"
-#include "../error.h"
 
-#include <string>
-
-ui::input_box::input_box()
-{
-	this->focus = 0; 
-	this->index = -1;
-	this->secreto = 0;
-	this->maxchar = 12;
-	this->parametro = 0;
-	this->function = NULL;
-	this->charsplus = false;
+ui::input_box::input_box() {
+    this->index = -1;
+    this->max_length = 12;
+    this->function = nullptr;
 }
 
-ui::input_box::input_box(std::string title, std::string prf, int maxchars)
-{
-	this->titulo = title;
-	this->texto = prf;
-	this->focus = 0;
-	this->index = -1;
-	this->secreto = 0;
-	this->maxchar = maxchars;
-	this->parametro = 0;
-	this->function = NULL;
-	this->charsplus = false;
+ui::input_box::input_box(std::string title, std::string text, int max_length) {
+    this->title = title;
+    this->text = text;
+    this->index = -1;
+    this->max_length = max_length;
+    this->function = nullptr;
 }
 
-void ui::input_box::Set(int x, int y, int anc)
-{
-	this->x = x;
-	this->y = y;
-	this->width = anc;
-	this->height = 14;
+void ui::input_box::set(int x, int y, int w) {
+    this->x = x;
+    this->y = y;
+    this->width = w;
+    this->height = 14;
 }
 
-void ui::input_box::Borrar()
-{
-	if((int)texto.size() != 0) {
-		texto = texto.substr(0, texto.length()-1);
-	}
+void ui::input_box::remove_last() {
+    text.pop_back();
 }
 
-void ui::input_box::write(char que)
-{
-	if((int)texto.size() >= maxchar) return;
-	texto.push_back(que);
+void ui::input_box::write(char que) {
+    if (current_length() >= max_length) return;
+    text.push_back(que);
 }

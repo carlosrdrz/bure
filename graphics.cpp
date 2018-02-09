@@ -263,7 +263,7 @@ void graphics::draw(user_interface *i) {
 
     int containerIndex, lb, ib, bon, img;
     for (containerIndex = 0; i->getContainer(containerIndex) != nullptr; containerIndex++) {
-        if (!i->getContainer(containerIndex)->invisible) {
+        if (i->getContainer(containerIndex)->visible) {
             // Globales para todo el contenedor
             src.w = 1;
             src.h = 26;
@@ -346,18 +346,19 @@ void graphics::draw(user_interface *i) {
         }
 
         // Labels
-        for (lb = 0; i->getContainer(containerIndex)->getLabel(lb) != nullptr; lb++) {
-            if (i->getContainer(containerIndex)->getLabel(lb)->getTamano() != this->fontSize) {
-                this->openFont(i->getContainer(containerIndex)->getLabel(lb)->getTamano());
+        for (lb = 0; i->getContainer(containerIndex)->get_label(lb) != nullptr; lb++) {
+            if (i->getContainer(containerIndex)->get_label(lb)->get_size() != this->fontSize) {
+                this->openFont(i->getContainer(containerIndex)->get_label(lb)->get_size());
             }
 
-            SDL_Surface *textSurface = TTF_RenderText_Solid(font, i->getContainer(containerIndex)->getLabel(lb)->getText(),
+            SDL_Surface *textSurface = TTF_RenderText_Solid(font,
+                                                            i->getContainer(containerIndex)->get_label(lb)->get_text(),
                                                       fontColor);
             SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
             if (textSurface != nullptr) {
-                dst.x = i->getContainer(containerIndex)->getLabel(lb)->x + i->getContainer(containerIndex)->x;
-                dst.y = i->getContainer(containerIndex)->getLabel(lb)->y + i->getContainer(containerIndex)->y;
+                dst.x = i->getContainer(containerIndex)->get_label(lb)->x + i->getContainer(containerIndex)->x;
+                dst.y = i->getContainer(containerIndex)->get_label(lb)->y + i->getContainer(containerIndex)->y;
                 dst.w = textSurface->w;
                 dst.h = textSurface->h;
 
@@ -368,23 +369,24 @@ void graphics::draw(user_interface *i) {
         }
 
         // InputBoxes
-        for (ib = 0; i->getContainer(containerIndex)->getIB(ib) != nullptr; ++ib) {
+        for (ib = 0; i->getContainer(containerIndex)->get_input_box(ib) != nullptr; ++ib) {
             // Se dibuja el input box
-            src.x = (i->getContainer(containerIndex)->getIB(ib)->getFocus() && i->getContainer(containerIndex)->getFocus() &&
+            src.x = (i->getContainer(containerIndex)->get_input_box(ib)->focused &&
+                    i->getContainer(containerIndex)->focused &&
                      !i->blocked) ? 1 : 3;
             src.y = 26;
             src.w = 1;
             src.h = 14;
 
-            dst.x = i->getContainer(containerIndex)->getIB(ib)->x + i->getContainer(containerIndex)->x;
-            dst.y = i->getContainer(containerIndex)->getIB(ib)->y + i->getContainer(containerIndex)->y;
+            dst.x = i->getContainer(containerIndex)->get_input_box(ib)->x + i->getContainer(containerIndex)->x;
+            dst.y = i->getContainer(containerIndex)->get_input_box(ib)->y + i->getContainer(containerIndex)->y;
             dst.w = 1;
             dst.h = 14;
 
             SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
             dst.x++;
             src.x--;
-            for (int an = 0; an < i->getContainer(containerIndex)->getIB(ib)->width - 2; an++) {
+            for (int an = 0; an < i->getContainer(containerIndex)->get_input_box(ib)->width - 2; an++) {
                 SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
                 dst.x++;
             }
@@ -396,31 +398,22 @@ void graphics::draw(user_interface *i) {
                 this->openFont(8);
             }
 
-            SDL_Surface *titleSurface = TTF_RenderText_Solid(font, i->getContainer(containerIndex)->getIB(ib)->getTitulo(),
+            SDL_Surface *titleSurface = TTF_RenderText_Solid(font,
+                                                             i->getContainer(containerIndex)->get_input_box(ib)->get_title(),
                                                       fontColor);
             SDL_Texture *titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
 
-            dst.x = i->getContainer(containerIndex)->getIB(ib)->x + i->getContainer(containerIndex)->x - titleSurface->w - 5;
+            dst.x = i->getContainer(containerIndex)->get_input_box(ib)->x + i->getContainer(containerIndex)->x - titleSurface->w - 5;
             dst.y += 3;
             dst.w = titleSurface->w;
             dst.h = titleSurface->h;
 
             SDL_RenderCopy(renderer, titleTexture, nullptr, &dst);
 
-            if (i->getContainer(containerIndex)->getIB(ib)->getCaracteres() != 0) {
-                SDL_Surface *textSurface;
-                if (i->getContainer(containerIndex)->getIB(ib)->secreto == 1) {
-                    char sec[13];
-                    for (int sd = 0; sd < i->getContainer(containerIndex)->getIB(ib)->getCaracteres(); sd++) {
-                        sec[sd] = 42;
-                    }
-                    sec[i->getContainer(containerIndex)->getIB(ib)->getCaracteres()] = 0;
-                    textSurface = TTF_RenderText_Solid(font, sec, fontColor);
-                } else {
-                    textSurface = TTF_RenderText_Solid(font, i->getContainer(containerIndex)->getIB(ib)->getTexto(), fontColor);
-                }
+            if (i->getContainer(containerIndex)->get_input_box(ib)->current_length() != 0) {
+                SDL_Surface *textSurface = TTF_RenderText_Solid(font, i->getContainer(containerIndex)->get_input_box(ib)->get_text(), fontColor);
                 dst.x += titleSurface->w + 10;
-                dst.w = std::min(i->getContainer(containerIndex)->getIB(ib)->width, textSurface->w);
+                dst.w = std::min(i->getContainer(containerIndex)->get_input_box(ib)->width, textSurface->w);
 
                 SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
                 SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
@@ -433,59 +426,61 @@ void graphics::draw(user_interface *i) {
         }
 
         // Botones
-        for (bon = 0; i->getContainer(containerIndex)->getBoton(bon) != nullptr; bon++) {
-            if (i->getContainer(containerIndex)->getBoton(bon)->press == 0) SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
+        for (bon = 0; i->getContainer(containerIndex)->get_button(bon) != nullptr; bon++) {
+            if (i->getContainer(containerIndex)->get_button(bon)->press == 0) SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
             else SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 
-            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getBoton(bon)->x;
-            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getBoton(bon)->y;
-            dst.w = i->getContainer(containerIndex)->getBoton(bon)->width;
-            dst.h = i->getContainer(containerIndex)->getBoton(bon)->height;
+            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->get_button(bon)->x;
+            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->get_button(bon)->y;
+            dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
+            dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
 
             SDL_RenderFillRect(renderer, &dst);
 
-            if (i->getContainer(containerIndex)->getBoton(bon)->press == 0) SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+            if (i->getContainer(containerIndex)->get_button(bon)->press == 0) SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
             else SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
 
-            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getBoton(bon)->x;
-            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getBoton(bon)->y;
-            dst.w = i->getContainer(containerIndex)->getBoton(bon)->width;
+            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->get_button(bon)->x;
+            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->get_button(bon)->y;
+            dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
             dst.h = 1;
 
             SDL_RenderFillRect(renderer, &dst);
 
-            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getBoton(bon)->x;
-            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getBoton(bon)->y +
-                    i->getContainer(containerIndex)->getBoton(bon)->height;
-            dst.w = i->getContainer(containerIndex)->getBoton(bon)->width;
+            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->get_button(bon)->x;
+            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->get_button(bon)->y +
+                    i->getContainer(containerIndex)->get_button(bon)->height;
+            dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
             dst.h = 1;
 
             SDL_RenderFillRect(renderer, &dst);
 
-            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getBoton(bon)->x;
-            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getBoton(bon)->y;
+            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->get_button(bon)->x;
+            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->get_button(bon)->y;
             dst.w = 1;
-            dst.h = i->getContainer(containerIndex)->getBoton(bon)->height;
+            dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
 
             SDL_RenderFillRect(renderer, &dst);
 
-            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getBoton(bon)->x +
-                    i->getContainer(containerIndex)->getBoton(bon)->width;
-            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getBoton(bon)->y;
+            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->get_button(bon)->x +
+                    i->getContainer(containerIndex)->get_button(bon)->width;
+            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->get_button(bon)->y;
             dst.w = 1;
-            dst.h = i->getContainer(containerIndex)->getBoton(bon)->height;
+            dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
 
             SDL_RenderFillRect(renderer, &dst);
 
             // Dibujar la etiqueta
             if (this->fontSize != 8) this->openFont(8);
 
-            SDL_Surface *titlebSurface = TTF_RenderText_Solid(font, i->getContainer(containerIndex)->getBoton(bon)->getTitulo(),
+            SDL_Surface *titlebSurface = TTF_RenderText_Solid(font,
+                                                              i->getContainer(containerIndex)->get_button(
+                                                                      bon)->get_title(),
                                                        fontColor);
-            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getBoton(bon)->y +
-                    (i->getContainer(containerIndex)->getBoton(bon)->height / 2) - (titlebSurface->h / 2);
-            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getBoton(bon)->x +
-                    (i->getContainer(containerIndex)->getBoton(bon)->width / 2) - (titlebSurface->w / 2);
+            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->get_button(bon)->y +
+                    (i->getContainer(containerIndex)->get_button(bon)->height / 2) - (titlebSurface->h / 2);
+            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->get_button(bon)->x +
+                    (i->getContainer(containerIndex)->get_button(bon)->width / 2) - (titlebSurface->w / 2);
             dst.w = titlebSurface->w;
             dst.h = titlebSurface->h;
 
@@ -496,46 +491,28 @@ void graphics::draw(user_interface *i) {
         }
 
         // Imagenes
-        for (img = 0; i->getContainer(containerIndex)->getImagen(img) != nullptr; img++) {
-            if (!i->getContainer(containerIndex)->getImagen(img)->isDinamic()) {
-                if (i->getContainer(containerIndex)->getImagen(img)->img != nullptr) {
-                    dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getImagen(img)->y;
-                    dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getImagen(img)->x;
-                    dst.w = i->getContainer(containerIndex)->getImagen(img)->img->w;
-                    dst.h = i->getContainer(containerIndex)->getImagen(img)->img->h;
-                    // TODO: Fix this images thing
-                    // SDL_BlitSurface(i->getContainer(containerIndex)->getImagen(img)->img, NULL, bbuffer, &dst);
-                } else {
-                    Error::Log((char *) "No hay imagen para dibujar...", 1);
-                }
-            } else {
-                string toload = i->getContainer(containerIndex)->getImagen(img)->inicio;
-                toload.append(i->getContainer(containerIndex)->getSelector(
-                        i->getContainer(containerIndex)->getImagen(img)->selector)->getSelected());
-                toload.append(i->getContainer(containerIndex)->getImagen(img)->final);
-                if (i->getContainer(containerIndex)->getImagen(img)->currentpath.compare(toload) != 0) {
-                    SDL_FreeSurface(i->getContainer(containerIndex)->getImagen(img)->img);
-                    i->getContainer(containerIndex)->getImagen(img)->img = IMG_Load(toload.c_str());
-                }
-                dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getImagen(img)->y;
-                dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getImagen(img)->x;
-                dst.w = i->getContainer(containerIndex)->getImagen(img)->img->w;
-                dst.h = i->getContainer(containerIndex)->getImagen(img)->img->h;
-
+        for (img = 0; i->getContainer(containerIndex)->get_image(img) != nullptr; img++) {
+            if (i->getContainer(containerIndex)->get_image(img)->img != nullptr) {
+                dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->get_image(img)->y;
+                dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->get_image(img)->x;
+                dst.w = i->getContainer(containerIndex)->get_image(img)->img->w;
+                dst.h = i->getContainer(containerIndex)->get_image(img)->img->h;
                 // TODO: Fix this images thing
                 // SDL_BlitSurface(i->getContainer(containerIndex)->getImagen(img)->img, NULL, bbuffer, &dst);
+            } else {
+                Error::Log((char *) "No hay imagen para dibujar...", 1);
             }
         }
 
         // Selectores
-        for (int sel = 0; i->getContainer(containerIndex)->getSelector(sel) != nullptr; sel++) {
+        for (int sel = 0; i->getContainer(containerIndex)->get_selector(sel) != nullptr; sel++) {
             src.x = 4;
             src.y = 26;
             src.w = 9;
             src.h = 14;
 
-            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->getSelector(sel)->x;
-            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->getSelector(sel)->y;
+            dst.x = i->getContainer(containerIndex)->x + i->getContainer(containerIndex)->get_selector(sel)->x;
+            dst.y = i->getContainer(containerIndex)->y + i->getContainer(containerIndex)->get_selector(sel)->y;
             dst.w = 9;
             dst.h = 14;
 
@@ -552,9 +529,9 @@ void graphics::draw(user_interface *i) {
             src.x--;
 
             if (8 != this->fontSize) this->openFont(8);
-            SDL_Surface *seleccionado = TTF_RenderText_Solid(font, i->getContainer(containerIndex)->getSelector(
-                    sel)->getSelected().c_str(), fontColor);
-            i->getContainer(containerIndex)->getSelector(sel)->width = seleccionado->w + 8;
+            SDL_Surface *seleccionado = TTF_RenderText_Solid(font, i->getContainer(containerIndex)->get_selector(
+                    sel)->get_selected().c_str(), fontColor);
+            i->getContainer(containerIndex)->get_selector(sel)->width = seleccionado->w + 8;
 
             for (int an = 0; an < seleccionado->w + 8; an++) {
                 SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);

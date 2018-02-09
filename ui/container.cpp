@@ -2,213 +2,136 @@
 
 #include <list>
 
-ui::container::container()
-{
-    this->boton_pulsado = false;
-	this->focus = 0;
-	this->index = 0;
-	this->invisible = 0;
+ui::container::container() {
+    this->buttonPressed = false;
+    this->focused = false;
+    this->index = 0;
+    this->visible = true;
 }
 
-ui::container::container(int x, int y, int ancho, int alto) {
-	this->x = x;
-	this->y = y;
-	this->width = ancho;
-	this->height = alto;
-	
-	this->focus = 0;
-	this->index = 0;
-	this->invisible = 0;
-    this->boton_pulsado = false;
+ui::container::container(int x, int y, int w, int h) {
+    this->x = x;
+    this->y = y;
+    this->width = w;
+    this->height = h;
+
+    this->focused = false;
+    this->index = 0;
+    this->visible = true;
+    this->buttonPressed = false;
 }
 
 ui::container::~container() {
-	etiq.clear();
-	cajas.clear();
-	pul.clear();
-	images.clear();
+    labels.clear();
+    inputBoxes.clear();
+    buttons.clear();
+    images.clear();
 }
 
-void ui::container::Add(label *w) {
-	w->index = (int)etiq.size();
-	etiq.push_back(w);
+void ui::container::add(label w) {
+    w.index = static_cast<int>(labels.size());
+    labels.push_back(w);
 }
 
-void ui::container::Add(button *w) {
-	w->index = (int)pul.size();
-	pul.push_back(w);
+void ui::container::add(button w) {
+    w.index = static_cast<int>(buttons.size());
+    buttons.push_back(w);
 }
 
-void ui::container::Add(input_box *w) {
-	w->index = (int)cajas.size();
-	cajas.push_back(w);
-	if((int)cajas.size() == 1) {
-		inputboxOnFocus = cajas.begin();
-		(*inputboxOnFocus)->Focus();
-	}
-	
-}
-
-void ui::container::Add(image *w) {
-	w->index = (int)images.size();
-	images.push_back(w);
-}
-
-void ui::container::Add(selector *w) {
-	w->index = (int)selectores.size();
-	selectores.push_back(w);
-}
-
-void ui::container::SetCont(int x, int y, int ancho, int alto) {
-	this->x = x;
-	this->y = y;
-	this->width = ancho;
-	this->height = alto;
-}
-
-///////////////////////////////////////////////////////////
-///// int elem:     	- 0: Label
-/////					- 1: InputBox
-/////					- 2: Boton
-/////					- 3: Imagen
-/////
-///// int num: 			Elemento a borrar
-/////////////////////////////////////////////////////////////
-void ui::container::CloseWidget(int elem, int num) {
-	if(!elem) {
-		std::list<label*>::iterator it;
-		for(it = etiq.begin(); it != etiq.end(); ++it) {
-			if((*it)->index == num) {
-				etiq.erase(it);
-				break;
-			}
-		}
-	} else if(1 == elem) {
-		std::list<input_box*>::iterator it;
-		for(it = cajas.begin(); it != cajas.end(); ++it) {
-			if((*it)->index == num) {
-				cajas.erase(it);
-				break;
-			}
-		}
-	} else if(2 == elem) {
-		std::list<button*>::iterator it;
-		for(it = pul.begin(); it != pul.end(); ++it) {
-			if((*it)->index == num) {
-				pul.erase(it);
-				break;
-			}
-		}
-	} else if(3 == elem) {
-		std::list<image*>::iterator it;
-		for(it = images.begin(); it != images.end(); ++it) {
-			if((*it)->index == num) {
-				images.erase(it);
-				break;
-			}
-		}
-	}
-}
-
-void ui::container::changeButtonFocus(int num)
-{	
-	std::list<button*>::iterator it;
-	for (it = pul.begin(); it != pul.end(); ++it) {
-		if((*it)->index == num) {
-			buttonOnFocus = it;
-			break;
-		}
-	}
-}
-
-void ui::container::changeIBFocus(int num)
-{
-	if((int)cajas.size() > 0) {
-		(*inputboxOnFocus)->noFocus();
-
-		if(num >= (int)cajas.size()) {
-			num -= (int)cajas.size();	
-		}
-	
-		std::list<input_box*>::iterator it;
-		for (it = cajas.begin(); it != cajas.end(); ++it) {
-			if((*it)->index == num) {
-				inputboxOnFocus = it;
-				break;
-			}
-		}
-	
-		(*inputboxOnFocus)->Focus();
-	}
+void ui::container::add(input_box w) {
+    w.index = static_cast<int>(inputBoxes.size());
+    inputBoxes.push_back(w);
+    if (inputBoxes.size() == 1) {
+        inputBoxOnFocus = &(*(inputBoxes.begin()));
+        inputBoxOnFocus->focused = true;
+    }
 
 }
 
-ui::input_box *ui::container::getIB(int ib)
-{
-	if(ib > (int)cajas.size()-1) return NULL;
-	
-	std::list<input_box*>::iterator lb;
-	for(lb = cajas.begin(); lb != cajas.end(); ++lb) {
-	if((*lb)->index == ib) { 
-		return (*lb);
-		}
-	}
-	
-	return NULL;
+void ui::container::add(image w) {
+    w.index = static_cast<int>(images.size());
+    images.push_back(w);
 }
 
-ui::label *ui::container::getLabel(int lb)
-{
-	if(lb > (int)etiq.size()-1) return NULL;
-	
-	std::list<label*>::iterator eti;
-	for(eti = etiq.begin(); eti != etiq.end(); ++eti) {
-	if((*eti)->index == lb) {
-		return (*eti);
-		}
-	}
-	
-	return NULL;
+void ui::container::add(selector w) {
+    w.index = static_cast<int>(selectors.size());
+    selectors.push_back(w);
 }
 
-ui::button *ui::container::getBoton(int b)
-{
-	if(b > (int)pul.size()-1) return NULL;
-	
-	std::list<button*>::iterator bu;
-	for(bu = pul.begin(); bu != pul.end(); ++bu) {
-	if((*bu)->index == b) { 
-		return (*bu);
-		}
-	}
-	
-	return NULL;
+void ui::container::changeButtonFocus(int num) {
+    for (auto& button : buttons) {
+        if (button.index == num) {
+            buttonOnFocus = &button;
+            break;
+        }
+    }
 }
 
-ui::image *ui::container::getImagen(int im)
-{
-	if(im > (int)images.size()-1) return NULL;
-	
-	std::list<image*>::iterator imag;
-	for(imag = images.begin(); imag != images.end(); ++imag) {
-	if((*imag)->index == im) { 
-		return (*imag);
-		}
-	}
-
-	return NULL;
+void ui::container::changeIBFocus(int num) {
+    for (auto& ib : inputBoxes) {
+        if (ib.index == num) {
+            inputBoxOnFocus = &ib;
+            break;
+        }
+    }
 }
 
-ui::selector *ui::container::getSelector(int sel)
-{
-	if(sel > (int)selectores.size()-1) return NULL;
-	
-	std::list<selector*>::iterator selec;
-	for(selec = selectores.begin(); selec != selectores.end(); ++selec) {
-		if((*selec)->index == sel) { 
-			return (*selec);
-		}
-	}
-	
-	return NULL;
+ui::input_box *ui::container::get_input_box(int id) {
+    if (id > static_cast<int>(inputBoxes.size()) - 1) return nullptr;
+
+    for (auto &e : inputBoxes) {
+        if (e.index == id) {
+            return &e;
+        }
+    }
+
+    return nullptr;
+}
+
+ui::label *ui::container::get_label(int id) {
+    if (id > static_cast<int>(labels.size()) - 1) return nullptr;
+
+    for (auto &e : labels) {
+        if (e.index == id) {
+            return &e;
+        }
+    }
+
+    return nullptr;
+}
+
+ui::button *ui::container::get_button(int id) {
+    if (id > static_cast<int>(buttons.size()) - 1) return nullptr;
+
+    for (auto &e : buttons) {
+        if (e.index == id) {
+            return &e;
+        }
+    }
+
+    return nullptr;
+}
+
+ui::image *ui::container::get_image(int id) {
+    if (id > static_cast<int>(images.size()) - 1) return nullptr;
+
+    for (auto &e : images) {
+        if (e.index == id) {
+            return &e;
+        }
+    }
+
+    return nullptr;
+}
+
+ui::selector *ui::container::get_selector(int id) {
+    if (id > static_cast<int>(selectors.size()) - 1) return nullptr;
+
+    for (auto &e : selectors) {
+        if (e.index == id) {
+            return &e;
+        }
+    }
+
+    return nullptr;
 }

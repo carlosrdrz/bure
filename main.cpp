@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     auto gameUniquePtr = std::make_unique<game>();
     gameInstance = gameUniquePtr.get();
 
-    uiInstance->changeIBFocus(0);
+    uiInstance->changeInputBoxFocus(0);
 
     while (gameInstance->abierto) {
         if (gameInstance->playing) {
@@ -94,16 +94,16 @@ void manageEvent() {
             if (!uiInstance->blocked && uiInstance->writing) {
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     if (uiInstance->clickOnContainer(x, y)) {
-                        if (uiInstance->getContainerClicked(x, y)->getFocus() == 0)
+                        if (!uiInstance->getContainerClicked(x, y)->focused)
                             uiInstance->changeContainerFocus(uiInstance->getContainerClicked(x, y)->index);
                     }
 
-                    if (uiInstance->clickOnIB(x, y)) {
-                        uiInstance->changeIBFocus(uiInstance->getInputBoxClicked(x, y)->index);
+                    if (uiInstance->clickOnInputBox(x, y)) {
+                        uiInstance->changeInputBoxFocus(uiInstance->getInputBoxClicked(x, y)->index);
                     } else if (uiInstance->clickOnButton(x, y)) {
                         uiInstance->changeButtonFocus(uiInstance->getButtonClicked(x, y)->index);
                         uiInstance->getButtonFocused()->press = 1;
-                        uiInstance->getContainerClicked(x, y)->boton_pulsado = true;
+                        uiInstance->getContainerClicked(x, y)->buttonPressed = true;
                     } else if (uiInstance->clickOnSelector(x, y)) {
                         if (x > (uiInstance->getContainerFocused()->x + uiInstance->getSelectorClicked(x, y)->x) &&
                             x < (uiInstance->getContainerFocused()->x
@@ -121,12 +121,12 @@ void manageEvent() {
 
         case SDL_MOUSEBUTTONUP:
             if (!uiInstance->blocked && uiInstance->writing && uiInstance->getContainerFocused() != nullptr) {
-                if (uiInstance->getContainerFocused()->boton_pulsado) {
+                if (uiInstance->getContainerFocused()->buttonPressed) {
                     uiInstance->getButtonFocused()->press = 0;
-                    uiInstance->getContainerFocused()->boton_pulsado = false;
+                    uiInstance->getContainerFocused()->buttonPressed = false;
                     if (uiInstance->clickOnButton(x, y)) {
                         if (uiInstance->getButtonClicked(x, y) == uiInstance->getButtonFocused())
-                            uiInstance->ejecutarBoton(uiInstance->getButtonClicked(x, y));
+                            uiInstance->execButton(uiInstance->getButtonClicked(x, y));
                     }
                 }
             }
@@ -137,14 +137,14 @@ void manageEvent() {
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     gameInstance->cerrar();
                 } else if (event.key.keysym.sym == SDLK_BACKSPACE) {
-                    uiInstance->getInputBoxFocused()->Borrar();
+                    uiInstance->getInputBoxFocused()->remove_last();
                 } else if (event.key.keysym.sym == SDLK_TAB) {
                     // Se focusea al input box siguiente en la std::lista
-                    uiInstance->changeIBFocus(uiInstance->getInputBoxFocused()->index + 1);
+                    uiInstance->changeInputBoxFocus(uiInstance->getInputBoxFocused()->index + 1);
                 } else if (event.key.keysym.sym == SDLK_F12) {
-                    static container *id = nullptr;
+                    static ui::container *id = nullptr;
                     if (uiInstance->containerExists(id)) {
-                        if (id->getSelector(2)->getSelected() == "SI") {
+                        if (id->get_selector(2)->get_selected() == "SI") {
                             configInstance->setValueOf("fullscreen", "1");
                         } else {
                             configInstance->setValueOf("fullscreen", "0");
@@ -152,19 +152,19 @@ void manageEvent() {
                         uiInstance->closeContainer(id);
                     } else {
                         // SI NO ESTA CREADO CONSTRUIR MENU OPCIONES
-                        auto* settingsContainer = new container(362, 180, 300, 100);
-                        auto* fullscreen = new label("PANTALLA COMPLETA", 8);
-                        fullscreen->Set(35, 65);
-                        auto* fullScreenSelector = new selector(220, 65);
+                        auto* settingsContainer = new ui::container(362, 180, 300, 100);
+                        auto fullscreen = ui::label("PANTALLA COMPLETA", 8);
+                        fullscreen.set(35, 65);
+                        auto fullScreenSelector = ui::selector(220, 65);
                         if (configInstance->getBoolValueOf("fullscreen")) {
-                            fullScreenSelector->addOption("SI");
-                            fullScreenSelector->addOption("NO");
+                            fullScreenSelector.add_option("SI");
+                            fullScreenSelector.add_option("NO");
                         } else {
-                            fullScreenSelector->addOption("NO");
-                            fullScreenSelector->addOption("SI");
+                            fullScreenSelector.add_option("NO");
+                            fullScreenSelector.add_option("SI");
                         }
-                        settingsContainer->Add(fullscreen);
-                        settingsContainer->Add(fullScreenSelector);
+                        settingsContainer->add(fullscreen);
+                        settingsContainer->add(fullScreenSelector);
                         uiInstance->addContainer(settingsContainer);
                         id = settingsContainer;
                         uiInstance->blocked = false;
@@ -181,7 +181,9 @@ void manageEvent() {
                         playerInstance->moveUp();
                     }
                 } else if (uiInstance->getInputBoxFocused() != nullptr) {
-                    if (uiInstance->getInputBoxFocused()->escapeable()) {
+                    if (true) {
+                    // todo: fix this
+                    // if (uiInstance->getInputBoxFocused()->escapeable()) {
                         const std::set<SDL_Keycode> allowedSpecialChars = {
                                 SDLK_SPACE, SDLK_PERIOD, SDLK_EXCLAIM, SDLK_QUESTION, SDLK_COLON,
                                 SDLK_MINUS, SDLK_LEFTPAREN, SDLK_RIGHTPAREN, SDLK_EQUALS

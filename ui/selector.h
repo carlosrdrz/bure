@@ -6,23 +6,21 @@
 #include <string>
 
 namespace ui {
-	class selector : public widget {
-	public:
-		selector(int x, int y);
+class selector : public widget {
+ public:
+    selector(int x, int y);
+    ~selector();
 
-		~selector();
+    void add_option(std::string value);
 
-		void addOption(std::string toadd);
+    std::string get_selected();
 
-		std::string getSelected();
+    void next();
+    void previous();
 
-		void next();
+    std::list<std::string>::iterator options_it;
 
-		void previous();
-
-		std::list<std::string>::iterator opcionesit;
-
-	private:
-		std::list<std::string> opciones;
-	};
+ private:
+    std::list<std::string> options;
+};
 };

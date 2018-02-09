@@ -5,8 +5,8 @@
 
 ui::selector::selector(int x, int y)
 {
-	opciones.push_back("DEFAULT");
-	opcionesit = opciones.begin();
+	options.push_back("DEFAULT");
+	options_it = options.begin();
 	this->x = x;
 	this->y = y;
 	this->height = 14;
@@ -15,38 +15,38 @@ ui::selector::selector(int x, int y)
 
 ui::selector::~selector()
 {
-	opciones.clear();
+	options.clear();
 }
 
-void ui::selector::addOption(std::string toadd)
+void ui::selector::add_option(std::string value)
 {
-	if(opciones.front().compare("DEFAULT") == 0) {
-		opciones.clear();
+	if(options.front().compare("DEFAULT") == 0) {
+		options.clear();
 	}
-	opciones.push_back(toadd);
+	options.push_back(value);
 }
 
-std::string ui::selector::getSelected()
+std::string ui::selector::get_selected()
 {
-	return (*opcionesit);
+	return (*options_it);
 }
 
 void ui::selector::next()
 {
-	if(opciones.size() > 1) {
-		if((*opcionesit).compare(opciones.back()) == 0) opcionesit = opciones.begin();
-		else opcionesit++;
+	if(options.size() > 1) {
+		if((*options_it).compare(options.back()) == 0) options_it = options.begin();
+		else options_it++;
 	}
 }
 
 void ui::selector::previous()
 {
-	if(opciones.size() > 1) {
-		if(opcionesit == opciones.begin()) {
-			opcionesit = opciones.end();
-			opcionesit--;
+	if(options.size() > 1) {
+		if(options_it == options.begin()) {
+			options_it = options.end();
+			options_it--;
 		} else {
-			opcionesit--;
+			options_it--;
 		}
 	}
 }

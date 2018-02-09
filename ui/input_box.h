@@ -6,43 +6,29 @@
 #include <functional>
 
 namespace ui {
-	class input_box : public widget {
-	public:
-		using callback = std::function<void(int)>;
+class input_box : public widget {
+ public:
+    using callback = std::function<void(int)>;
 
-		callback function;
-		std::string texto;
-		std::string titulo;
-		int parametro;
-		int secreto;
+    bool focused = false;
+    callback function;
+    std::string text;
+    std::string title;
 
-		input_box();
-		input_box(std::string title, std::string prf, int maxchars = 12);
-		~input_box() {}
+    input_box();
+    input_box(std::string title, std::string text, int max_length = 12);
+    ~input_box() = default;
 
-		void Set(int x, int y, int anc);
+    void set(int x, int y, int w);
+    void write(char que);
+    void remove_last();
 
-		void write(char que);
+    const char *get_text() { return text.c_str(); }
+    const char *get_title() { return title.c_str(); }
 
-		void Borrar();
+    int current_length() { return static_cast<int>(text.size()); }
 
-		void EsSecreto() { this->secreto = 1; }
-
-		bool escapeable() { return charsplus; }
-		void escapeable(bool que) { charsplus = que; }
-
-		void Focus() { focus = 1; }
-		void noFocus() { focus = 0; }
-		int getFocus() { return focus; }
-
-		const char *getTexto() { return texto.c_str(); }
-		const char *getTitulo() { return titulo.c_str(); }
-
-		int getCaracteres() { return (int) texto.size(); }
-
-	private:
-		int focus;
-		int maxchar;
-		bool charsplus;
-	};
+ private:
+    int max_length;
+};
 };

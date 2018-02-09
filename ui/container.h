@@ -10,53 +10,43 @@
 #include <list>
 
 namespace ui {
-    class container : public widget {
-    public:
-        int invisible;
-        int index;
-        bool boton_pulsado;
+class container : public widget {
+ public:
+    int visible;
+    int index;
+    bool buttonPressed;
+    bool focused;
 
-        container();
-        container(int x, int y, int ancho, int alto);
-        ~container();
+    container();
+    container(int x, int y, int w, int h);
+    ~container();
 
-        void Add(label *w);
-        void Add(input_box *w);
-        void Add(button *w);
-        void Add(image *w);
-        void Add(selector *w);
+    void add(label w);
+    void add(input_box w);
+    void add(button w);
+    void add(image w);
+    void add(selector w);
 
-        void SetCont(int x, int y, int ancho, int alto);
-        void SetInvisible() { invisible = 1; }
+    input_box* get_input_box(int ib);
+    label* get_label(int lb);
+    button* get_button(int b);
+    image* get_image(int im);
+    selector* get_selector(int sel);
 
-        void CloseWidget(int elem, int num);
+    void changeIBFocus(int num);
+    void changeButtonFocus(int num);
 
-        input_box *getIB(int ib);
-        label *getLabel(int lb);
-        button *getBoton(int b);
-        image *getImagen(int im);
-        selector *getSelector(int sel);
+    input_box* getIBFocused() { return inputBoxOnFocus; }
+    button* getButtonFocused() { return buttonOnFocus; }
 
-        void Focus() { focus = 1; }
-        void noFocus() { focus = 0; }
-        int getFocus() { return focus; }
+ private:
+    std::list<label> labels;
+    std::list<input_box> inputBoxes;
+    std::list<button> buttons;
+    std::list<image> images;
+    std::list<selector> selectors;
 
-        void changeIBFocus(int num);
-        void changeButtonFocus(int num);
-
-        input_box *getIBFocused() { if ((int) cajas.size() > 0) return (*inputboxOnFocus); else return nullptr; }
-        button *getButtonFocused() { if ((int) pul.size() > 0) return (*buttonOnFocus); else return nullptr; }
-
-    private:
-        int focus;
-
-        std::list<label *> etiq;
-        std::list<input_box *> cajas;
-        std::list<button *> pul;
-        std::list<image *> images;
-        std::list<selector *> selectores;
-
-        std::list<input_box *>::iterator inputboxOnFocus;
-        std::list<button *>::iterator buttonOnFocus;
-    };
+    input_box* inputBoxOnFocus = nullptr;
+    button* buttonOnFocus = nullptr;
+};
 };
