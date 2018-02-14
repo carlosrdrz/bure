@@ -1,22 +1,21 @@
 #ifndef __H_CONFIG__
 #define __H_CONFIG__
 
-#include <libxml/tree.h>
-#include <libxml/parser.h>
+#include "error.h"
 
+#include <libxml++/libxml++.h>
 #include <string>
+#include <map>
 
 class config {
-	public:
-		config();
-		~config();
+ public:
+    void readFile(std::string path);
+    bool getBoolValueOf(std::string of);
+    void setValueOf(std::string of, std::string on);
 
-		std::string getValueOf(std::string of);
-		bool getBoolValueOf(std::string of);
-		void setValueOf(std::string of, std::string on);
-
-	private:
-		xmlDocPtr doc;
-		xmlNodePtr node;
+    static config instance;
+ private:
+    std::map<std::string, std::string> configs;
 };
+
 #endif

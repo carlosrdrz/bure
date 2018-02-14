@@ -1,22 +1,24 @@
 #pragma once
 
-#include "SDL.h"
-#include "SDL_ttf.h"
-#include "map.h"
+#include "game.h"
+#include "config.h"
+#include "game_map.h"
 #include "user_interface.h"
 #include "player.h"
 
+#include <SDL.h>
+#include <SDL_ttf.h>
 #include <list>
 
 using namespace std;
 
 class graphics {
 public:
-	graphics();
+	explicit graphics(std::string basePath);
 	~graphics();
 
 	void draw(int tile, int x, int y, int h, int v, bool fullLayer, bool layer);
-	void draw(map *m, bool layer);
+	void draw(game_map *m, bool layer);
 	void draw(user_interface *i);
 	void drawPlayers();
 	void drawMessage(char *msg, player *jd);
@@ -28,6 +30,7 @@ public:
 	void flipBuffer();
 
 private:
+	std::string basePath;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	SDL_Surface *screenSurface, *tilesSurface, *playersSurface, *elementsSurface, *uiImagesSurface, *bgSurface;

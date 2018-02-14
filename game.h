@@ -1,8 +1,11 @@
-#ifndef __H_JUEGO__
-#define __H_JUEGO__
+#ifndef __H_GAME__
+#define __H_GAME__
 
 #include "player.h"
-#include "map.h"
+#include "game_map.h"
+#include "graphics.h"
+#include "player.h"
+#include "error.h"
 
 #include <list>
 #include <string>
@@ -28,7 +31,7 @@ class game {
         void cerrar();
 
         // Mapas
-        map *currentMap;
+        game_map *currentMap;
         void cambiarMapa(std::string archivo);
 
         // Jugadores

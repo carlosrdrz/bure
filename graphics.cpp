@@ -1,26 +1,17 @@
-#include "SDL.h"
-#include "SDL_image.h"
-#include "SDL_ttf.h"
-#include "map.h"
-#include "error.h"
-#include "user_interface.h"
-#include "player.h"
-#include "game.h"
 #include "graphics.h"
-#include "config.h"
 
 #define TILE_SIZE 32
 
-extern user_interface *uiInstance;
 extern game *gameInstance;
 extern player *playerInstance;
-extern config *configInstance;
-extern std::string path;
 
-graphics::graphics() {
+graphics::graphics(std::string basePath) {
+    // todo: fix basepath
+    this->basePath = basePath;
+
     // Init video at 1024x768
     Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
-    if (configInstance->getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_OPENGL;
+    if (config::instance.getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_OPENGL;
     window = SDL_CreateWindow("Bure", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920, 1440, flags);
     renderer = SDL_CreateRenderer(window, -1, 0);
 
@@ -28,19 +19,19 @@ graphics::graphics() {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     // Load the file tiles
-    tilesSurface = IMG_Load((path + "data/tiles.png").c_str());
+    tilesSurface = IMG_Load((basePath + "data/tiles.png").c_str());
     if (tilesSurface == nullptr) Error::Log(SDL_GetError(), 2);
     tilesTexture = SDL_CreateTextureFromSurface(renderer, tilesSurface);
 
-    playersSurface = IMG_Load((path + "data/personajes.png").c_str());
+    playersSurface = IMG_Load((basePath + "data/personajes.png").c_str());
     if (playersSurface == nullptr) Error::Log(SDL_GetError(), 2);
     playersTexture = SDL_CreateTextureFromSurface(renderer, playersSurface);
 
-    elementsSurface = IMG_Load((path + "data/elements.png").c_str());
+    elementsSurface = IMG_Load((basePath + "data/elements.png").c_str());
     if (elementsSurface == nullptr) Error::Log(SDL_GetError(), 2);
     elementsTexture = SDL_CreateTextureFromSurface(renderer, elementsSurface);
 
-    uiImagesSurface = IMG_Load((path + "data/gui.png").c_str());
+    uiImagesSurface = IMG_Load((basePath + "data/gui.png").c_str());
     if (uiImagesSurface == nullptr) Error::Log(SDL_GetError(), 2);
     uiImagesTexture = SDL_CreateTextureFromSurface(renderer, uiImagesSurface);
     SDL_SetTextureBlendMode(uiImagesTexture, SDL_BLENDMODE_BLEND);
@@ -48,7 +39,7 @@ graphics::graphics() {
     // Init SDL_ttf and load font
     if (TTF_Init() < 0) Error::Log(SDL_GetError(), 2);
 
-    font = TTF_OpenFont((path + "data/pixel_font.ttf").c_str(), 16);
+    font = TTF_OpenFont((basePath + "data/pixel_font.ttf").c_str(), 16);
     if (!font) Error::Log(TTF_GetError(), 2);
 
     fontSize = 16;
@@ -61,7 +52,7 @@ graphics::graphics() {
     backgroundColor.b = 82;
 
     // Load background
-    bgSurface = IMG_Load((path + "data/background.jpg").c_str());
+    bgSurface = IMG_Load((basePath + "data/background.jpg").c_str());
     if (bgSurface == nullptr) Error::Log(SDL_GetError(), 2);
     bgTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
 }
@@ -167,7 +158,7 @@ void graphics::draw(int tile, int x, int y, int h, int v, bool fullLayer, bool l
     else SDL_RenderCopy(renderer, elementsTexture, &src, &dst);
 }
 
-void graphics::draw(map *m, bool layer) {
+void graphics::draw(game_map *m, bool layer) {
     int empezar_x, empezar_y = 0;
     int jug_y = playerInstance->y;
     int jug_x = playerInstance->x;
@@ -650,7 +641,7 @@ void graphics::flipBuffer() {
 
 void graphics::openFont(int size) {
     TTF_CloseFont(font);
-    font = TTF_OpenFont((path + "data/pixel_font.ttf").c_str(), size);
+    font = TTF_OpenFont((basePath + "data/pixel_font.ttf").c_str(), size);
     if (!font) {
         Error::Log(TTF_GetError(), 2);
     }

@@ -1,10 +1,4 @@
 #include "game.h"
-#include "map.h"
-#include "graphics.h"
-#include "player.h"
-#include "error.h"
-
-#include <string>
 
 extern graphics *pantalla;
 extern player *playerInstance;
@@ -33,7 +27,8 @@ void game::cerrar()
 void game::cambiarMapa(std::string archivo)
 {
 	delete currentMap;
-	currentMap = new map(archivo);
+    // todo: fix base path
+	currentMap = new game_map("/home/carlosrdrz/dev/bure", archivo);
 }
 
 void game::newPlayer(player *pl)

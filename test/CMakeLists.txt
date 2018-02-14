@@ -21,7 +21,7 @@ include_directories(
 
 add_executable(bure-test ui_leak.cpp)
 
-target_link_libraries(bure-test bure-lib bure-ui gtest gtest_main)
+target_link_libraries(bure-test bure-ui gtest gtest_main)
 target_link_libraries(bure-test
         ${SDL2_LIBRARIES}
         ${SDL2_IMAGE_LIBRARIES}
