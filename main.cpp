@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
         if (gameInstance->playing) {
             pantalla->clean();
             pantalla->draw(gameInstance->currentMap, false);
-            pantalla->drawPlayers();
+            pantalla->drawPlayer();
             pantalla->draw(gameInstance->currentMap, true);
             gameInstance->nextAnimationFrame();
         } else {

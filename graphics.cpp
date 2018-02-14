@@ -553,60 +553,12 @@ void graphics::draw(user_interface *i) {
     }
 }
 
-void graphics::drawPlayers() {
+void graphics::drawPlayer() {
     int tilexinic = playerInstance->x - 16;
     int tileyinic = playerInstance->y - 12;
     if (this->fontSize != 8) this->openFont(8);
 
     SDL_Rect dst, src;
-    src.w = 32;
-    src.h = 32;
-
-    dst.w = 32;
-    dst.h = 32;
-
-    // Dibuja el resto de personajes en relación a tu personaje
-    for (int x = 0; x < gameInstance->jugadores(); x++) {
-        player *jd = gameInstance->getPlayerByIndex(x);
-        if (abs(playerInstance->x - jd->x) < 17 && abs(playerInstance->y - jd->y) < 13) {
-            src.x = 32 * jd->spriteState;
-            src.y = 32 * (jd->traje - 1);
-
-            dst.x = ((jd->x - tilexinic) * 32);
-            dst.y = ((jd->y - tileyinic) * 32);
-
-            if (jd->h_offset > 0) dst.x = ((jd->x + 1 - tilexinic) * 32) - jd->h_offset;
-            else if (jd->h_offset < 0) dst.x = ((jd->x - 1 - tilexinic) * 32) - jd->h_offset;
-            else if (jd->v_offset > 0) dst.y = ((jd->y + 1 - tileyinic) * 32) - jd->v_offset;
-            else if (jd->v_offset < 0) dst.y = ((jd->y - 1 - tileyinic) * 32) - jd->v_offset;
-
-            if (playerInstance->h_offset > 0) dst.x -= 32;
-            else if (playerInstance->h_offset < 0) dst.x += 32;
-            else if (playerInstance->v_offset > 0) dst.y -= 32;
-            else if (playerInstance->v_offset < 0) dst.y += 32;
-
-            dst.x += playerInstance->h_offset;
-            dst.y += playerInstance->v_offset;
-
-            SDL_RenderCopy(renderer, playersTexture, &src, &dst);
-
-            // Dibujar etiqueta del nombre del resto de personajes
-            SDL_Surface *lblname = TTF_RenderText_Solid(font, (char *) jd->nombre.c_str(), fontColor);
-            SDL_Texture *lblnameTexture = SDL_CreateTextureFromSurface(renderer, lblname);
-
-            dst.x = (dst.x + 16) - (lblname->w / 2);
-            dst.y = dst.y + 36;
-            dst.w = lblname->w;
-            dst.h = lblname->h;
-
-            SDL_RenderCopy(renderer, lblnameTexture, nullptr, &dst);
-
-            SDL_DestroyTexture(lblnameTexture);
-            SDL_FreeSurface(lblname);
-        }
-    }
-
-    // Dibuja tu personaje
     dst.x = 1024 / 2;
     dst.y = 768 / 2;
     dst.w = 32;
@@ -614,7 +566,6 @@ void graphics::drawPlayers() {
 
     src.x = 32 * playerInstance->spriteState;
     src.y = 32 * (playerInstance->traje - 1);
-
     src.w = 32;
     src.h = 32;
 
@@ -646,96 +597,4 @@ void graphics::openFont(int size) {
         Error::Log(TTF_GetError(), 2);
     }
     this->fontSize = size;
-}
-
-void graphics::drawMessage(char *msg, player *jd) {
-    SDL_Rect dst, src;
-    int tilexinic = playerInstance->x - 16;
-    int tileyinic = playerInstance->y - 12;
-    if (this->fontSize != 8) this->openFont(8);
-
-    if (abs(playerInstance->x - jd->x) < 17 && abs(playerInstance->y - jd->y) < 13) {
-        src.y = 41;
-        src.w = 28;
-        src.h = 23;
-
-        if (jd->mensajesMostrados == 0) {
-            src.x = 0;
-        } else {
-            src.x = 32;
-        }
-
-        dst.x = (jd->x - tilexinic) * 32;
-        dst.y = ((jd->y - tileyinic) * 32) - 25 - jd->mensajesMostrados * 20;
-
-        if (jd->x != playerInstance->x && jd->y != playerInstance->y) {
-            if (jd->h_offset < 0) dst.x = ((jd->x - 1 - tilexinic) * 32) - jd->h_offset;
-            else if (jd->h_offset > 0) dst.x = ((jd->x + 1 - tilexinic) * 32) - jd->h_offset;
-            else if (jd->v_offset < 0) dst.y = ((jd->y - 1 - tileyinic) * 32) - jd->v_offset - 25 -
-                                                   jd->mensajesMostrados * 20;
-            else if (jd->v_offset > 0) dst.y = ((jd->y + 1 - tileyinic) * 32) - jd->v_offset - 25 -
-                                                   jd->mensajesMostrados * 20;
-
-            if (playerInstance->h_offset > 0) dst.x -= 32;
-            else if (playerInstance->h_offset < 0) dst.x += 32;
-            else if (playerInstance->v_offset > 0) dst.y -= 32;
-            else if (playerInstance->v_offset < 0) dst.y += 32;
-
-            dst.x += playerInstance->h_offset;
-            dst.y += playerInstance->v_offset;
-        }
-
-        dst.w = 28;
-        dst.h = 23;
-
-        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-
-        src.x = 27;
-        src.w = 1;
-        src.h = 14;
-
-        dst.x += 27;
-        dst.w = 1;
-        dst.h = 14;
-
-        SDL_Surface *mensaje = TTF_RenderText_Solid(font, msg, fontColor);
-        SDL_Texture *msgTexture = SDL_CreateTextureFromSurface(renderer, mensaje);
-
-        for (int y = 0; y < mensaje->w + 8; y++) {
-            dst.x++;
-            SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-        }
-
-        src.x = 29;
-        src.y = 41;
-        src.w = 4;
-        src.h = 14;
-
-        dst.w = 4;
-
-        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-
-        dst.y += 3;
-        dst.x = (jd->x - tilexinic) * 32 + 32;
-        if (jd->x != playerInstance->x && jd->y != playerInstance->y) {
-            if (jd->h_offset < 0) dst.x = ((jd->x - 1 - tilexinic) * 32) - jd->h_offset + 32;
-            else if (jd->h_offset > 0) dst.x = ((jd->x + 1 - tilexinic) * 32) - jd->h_offset + 32;
-            else if (jd->v_offset < 0) dst.y = ((jd->y - 1 - tileyinic) * 32) - jd->v_offset - 25 -
-                                                   jd->mensajesMostrados * 20 + 3;
-            else if (jd->v_offset > 0) dst.y = ((jd->y + 1 - tileyinic) * 32) - jd->v_offset - 25 -
-                                                   jd->mensajesMostrados * 20 + 3;
-
-            if (playerInstance->h_offset > 0) dst.x -= 32;
-            else if (playerInstance->h_offset < 0) dst.x += 32;
-
-            dst.x += playerInstance->h_offset;
-        }
-        dst.w = mensaje->w;
-        dst.h = mensaje->h;
-
-        SDL_RenderCopy(renderer, msgTexture, nullptr, &dst);
-
-        SDL_DestroyTexture(msgTexture);
-        SDL_FreeSurface(mensaje);
-    }
 }

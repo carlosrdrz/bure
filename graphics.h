@@ -20,8 +20,7 @@ public:
 	void draw(int tile, int x, int y, int h, int v, bool fullLayer, bool layer);
 	void draw(game_map *m, bool layer);
 	void draw(user_interface *i);
-	void drawPlayers();
-	void drawMessage(char *msg, player *jd);
+	void drawPlayer();
 
 	void renderBackground();
 
