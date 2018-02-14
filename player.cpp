@@ -11,6 +11,7 @@ player::player()
 	moviendo = false;
 	v_offset = 0;
 	h_offset = 0;
+    nombre = "Undefined";
 }
 
 void player::nextWalkingFrame()

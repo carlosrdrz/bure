@@ -5,9 +5,14 @@
 extern game *gameInstance;
 extern player *playerInstance;
 
-graphics::graphics(std::string basePath) {
-    // todo: fix basepath
-    this->basePath = basePath;
+// todo: fix basepath
+graphics::graphics(std::string basePath) : basePath(basePath) {
+    atexit(SDL_Quit);
+
+    // Init SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        Error::Log(SDL_GetError(), 3);
+    }
 
     // Init video at 1024x768
     Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
