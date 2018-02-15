@@ -1,5 +1,4 @@
-#ifndef __H_CONFIG__
-#define __H_CONFIG__
+#pragma once
 
 #include "error.h"
 
@@ -17,5 +16,3 @@ class config {
  private:
     std::map<std::string, std::string> configs;
 };
-
-#endif

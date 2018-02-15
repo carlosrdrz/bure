@@ -1,5 +1,4 @@
-#ifndef __H_GAME__
-#define __H_GAME__
+#pragma once
 
 #include "player.h"
 #include "game_map.h"
@@ -38,4 +37,3 @@ class game {
     std::unique_ptr<player> _player;
     std::unique_ptr<game_map> _map;
 };
-#endif

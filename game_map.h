@@ -1,5 +1,4 @@
-#ifndef __H_GAME_MAP__
-#define __H_GAME_MAP__
+#pragma once
 
 #include "error.h"
 
@@ -23,5 +22,3 @@ public:
 
 	bool comprobarTilePisable(int x, int y);
 };
-
-#endif

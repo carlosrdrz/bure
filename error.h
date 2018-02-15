@@ -1,5 +1,4 @@
-#ifndef __H_ERROR__
-#define __H_ERROR__
+#pragma once
 
 #include <string>
 
@@ -9,5 +8,3 @@ class Error
 		static void Log(std::string error, int import);
 		static void Log(int error, int import);
 };
-
-#endif

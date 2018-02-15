@@ -1,5 +1,4 @@
-#ifndef EVENT_MANAGER_H
-#define EVENT_MANAGER_H
+#pragma once
 
 #include "user_interface.h"
 #include "game.h"
@@ -22,6 +21,3 @@ class event_manager {
 
     SDL_Event lastEvent;
 };
-
-
-#endif // EVENT_MANAGER_H
