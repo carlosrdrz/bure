@@ -17,10 +17,13 @@ public:
 	explicit graphics(std::string basePath);
 	~graphics();
 
+    void draw(game &g);
 	void draw(int tile, int x, int y, int h, int v, bool fullLayer, bool layer);
-	void draw(game_map *m, bool layer);
+    // todo: no reason these are not const
+	void draw(game_map *m, player &p, bool layer);
 	void draw(user_interface *i);
-	void drawPlayer();
+    // todo: no reason these are not const
+	void draw(player &p);
 
 	void renderBackground();
 

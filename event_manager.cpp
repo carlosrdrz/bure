@@ -11,34 +11,34 @@ void event_manager::process_event() {
 
     switch (lastEvent.type) {
         case SDL_QUIT:
-            gameInstance.cerrar();
+            _game.finishGame();
             break;
 
         case SDL_MOUSEBUTTONDOWN:
-            if (!userInterface.blocked && userInterface.writing) {
+            if (!_ui.blocked && _ui.writing) {
                 if (lastEvent.button.button == SDL_BUTTON_LEFT) {
-                    if (userInterface.clickOnContainer(x, y)) {
-                        auto container = userInterface.getContainerClicked(x, y);
+                    if (_ui.clickOnContainer(x, y)) {
+                        auto container = _ui.getContainerClicked(x, y);
 
                         if (!container->focused)
-                            userInterface.changeContainerFocus(container->index);
+                            _ui.changeContainerFocus(container->index);
                     }
 
-                    if (userInterface.clickOnInputBox(x, y)) {
-                        userInterface.changeInputBoxFocus(userInterface.getInputBoxClicked(x, y)->index);
-                    } else if (userInterface.clickOnButton(x, y)) {
-                        userInterface.changeButtonFocus(userInterface.getButtonClicked(x, y)->index);
-                        userInterface.getButtonFocused()->press = 1;
-                        userInterface.getContainerClicked(x, y)->buttonPressed = true;
-                    } else if (userInterface.clickOnSelector(x, y)) {
-                        if (x > (userInterface.getContainerFocused()->x + userInterface.getSelectorClicked(x, y)->x) &&
-                            x < (userInterface.getContainerFocused()->x
-                                 + userInterface.getSelectorClicked(x, y)->x + 9) &&
-                            y > (userInterface.getContainerFocused()->y + userInterface.getSelectorClicked(x, y)->y)
-                            && y < (userInterface.getContainerFocused()->y + userInterface.getSelectorClicked(x, y)->y + 14)) {
-                            userInterface.getSelectorClicked(x, y)->previous();
+                    if (_ui.clickOnInputBox(x, y)) {
+                        _ui.changeInputBoxFocus(_ui.getInputBoxClicked(x, y)->index);
+                    } else if (_ui.clickOnButton(x, y)) {
+                        _ui.changeButtonFocus(_ui.getButtonClicked(x, y)->index);
+                        _ui.getButtonFocused()->press = 1;
+                        _ui.getContainerClicked(x, y)->buttonPressed = true;
+                    } else if (_ui.clickOnSelector(x, y)) {
+                        if (x > (_ui.getContainerFocused()->x + _ui.getSelectorClicked(x, y)->x) &&
+                            x < (_ui.getContainerFocused()->x
+                                 + _ui.getSelectorClicked(x, y)->x + 9) &&
+                            y > (_ui.getContainerFocused()->y + _ui.getSelectorClicked(x, y)->y)
+                            && y < (_ui.getContainerFocused()->y + _ui.getSelectorClicked(x, y)->y + 14)) {
+                            _ui.getSelectorClicked(x, y)->previous();
                         } else {
-                            userInterface.getSelectorClicked(x, y)->next();
+                            _ui.getSelectorClicked(x, y)->next();
                         }
                     }
                 }
@@ -46,38 +46,39 @@ void event_manager::process_event() {
             break;
 
         case SDL_MOUSEBUTTONUP:
-            if (!userInterface.blocked && userInterface.writing && userInterface.getContainerFocused() != nullptr) {
-                if (userInterface.getContainerFocused()->buttonPressed) {
-                    userInterface.getButtonFocused()->press = 0;
-                    userInterface.getContainerFocused()->buttonPressed = false;
-                    if (userInterface.clickOnButton(x, y)) {
-                        if (userInterface.getButtonClicked(x, y) == userInterface.getButtonFocused())
-                            userInterface.execButton(userInterface.getButtonClicked(x, y));
+            if (!_ui.blocked && _ui.writing && _ui.getContainerFocused() != nullptr) {
+                if (_ui.getContainerFocused()->buttonPressed) {
+                    _ui.getButtonFocused()->press = 0;
+                    _ui.getContainerFocused()->buttonPressed = false;
+                    if (_ui.clickOnButton(x, y)) {
+                        if (_ui.getButtonClicked(x, y) == _ui.getButtonFocused())
+                            _ui.execButton(_ui.getButtonClicked(x, y));
                     }
                 }
             }
             break;
 
         case SDL_KEYDOWN:
-            if (!userInterface.blocked) {
+            if (!_ui.blocked) {
                 if (lastEvent.key.keysym.sym == SDLK_ESCAPE) {
-                    gameInstance.cerrar();
+                    _game.finishGame();
                 } else if (lastEvent.key.keysym.sym == SDLK_BACKSPACE) {
-                    userInterface.getInputBoxFocused()->remove_last();
+                    _ui.getInputBoxFocused()->remove_last();
                 } else if (lastEvent.key.keysym.sym == SDLK_TAB) {
                     // Se focusea al input box siguiente en la std::lista
-                    userInterface.changeInputBoxFocus(userInterface.getInputBoxFocused()->index + 1);
+                    _ui.changeInputBoxFocus(_ui.getInputBoxFocused()->index + 1);
                 } else if (lastEvent.key.keysym.sym == SDLK_F12) {
                     static ui::container *id = nullptr;
-                    if (userInterface.containerExists(id)) {
+                    if (_ui.containerExists(id)) {
                         if (id->get_selector(2)->get_selected() == "SI") {
                             config::instance.setValueOf("fullscreen", "1");
                         } else {
                             config::instance.setValueOf("fullscreen", "0");
                         }
-                        userInterface.closeContainer(id);
+                        _ui.closeContainer(id);
                     } else {
-                        // SI NO ESTA CREADO CONSTRUIR MENU OPCIONES
+                        // todo: this must be built elsewhere
+                        // this does not belong to this class
                         auto settingsContainer = new ui::container(362, 180, 300, 100);
                         auto fullscreen = ui::label("PANTALLA COMPLETA", 8);
                         fullscreen.set(35, 65);
@@ -91,22 +92,22 @@ void event_manager::process_event() {
                         }
                         settingsContainer->add(fullscreen);
                         settingsContainer->add(fullScreenSelector);
-                        userInterface.addContainer(settingsContainer);
+                        _ui.addContainer(settingsContainer);
                         id = settingsContainer;
-                        userInterface.blocked = false;
-                        userInterface.writing = true;
+                        _ui.blocked = false;
+                        _ui.writing = true;
                     }
-                } else if (gameInstance.playing && !userInterface.writing) {
-                    if (lastEvent.key.keysym.sym == SDLK_a && playerInstance.x > 0) {
-                        playerInstance.moveLeft();
-                    } else if (lastEvent.key.keysym.sym == SDLK_s && playerInstance.y < gameInstance.currentMap->height - 1) {
-                        playerInstance.moveDown();
-                    } else if (lastEvent.key.keysym.sym == SDLK_d && playerInstance.x < gameInstance.currentMap->width - 1) {
-                        playerInstance.moveRight();
-                    } else if (lastEvent.key.keysym.sym == SDLK_w && playerInstance.y > 0) {
-                        playerInstance.moveUp();
+                } else if (_game.playing && !_ui.writing) {
+                    if (lastEvent.key.keysym.sym == SDLK_a && _game.getPlayer().x > 0) {
+                        if (_game.getMap()->comprobarTilePisable(_game.getPlayer().x - 1, _game.getPlayer().y)) _game.getPlayer().moveLeft();
+                    } else if (lastEvent.key.keysym.sym == SDLK_s && _game.getPlayer().y < _game.getMap()->height - 1) {
+                        if (_game.getMap()->comprobarTilePisable(_game.getPlayer().x, _game.getPlayer().y - 1)) _game.getPlayer().moveDown();
+                    } else if (lastEvent.key.keysym.sym == SDLK_d && _game.getPlayer().x < _game.getMap()->width - 1) {
+                        if (_game.getMap()->comprobarTilePisable(_game.getPlayer().x, _game.getPlayer().y + 1)) _game.getPlayer().moveRight();
+                    } else if (lastEvent.key.keysym.sym == SDLK_w && _game.getPlayer().y > 0) {
+                        if (_game.getMap()->comprobarTilePisable(_game.getPlayer().x, _game.getPlayer().y + 1)) _game.getPlayer().moveUp();
                     }
-                } else if (userInterface.getInputBoxFocused() != nullptr) {
+                } else if (_ui.getInputBoxFocused() != nullptr) {
                     const std::set<SDL_Keycode> allowedSpecialChars = {
                             SDLK_SPACE, SDLK_PERIOD, SDLK_EXCLAIM, SDLK_QUESTION, SDLK_COLON,
                             SDLK_MINUS, SDLK_LEFTPAREN, SDLK_RIGHTPAREN, SDLK_EQUALS
@@ -114,13 +115,13 @@ void event_manager::process_event() {
 
                     // If the character is allowed, write it
                     if (allowedSpecialChars.find(lastEvent.key.keysym.sym) != allowedSpecialChars.end()) {
-                        userInterface.getInputBoxFocused()->write(*SDL_GetKeyName(lastEvent.key.keysym.sym));
+                        _ui.getInputBoxFocused()->write(*SDL_GetKeyName(lastEvent.key.keysym.sym));
                     }
 
                     if ((lastEvent.key.keysym.sym >= SDLK_0 && lastEvent.key.keysym.sym <= SDLK_9) ||
                         (lastEvent.key.keysym.sym >= SDLK_a && lastEvent.key.keysym.sym <= SDLK_z)) {
-                        if (userInterface.writing) {
-                            userInterface.getInputBoxFocused()->write(*SDL_GetKeyName(lastEvent.key.keysym.sym));
+                        if (_ui.writing) {
+                            _ui.getInputBoxFocused()->write(*SDL_GetKeyName(lastEvent.key.keysym.sym));
                         }
                     }
                 }

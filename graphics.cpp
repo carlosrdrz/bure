@@ -2,9 +2,6 @@
 
 #define TILE_SIZE 32
 
-extern game *gameInstance;
-extern player *playerInstance;
-
 // todo: fix basepath
 graphics::graphics(std::string basePath) : basePath(basePath) {
     atexit(SDL_Quit);
@@ -86,6 +83,13 @@ void graphics::clean() {
     SDL_RenderClear(renderer);
 }
 
+void graphics::draw(game& g)
+{
+    draw(g.getMap(), g.getPlayer(), false);
+    draw(g.getPlayer());
+    draw(g.getMap(), g.getPlayer(), true);
+}
+
 void graphics::draw(int tile, int x, int y, int h, int v, bool fullLayer, bool layer = false) {
     SDL_Rect src, dst;
 
@@ -163,22 +167,22 @@ void graphics::draw(int tile, int x, int y, int h, int v, bool fullLayer, bool l
     else SDL_RenderCopy(renderer, elementsTexture, &src, &dst);
 }
 
-void graphics::draw(game_map *m, bool layer) {
+void graphics::draw(game_map *m, player &p, bool layer) {
     int empezar_x, empezar_y = 0;
-    int jug_y = playerInstance->y;
-    int jug_x = playerInstance->x;
+    int jug_y = p.y;
+    int jug_x = p.x;
     int x, y;
 
-    playerInstance->moviendo = false;
+    p.moviendo = false;
 
-    if (playerInstance->h_offset > 0) {
+    if (p.h_offset > 0) {
         empezar_y = 0;
         for (y = (jug_y - 12); y < (jug_y + 12); y++) {
             if (y >= 0 && y < m->height) {
                 if (!layer)
-                    draw(m->mapa[(jug_x - 16) + y * m->width], 0, empezar_y, playerInstance->h_offset, playerInstance->v_offset, false);
+                    draw(m->mapa[(jug_x - 16) + y * m->width], 0, empezar_y, p.h_offset, p.v_offset, false);
                 else
-                    draw(m->elementos[(jug_x - 16) + y * m->width], 0, empezar_y, playerInstance->h_offset, playerInstance->v_offset,
+                    draw(m->elementos[(jug_x - 16) + y * m->width], 0, empezar_y, p.h_offset, p.v_offset,
                          false, true);
             }
             empezar_y += TILE_SIZE;
@@ -186,46 +190,46 @@ void graphics::draw(game_map *m, bool layer) {
         jug_x++;
     }
 
-    if (playerInstance->h_offset < 0) {
+    if (p.h_offset < 0) {
         empezar_y = 0;
         for (y = (jug_y - 12); y < (jug_y + 12); y++) {
             if (y >= 0 && y < m->height) {
                 if (!layer)
-                    draw(m->mapa[(jug_x + 15) + y * m->width], 1024 + playerInstance->h_offset, empezar_y, playerInstance->h_offset,
-                         playerInstance->v_offset, false);
+                    draw(m->mapa[(jug_x + 15) + y * m->width], 1024 + p.h_offset, empezar_y, p.h_offset,
+                         p.v_offset, false);
                 else
-                    draw(m->elementos[(jug_x + 15) + y * m->width], 1024 + playerInstance->h_offset, empezar_y,
-                         playerInstance->h_offset, playerInstance->v_offset, false, true);
+                    draw(m->elementos[(jug_x + 15) + y * m->width], 1024 + p.h_offset, empezar_y,
+                         p.h_offset, p.v_offset, false, true);
             }
             empezar_y += TILE_SIZE;
         }
         jug_x--;
     }
-    if (playerInstance->v_offset > 0) {
+    if (p.v_offset > 0) {
         empezar_x = 0;
         for (x = (jug_x - 16); x < (jug_x + 16); x++) {
             if (x >= 0 && x < m->width) {
                 if (!layer)
-                    draw(m->mapa[(x + ((jug_y - 12) * m->width))], empezar_x, 0, playerInstance->h_offset, playerInstance->v_offset,
+                    draw(m->mapa[(x + ((jug_y - 12) * m->width))], empezar_x, 0, p.h_offset, p.v_offset,
                          false);
                 else
-                    draw(m->elementos[(x + ((jug_y - 12) * m->width))], empezar_x, 0, playerInstance->h_offset,
-                         playerInstance->v_offset, false, true);
+                    draw(m->elementos[(x + ((jug_y - 12) * m->width))], empezar_x, 0, p.h_offset,
+                         p.v_offset, false, true);
             }
             empezar_x += TILE_SIZE;
         }
         jug_y++;
     }
-    if (playerInstance->v_offset < 0) {
+    if (p.v_offset < 0) {
         empezar_x = 0;
         for (x = (jug_x - 16); x < (jug_x + 16); x++) {
             if (x >= 0 && x < m->width) {
                 if (!layer)
-                    draw(m->mapa[(x + ((jug_y + 11) * m->width))], empezar_x, 768 + playerInstance->v_offset, playerInstance->h_offset,
-                         playerInstance->v_offset, false);
+                    draw(m->mapa[(x + ((jug_y + 11) * m->width))], empezar_x, 768 + p.v_offset, p.h_offset,
+                         p.v_offset, false);
                 else
-                    draw(m->elementos[(x + ((jug_y + 11) * m->width))], empezar_x, 768 + playerInstance->v_offset,
-                         playerInstance->h_offset, playerInstance->v_offset, false, true);
+                    draw(m->elementos[(x + ((jug_y + 11) * m->width))], empezar_x, 768 + p.v_offset,
+                         p.h_offset, p.v_offset, false, true);
             }
             empezar_x += TILE_SIZE;
         }
@@ -238,9 +242,9 @@ void graphics::draw(game_map *m, bool layer) {
         for (x = (jug_x - 16); x < (jug_x + 16); x++) {
             if (x >= 0 && y >= 0 && x < m->width && y < m->height) {
                 if (!layer)
-                    draw(m->mapa[(x + (y * m->width))], empezar_x, empezar_y, playerInstance->h_offset, playerInstance->v_offset, true);
+                    draw(m->mapa[(x + (y * m->width))], empezar_x, empezar_y, p.h_offset, p.v_offset, true);
                 else
-                    draw(m->elementos[(x + (y * m->width))], empezar_x, empezar_y, playerInstance->h_offset, playerInstance->v_offset,
+                    draw(m->elementos[(x + (y * m->width))], empezar_x, empezar_y, p.h_offset, p.v_offset,
                          true, true);
             }
             empezar_x += TILE_SIZE;
@@ -558,9 +562,9 @@ void graphics::draw(user_interface *i) {
     }
 }
 
-void graphics::drawPlayer() {
-    int tilexinic = playerInstance->x - 16;
-    int tileyinic = playerInstance->y - 12;
+void graphics::draw(player &p) {
+    int tilexinic = p.x - 16;
+    int tileyinic = p.y - 12;
     if (this->fontSize != 8) this->openFont(8);
 
     SDL_Rect dst, src;
@@ -569,15 +573,15 @@ void graphics::drawPlayer() {
     dst.w = 32;
     dst.h = 32;
 
-    src.x = 32 * playerInstance->spriteState;
-    src.y = 32 * (playerInstance->traje - 1);
+    src.x = 32 * p.spriteState;
+    src.y = 32 * (p.traje - 1);
     src.w = 32;
     src.h = 32;
 
     SDL_RenderCopy(renderer, playersTexture, &src, &dst);
 
     // Dibuja etiqueta de tu personaje
-    SDL_Surface *nombre = TTF_RenderText_Solid(font, (char *) playerInstance->nombre.c_str(), fontColor);
+    SDL_Surface *nombre = TTF_RenderText_Solid(font, (char *) p.nombre.c_str(), fontColor);
     SDL_Texture *nombreTexture = SDL_CreateTextureFromSurface(renderer, nombre);
 
     dst.x = 528 - (nombre->w / 2);

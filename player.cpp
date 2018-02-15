@@ -1,11 +1,13 @@
 #include "player.h"
 #include "game.h"
 
-extern game *gameInstance;
-
 player::player()
 {
-	x = y = hp = mp = nivel = traje = clase = mensajesMostrados = mensajesActuales = 0;
+	x = 30;
+	y = 36;
+	clase = 1;
+	traje = 1;
+	hp = mp = nivel = mensajesMostrados = mensajesActuales = 0;
 	index = -1;
 	spriteState = 4;
 	moviendo = false;
@@ -59,7 +61,7 @@ void player::setPosition(int nx, int ny)
 void player::moveLeft()
 {
 	moviendo = true;
-	if(gameInstance->currentMap->comprobarTilePisable(x-1, y) && h_offset == 0 && v_offset == 0) {
+	if(h_offset == 0 && v_offset == 0) {
 		this->x--;
 		spriteState = 6;
 		h_offset = 1;
@@ -69,7 +71,7 @@ void player::moveLeft()
 void player::moveRight()
 {
 	moviendo = true;
-	if(gameInstance->currentMap->comprobarTilePisable(x+1, y) && h_offset == 0 && v_offset == 0) {
+	if(h_offset == 0 && v_offset == 0) {
 		this->x++;
 		spriteState = 9;
 		h_offset = -1;
@@ -79,7 +81,7 @@ void player::moveRight()
 void player::moveUp()
 {
 	moviendo = true;
-	if(gameInstance->currentMap->comprobarTilePisable(x, y-1) && v_offset == 0 && h_offset == 0) {
+	if(v_offset == 0 && h_offset == 0) {
 		this->y--;
 		spriteState = 0;
 		v_offset = 1;
@@ -89,7 +91,7 @@ void player::moveUp()
 void player::moveDown()
 {
 	moviendo = true;
-	if(gameInstance->currentMap->comprobarTilePisable(x, y+1) && v_offset == 0 && h_offset == 0) {
+	if(v_offset == 0 && h_offset == 0) {
 		spriteState = 3;
 		this->y++;
 		v_offset = -1;

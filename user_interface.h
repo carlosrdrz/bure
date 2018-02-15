@@ -42,7 +42,6 @@ class user_interface {
 
         // Button actions
         void execButton(ui::button *button);
-        void e_loadMap(int param);
 
  private:
         std::list<ui::container*> containers;

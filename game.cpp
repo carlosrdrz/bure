@@ -1,29 +1,25 @@
 #include "game.h"
 
-extern player *playerInstance;
-
 game::game()
 {
-    currentMap = nullptr;
-    abierto = true;
+    finished = false;
     playing = false;
-    logged = false;
+    _player = std::make_unique<player>();
 }
 
-void game::cerrar()
+void game::finishGame()
 {
-    abierto = false;
+    finished = true;
     playing = false;
 }
 
-void game::cambiarMapa(std::string archivo)
+void game::changeMap(std::string mapName)
 {
-	delete currentMap;
     // todo: fix base path
-	currentMap = new game_map("/home/carlosrdrz/dev/bure", archivo);
+    _map = make_unique<game_map>("/home/carlosrdrz/dev/bure", mapName);
 }
 
-void game::nextAnimationFrame()
+void game::nextFrame()
 {
-	playerInstance->nextWalkingFrame();
+    _player->nextWalkingFrame();
 }

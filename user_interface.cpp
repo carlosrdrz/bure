@@ -7,31 +7,12 @@
 
 #include <sstream>
 
-extern game *gameInstance;
-extern graphics *pantalla;
-extern config *configInstance;
-extern player *playerInstance;
-
 using namespace std::placeholders;
 using namespace ui;
 
 user_interface::user_interface() {
-    // Main menu
-    auto men = new ui::container(362, 309, 130, 60);
-
-    // Buttons
-    auto enviar = ui::button("START GAME");
-    enviar.set(20, 20, 90, 20);
-    enviar.function = bind(&user_interface::e_loadMap, this, _1);
-
-    men->add(enviar);
-
     writing = true;
     blocked = false;
-
-    this->addContainer(men);
-    containerOnFocus = containers.begin();
-    (*containerOnFocus)->focused = true;
 }
 
 user_interface::~user_interface() {
@@ -311,13 +292,4 @@ selector *user_interface::getSelectorClicked(int x, int y)
 void user_interface::execButton(button *button)
 {
     button->function(button->parameter);
-}
-
-void user_interface::e_loadMap(int param)
-{
-    gameInstance->cambiarMapa("campo.tmx");
-    playerInstance->setPosition(30, 36);
-    gameInstance->playing = true;
-    this->writing = false;
-    this->closeContainer(0);
 }
