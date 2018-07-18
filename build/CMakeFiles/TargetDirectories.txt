@@ -1,6 +1,0 @@
-/home/carlosrdrz/dev/bure/client/build/CMakeFiles/edit_cache.dir
-/home/carlosrdrz/dev/bure/client/build/CMakeFiles/client.dir
-/home/carlosrdrz/dev/bure/client/build/CMakeFiles/rebuild_cache.dir
-/home/carlosrdrz/dev/bure/client/build/CMakeFiles/bure-ui.dir
-/home/carlosrdrz/dev/bure/client/build/CMakeFiles/test.dir
-/home/carlosrdrz/dev/bure/client/build/CMakeFiles/bure-engine.dir

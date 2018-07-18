@@ -1,2 +1,0 @@
-/usr/bin/ar qc libbure-engine.a  CMakeFiles/bure-engine.dir/engine/system.cpp.o CMakeFiles/bure-engine.dir/engine/entity.cpp.o CMakeFiles/bure-engine.dir/engine/engine.cpp.o CMakeFiles/bure-engine.dir/engine/utils/config.cpp.o CMakeFiles/bure-engine.dir/engine/utils/error.cpp.o CMakeFiles/bure-engine.dir/engine/graphics.cpp.o CMakeFiles/bure-engine.dir/engine/ui_manager.cpp.o CMakeFiles/bure-engine.dir/engine/game_map.cpp.o CMakeFiles/bure-engine.dir/engine/event_manager.cpp.o
-/usr/bin/ranlib libbure-engine.a
