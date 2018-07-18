@@ -1,0 +1,82 @@
+[
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/client.dir/main.cpp.o -c /home/carlosrdrz/dev/bure/client/main.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/main.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/client.dir/game.cpp.o -c /home/carlosrdrz/dev/bure/client/game.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/game.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/client.dir/player.cpp.o -c /home/carlosrdrz/dev/bure/client/player.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/player.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-ui.dir/engine/ui/container.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/ui/container.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/ui/container.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-ui.dir/engine/ui/input_box.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/ui/input_box.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/ui/input_box.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-ui.dir/engine/ui/label.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/ui/label.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/ui/label.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-ui.dir/engine/ui/selector.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/ui/selector.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/ui/selector.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/system.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/system.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/system.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/entity.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/entity.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/entity.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/engine.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/engine.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/engine.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/utils/config.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/utils/config.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/utils/config.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/utils/error.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/utils/error.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/utils/error.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/graphics.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/graphics.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/graphics.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/ui_manager.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/ui_manager.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/ui_manager.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/game_map.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/game_map.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/game_map.cpp"
+},
+{
+  "directory": "/home/carlosrdrz/dev/bure/client/build",
+  "command": "/usr/bin/c++   -I/usr/include/SDL2 -I/usr/local/include/libxml++-3.0 -I/usr/local/lib/libxml++-3.0/include -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include  -g -Wall   -std=gnu++14 -o CMakeFiles/bure-engine.dir/engine/event_manager.cpp.o -c /home/carlosrdrz/dev/bure/client/engine/event_manager.cpp",
+  "file": "/home/carlosrdrz/dev/bure/client/engine/event_manager.cpp"
+}
+]

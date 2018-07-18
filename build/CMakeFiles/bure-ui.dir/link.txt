@@ -1,0 +1,2 @@
+/usr/bin/ar qc libbure-ui.a  CMakeFiles/bure-ui.dir/engine/ui/container.cpp.o CMakeFiles/bure-ui.dir/engine/ui/input_box.cpp.o CMakeFiles/bure-ui.dir/engine/ui/label.cpp.o CMakeFiles/bure-ui.dir/engine/ui/selector.cpp.o
+/usr/bin/ranlib libbure-ui.a

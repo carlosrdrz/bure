@@ -1,59 +1,65 @@
-#include <vector>
-#include <set>
 #include <memory>
+#include <set>
+#include <vector>
 
-#include "graphics.h"
-#include "config.h"
-#include "event_manager.h"
+#include "engine/engine.h"
+#include "engine/event_manager.h"
+#include "engine/graphics.h"
+#include "engine/utils/config.h"
+#include "game.h"
 
 config config::instance;
 
-void buildStartMenu(game* g, user_interface* ui) {
-    auto c = new ui::container(362, 309, 130, 60);
-    auto b = ui::button("START GAME");
-    b.set(20, 20, 90, 20);
-    b.function = [g, ui](int) -> void {
-        g->changeMap("campo.tmx");
-        g->getPlayer().setPosition(30, 36);
-        g->playing = true;
-        ui->writing = false;
-        ui->closeContainer(0);
-    };
+void buildStartMenu(game* g) {
+  auto c = new bure::ui::container(362, 309, 130, 60);
+  auto b = bure::ui::button("START GAME");
+  b.set(20, 20, 90, 20);
+  b.function = [g](int) -> void {
+    g->changeMap("campo.tmx");
+    g->getPlayer().setPosition(30, 36);
+    g->playing = true;
+    // engine::uiManager->writing = false;
+    // engine::uiManager->closeContainer(0);
+  };
 
-    c->add(b);
-    ui->addContainer(c);
+  c->add(b);
+  // engine::uiManager->addContainer(c);
 }
 
-int main(int argc, char *argv[]) {
-    config::instance.readFile(argv[1]);
+int main(int argc, char* argv[]) {
+  std::string resourcesPath("./");
+  if (argv[1] != nullptr) {
+    resourcesPath = std::string(argv[1]);
+  }
 
-    // Init main objects
-    auto graphicsInstance = std::make_unique<graphics>(argv[1]);
-    auto gameInstance = std::make_unique<game>();
-    auto userInterface = std::make_unique<user_interface>();
-    auto eventManager = std::make_unique<event_manager>(
-            *gameInstance, *userInterface);
+  // Init config file
+  config::instance.readFile(resourcesPath);
 
-    // Init start menu
-    buildStartMenu(gameInstance.get(), userInterface.get());
+  // Init main objects
+  auto graphicsInstance = std::make_unique<bure::graphics>(resourcesPath);
+  auto gameInstance = std::make_unique<game>();
+  auto eventManager = std::make_unique<bure::event_manager>();
 
-    // Main game loop
-    while (!gameInstance->finished) {
-        if (gameInstance->playing) {
-            graphicsInstance->clean();
-            graphicsInstance->draw(*gameInstance);
-            gameInstance->nextFrame();
-        } else {
-            graphicsInstance->renderBackground();
-        }
+  // Init start menu
+  buildStartMenu(gameInstance.get());
 
-        graphicsInstance->draw(userInterface.get());
-        graphicsInstance->flipBuffer();
-
-        while (eventManager->poll_event()) eventManager->process_event();
-
-        SDL_Delay(10);
+  // Main game loop
+  while (!gameInstance->finished) {
+    if (gameInstance->playing) {
+      graphicsInstance->clean();
+      // graphicsInstance->draw(*gameInstance);
+      gameInstance->nextFrame();
+    } else {
+      graphicsInstance->renderBackground();
     }
 
-    return EXIT_SUCCESS;
+    // graphicsInstance->draw(engine::uiManager);
+    graphicsInstance->flipBuffer();
+
+    // while (eventManager->poll_event()) eventManager->process_event();
+
+    SDL_Delay(10);
+  }
+
+  return EXIT_SUCCESS;
 }
