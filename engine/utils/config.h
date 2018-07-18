@@ -3,8 +3,7 @@
 #include <string>
 #include <map>
 
-#include "libxml++/libxml++.h"
-#include "error.h"
+namespace bure {
 
 class config {
  public:
@@ -16,3 +15,5 @@ class config {
  private:
     std::map<std::string, std::string> configs;
 };
+
+}  // namespace bure

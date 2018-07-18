@@ -2,9 +2,9 @@
 
 #include <list>
 #include <string>
+#include <memory>
 
 #include "engine/game_map.h"
-#include "engine/utils/error.h"
 #include "player.h"
 
 class game {

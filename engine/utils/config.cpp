@@ -1,4 +1,8 @@
+#include "libxml++/libxml++.h"
 #include "config.h"
+#include "logger.h"
+
+namespace bure {
 
 void config::readFile(std::string path) {
   if (path.empty()) {
@@ -9,7 +13,7 @@ void config::readFile(std::string path) {
   parser.parse_file(path + "data/config.xml");
 
   if (!parser) {
-    Error::Log("Could not load config file", 3);
+    logger::log("Could not load config file", 3);
     return;
   }
 
@@ -27,3 +31,5 @@ void config::readFile(std::string path) {
 bool config::getBoolValueOf(std::string of) { return ("1" == configs[of]); }
 
 void config::setValueOf(std::string of, std::string on) { configs[of] = on; }
+
+}  // namespace bure

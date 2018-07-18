@@ -34,7 +34,7 @@ add_library(bure-engine
   engine/entity.cpp
   engine/engine.cpp
   engine/utils/config.cpp
-  engine/utils/error.cpp
+  engine/utils/logger.cpp
   engine/graphics.cpp
   engine/ui_manager.cpp
   engine/game_map.cpp

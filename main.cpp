@@ -8,7 +8,7 @@
 #include "engine/utils/config.h"
 #include "game.h"
 
-config config::instance;
+bure::config bure::config::instance;
 
 void buildStartMenu(game* g) {
   auto c = new bure::ui::container(362, 309, 130, 60);
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Init config file
-  config::instance.readFile(resourcesPath);
+  bure::config::instance.readFile(resourcesPath);
 
   // Init main objects
   auto graphicsInstance = std::make_unique<bure::graphics>(resourcesPath);

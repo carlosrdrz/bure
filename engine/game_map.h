@@ -5,10 +5,8 @@
 #include <list>
 #include <string>
 
-#include "libxml++/libxml++.h"
-#include "utils/error.h"
-
 namespace bure {
+
 class game_map {
  public:
   int width, height;
@@ -22,4 +20,5 @@ class game_map {
 
   bool comprobarTilePisable(int x, int y);
 };
+
 }  // namespace bure

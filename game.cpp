@@ -1,4 +1,5 @@
 #include "game.h"
+#include "engine/utils/logger.h"
 
 game::game()
     : finished(false), playing(false), _player(std::make_unique<player>()) {}

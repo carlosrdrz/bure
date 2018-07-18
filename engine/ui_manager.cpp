@@ -5,7 +5,7 @@
 #include "graphics.h"
 #include "ui/container.h"
 #include "utils/config.h"
-#include "utils/error.h"
+#include "utils/logger.h"
 
 using namespace std::placeholders;
 using namespace bure::ui;
