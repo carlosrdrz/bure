@@ -1,5 +1,5 @@
 *.o
 bure
 
-cmake-build-debug
+build
 .idea
