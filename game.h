@@ -1,14 +1,13 @@
 #pragma once
 
 #include <list>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "engine/game_map.h"
 #include "player.h"
 
-class game {
- public:
+class game {public:
   game();
 
   // Set to true when the player signals that he wants the

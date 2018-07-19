@@ -38,10 +38,7 @@ add_library(bure-engine
   engine/graphics.cpp
   engine/ui_manager.cpp
   engine/game_map.cpp
-  engine/event_manager.cpp
-  engine/event_manager.h
-  engine/events/keyboard_event.h
-  engine/events/event.h)
+  engine/event_manager.cpp)
 
 add_executable(client
   main.cpp

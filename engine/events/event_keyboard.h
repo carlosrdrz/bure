@@ -1,13 +1,14 @@
 # pragma once
 
+#include "event.h"
+
 namespace bure {
 namespace events {
 
-using event_id = std::string;
-
-class event {
+class event_keyboard : public event {
  public:
-  virtual event_id getID() const = 0;
+  event_id getID() const { return "keyboard"; }
+
 };
 
 }  // namespace events

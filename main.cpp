@@ -2,8 +2,10 @@
 #include <set>
 #include <vector>
 
+#include <iostream>
 #include "engine/engine.h"
 #include "engine/event_manager.h"
+#include "engine/events/event_close.h"
 #include "engine/graphics.h"
 #include "engine/utils/config.h"
 #include "game.h"
@@ -11,7 +13,7 @@
 bure::config bure::config::instance;
 
 void buildStartMenu(game* g) {
-  auto c = new bure::ui::container(362, 309, 130, 60);
+  auto c = std::make_unique<bure::ui::container>(362, 309, 130, 60);
   auto b = bure::ui::button("START GAME");
   b.set(20, 20, 90, 20);
   b.function = [g](int) -> void {
@@ -38,10 +40,18 @@ int main(int argc, char* argv[]) {
   // Init main objects
   auto graphicsInstance = std::make_unique<bure::graphics>(resourcesPath);
   auto gameInstance = std::make_unique<game>();
+  auto gamePointer = gameInstance.get();
   auto eventManager = std::make_unique<bure::event_manager>();
 
   // Init start menu
   buildStartMenu(gameInstance.get());
+
+  // Register close callback
+  eventManager->addEventCallback("close",
+                                 [gamePointer](const bure::events::event& e) {
+                                   std::cout << "finishing game" << std::endl;
+                                   gamePointer->finishGame();
+                                 });
 
   // Main game loop
   while (!gameInstance->finished) {
@@ -56,8 +66,8 @@ int main(int argc, char* argv[]) {
     // graphicsInstance->draw(engine::uiManager);
     graphicsInstance->flipBuffer();
 
-    // while (eventManager->poll_event()) eventManager->process_event();
-
+    // manage events
+    eventManager->pollEvent();
     SDL_Delay(10);
   }
 

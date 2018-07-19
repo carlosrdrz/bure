@@ -1,5 +1,5 @@
 #include "game_map.h"
-#include "libxml++/libxml++.h"
+#include <libxml++/libxml++.h>
 #include "utils/logger.h"
 
 namespace bure {
