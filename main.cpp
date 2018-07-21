@@ -12,20 +12,20 @@
 
 bure::config bure::config::instance;
 
-void buildStartMenu(game* g) {
-  auto c = std::make_unique<bure::ui::container>(362, 309, 130, 60);
+void buildStartMenu(bure::ui_manager* ui, game* g) {
+  auto c = new bure::ui::container(362, 309, 130, 60);
   auto b = bure::ui::button("START GAME");
   b.set(20, 20, 90, 20);
-  b.function = [g](int) -> void {
+  b.function = [g, ui](int) -> void {
     g->changeMap("campo.tmx");
     g->getPlayer().setPosition(30, 36);
     g->playing = true;
-    // engine::uiManager->writing = false;
-    // engine::uiManager->closeContainer(0);
+    ui->writing = false;
+    ui->closeContainer(0);
   };
 
   c->add(b);
-  // engine::uiManager->addContainer(c);
+  ui->addContainer(c);
 }
 
 int main(int argc, char* argv[]) {
@@ -42,9 +42,10 @@ int main(int argc, char* argv[]) {
   auto gameInstance = std::make_unique<game>();
   auto gamePointer = gameInstance.get();
   auto eventManager = std::make_unique<bure::event_manager>();
+  auto uiManager = std::make_unique<bure::ui_manager>();
 
   // Init start menu
-  buildStartMenu(gameInstance.get());
+  buildStartMenu(uiManager.get(), gamePointer);
 
   // Register close callback
   eventManager->addEventCallback(bure::events::event_id::close,
@@ -62,7 +63,7 @@ int main(int argc, char* argv[]) {
       graphicsInstance->renderBackground();
     }
 
-    // graphicsInstance->draw(engine::uiManager);
+    graphicsInstance->draw(uiManager.get());
     graphicsInstance->flipBuffer();
 
     // manage events

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "graphics.h"
 #include "utils/logger.h"
 
@@ -265,376 +267,368 @@ void graphics::renderBackground() {
   SDL_RenderCopy(renderer, bgTexture, nullptr, nullptr);
 }
 
-// void graphics::draw(ui::ui_manager *i) {
-//   SDL_Rect dst, src;
-//
-//   int containerIndex, lb, ib, bon, img;
-//   for (containerIndex = 0; i->getContainer(containerIndex) != nullptr;
-//        containerIndex++) {
-//     if (i->getContainer(containerIndex)->visible) {
-//       // Globales para todo el contenedor
-//       src.w = 1;
-//       src.h = 26;
-//       src.y = 0;
-//
-//       // Fondo del contenedor
-//       dst.x = i->getContainer(containerIndex)->x;
-//       dst.y = i->getContainer(containerIndex)->y;
-//       dst.w = i->getContainer(containerIndex)->width;
-//       dst.h = i->getContainer(containerIndex)->height;
-//
-//       SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g,
-//                              backgroundColor.b, SDL_ALPHA_OPAQUE);
-//       SDL_RenderFillRect(renderer, &dst);
-//
-//       // Barras horizontales
-//       dst.w = 1;
-//       dst.h = 26;
-//
-//       src.x = 104;
-//       dst.y -= 12;
-//       dst.x--;
-//       for (int y = 0; y < i->getContainer(containerIndex)->width; y++) {
-//         dst.x++;
-//         SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//       }
-//
-//       dst.y += i->getContainer(containerIndex)->height;
-//       dst.x = i->getContainer(containerIndex)->x - 1;
-//       for (int y = 0; y < i->getContainer(containerIndex)->width; y++) {
-//         dst.x++;
-//         SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//       }
-//
-//       // Barras verticales
-//       src.x = 130;
-//       src.w = 26;
-//       src.h = 1;
-//
-//       dst.x = i->getContainer(containerIndex)->x - 11;
-//       dst.y = i->getContainer(containerIndex)->y;
-//       dst.h = 1;
-//       dst.w = 26;
-//
-//       for (int y = 0; y < i->getContainer(containerIndex)->height; y++) {
-//         dst.y++;
-//         SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//       }
-//
-//       dst.x += i->getContainer(containerIndex)->width - 4;
-//       dst.y = i->getContainer(containerIndex)->y;
-//       for (int y = 0; y < i->getContainer(containerIndex)->height; y++) {
-//         dst.y++;
-//         SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//       }
-//
-//       // Todas las esquinas
-//       src.w = 26;
-//       src.h = 26;
-//       dst.w = 26;
-//       dst.h = 26;
-//
-//       src.x = 0;
-//       src.y = 0;
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->width - 15;
-//       dst.y = i->getContainer(containerIndex)->y - 12;
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//
-//       src.x += 26;
-//       dst.x -= i->getContainer(containerIndex)->width - 4;
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//
-//       src.x += 26;
-//       dst.y += i->getContainer(containerIndex)->height;
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->width - 15;
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//
-//       src.x += 26;
-//       dst.x -= i->getContainer(containerIndex)->width - 4;
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//     }
-//
-//     // Labels
-//     for (lb = 0; i->getContainer(containerIndex)->get_label(lb) != nullptr;
-//          lb++) {
-//       if (i->getContainer(containerIndex)->get_label(lb)->get_size() !=
-//           this->fontSize) {
-//         this->openFont(
-//             i->getContainer(containerIndex)->get_label(lb)->get_size());
-//       }
-//
-//       SDL_Surface *textSurface = TTF_RenderText_Solid(
-//           font, i->getContainer(containerIndex)->get_label(lb)->get_text(),
-//           fontColor);
-//       SDL_Texture *textTexture =
-//           SDL_CreateTextureFromSurface(renderer, textSurface);
-//
-//       if (textSurface != nullptr) {
-//         dst.x = i->getContainer(containerIndex)->get_label(lb)->x +
-//                 i->getContainer(containerIndex)->x;
-//         dst.y = i->getContainer(containerIndex)->get_label(lb)->y +
-//                 i->getContainer(containerIndex)->y;
-//         dst.w = textSurface->w;
-//         dst.h = textSurface->h;
-//
-//         SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
-//         SDL_FreeSurface(textSurface);
-//         SDL_DestroyTexture(textTexture);
-//       }
-//     }
-//
-//     // InputBoxes
-//     for (ib = 0; i->getContainer(containerIndex)->get_input_box(ib)
-//  != nullptr;
-//          ++ib) {
-//       // Se dibuja el input box
-//       src.x = (i->getContainer(containerIndex)->get_input_box(ib)->focused &&
-//                i->getContainer(containerIndex)->focused && !i->blocked)
-//                   ? 1
-//                   : 3;
-//       src.y = 26;
-//       src.w = 1;
-//       src.h = 14;
-//
-//       dst.x = i->getContainer(containerIndex)->get_input_box(ib)->x +
-//               i->getContainer(containerIndex)->x;
-//       dst.y = i->getContainer(containerIndex)->get_input_box(ib)->y +
-//               i->getContainer(containerIndex)->y;
-//       dst.w = 1;
-//       dst.h = 14;
-//
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//       dst.x++;
-//       src.x--;
-//       for (int an = 0;
-//            an < i->getContainer(containerIndex)->get_
-// input_box(ib)->width - 2;
-//            an++) {
-//         SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//         dst.x++;
-//       }
-//       src.x++;
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//
-//       // La etiqueta del inputbox
-//       if (8 != this->fontSize) {
-//         this->openFont(8);
-//       }
-//
-//       SDL_Surface *titleSurface = TTF_RenderText_Solid(
-//           font, i->getContainer(containerIndex)->get
-// _input_box(ib)->get_title(),
-//           fontColor);
-//       SDL_Texture *titleTexture =
-//           SDL_CreateTextureFromSurface(renderer, titleSurface);
-//
-//       dst.x = i->getContainer(containerIndex)->get_input_box(ib)->x +
-//               i->getContainer(containerIndex)->x - titleSurface->w - 5;
-//       dst.y += 3;
-//       dst.w = titleSurface->w;
-//       dst.h = titleSurface->h;
-//
-//       SDL_RenderCopy(renderer, titleTexture, nullptr, &dst);
-//
-//       if (i->getContainer(containerIndex)
-//               ->get_input_box(ib)
-//               ->current_length() != 0) {
-//         SDL_Surface *textSurface = TTF_RenderText_Solid(
-//             font,
-//             i->getContainer(containerIndex)->get_input_box(ib)->get_text(),
-//             fontColor);
-//         dst.x += titleSurface->w + 10;
-//         dst.w =
-//             std::min(i->getContainer(containerIndex)->get_input_box(ib)->width,
-//                      textSurface->w);
-//
-//         SDL_Texture *textTexture =
-//             SDL_CreateTextureFromSurface(renderer, textSurface);
-//         SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
-//         SDL_DestroyTexture(textTexture);
-//         SDL_FreeSurface(textSurface);
-//       }
-//
-//       SDL_DestroyTexture(titleTexture);
-//       SDL_FreeSurface(titleSurface);
-//     }
-//
-//     // Botones
-//     for (bon = 0; i->getContainer(containerIndex)
-// ->get_button(bon) != nullptr;
-//          bon++) {
-//       if (i->getContainer(containerIndex)->get_button(bon)->press == 0)
-//         SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
-//       else
-//         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-//
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->get_button(bon)->x;
-//       dst.y = i->getContainer(containerIndex)->y +
-//               i->getContainer(containerIndex)->get_button(bon)->y;
-//       dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
-//       dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
-//
-//       SDL_RenderFillRect(renderer, &dst);
-//
-//       if (i->getContainer(containerIndex)->get_button(bon)->press == 0)
-//         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-//       else
-//         SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
-//
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->get_button(bon)->x;
-//       dst.y = i->getContainer(containerIndex)->y +
-//               i->getContainer(containerIndex)->get_button(bon)->y;
-//       dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
-//       dst.h = 1;
-//
-//       SDL_RenderFillRect(renderer, &dst);
-//
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->get_button(bon)->x;
-//       dst.y = i->getContainer(containerIndex)->y +
-//               i->getContainer(containerIndex)->get_button(bon)->y +
-//               i->getContainer(containerIndex)->get_button(bon)->height;
-//       dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
-//       dst.h = 1;
-//
-//       SDL_RenderFillRect(renderer, &dst);
-//
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->get_button(bon)->x;
-//       dst.y = i->getContainer(containerIndex)->y +
-//               i->getContainer(containerIndex)->get_button(bon)->y;
-//       dst.w = 1;
-//       dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
-//
-//       SDL_RenderFillRect(renderer, &dst);
-//
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->get_button(bon)->x +
-//               i->getContainer(containerIndex)->get_button(bon)->width;
-//       dst.y = i->getContainer(containerIndex)->y +
-//               i->getContainer(containerIndex)->get_button(bon)->y;
-//       dst.w = 1;
-//       dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
-//
-//       SDL_RenderFillRect(renderer, &dst);
-//
-//       // Dibujar la etiqueta
-//       if (this->fontSize != 8) this->openFont(8);
-//
-//       SDL_Surface *titlebSurface = TTF_RenderText_Solid(
-//           font, i->getContainer(containerIndex)
-// ->get_button(bon)->get_title(),
-//           fontColor);
-//       dst.y = i->getContainer(containerIndex)->y +
-//               i->getContainer(containerIndex)->get_button(bon)->y +
-//               (i->getContainer(containerIndex)
-// ->get_button(bon)->height / 2) -
-//               (titlebSurface->h / 2);
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->get_button(bon)->x +
-//               (i->getContainer(containerIndex)->get_button(bon)->width / 2) -
-//               (titlebSurface->w / 2);
-//       dst.w = titlebSurface->w;
-//       dst.h = titlebSurface->h;
-//
-//       SDL_Texture *titlebTexture =
-//           SDL_CreateTextureFromSurface(renderer, titlebSurface);
-//       SDL_RenderCopy(renderer, titlebTexture, nullptr, &dst);
-//       SDL_DestroyTexture(titlebTexture);
-//       SDL_FreeSurface(titlebSurface);
-//     }
-//
-//     // Imagenes
-//     for (img = 0; i->getContainer(containerIndex)->get_image(img) != nullptr;
-//          img++) {
-//       if (i->getContainer(containerIndex)->get_image(img)->img != nullptr) {
-//         dst.y = i->getContainer(containerIndex)->y +
-//                 i->getContainer(containerIndex)->get_image(img)->y;
-//         dst.x = i->getContainer(containerIndex)->x +
-//                 i->getContainer(containerIndex)->get_image(img)->x;
-//         dst.w = i->getContainer(containerIndex)->get_image(img)->img->w;
-//         dst.h = i->getContainer(containerIndex)->get_image(img)->img->h;
-//         // TODO: Fix this images thing
-//         // SDL_BlitSurface(i->getContainer(containerIndex)
-// ->getImagen(img)->img,
-//         // NULL, bbuffer, &dst);
-//       } else {
-//         logger::log((char *)"No hay imagen para dibujar...", 1);
-//       }
-//     }
-//
-//     // Selectores
-//     for (int sel = 0;
-//          i->getContainer(containerIndex)->
-// get_selector(sel) != nullptr; sel++) {
-//       src.x = 4;
-//       src.y = 26;
-//       src.w = 9;
-//       src.h = 14;
-//
-//       dst.x = i->getContainer(containerIndex)->x +
-//               i->getContainer(containerIndex)->get_selector(sel)->x;
-//       dst.y = i->getContainer(containerIndex)->y +
-//               i->getContainer(containerIndex)->get_selector(sel)->y;
-//       dst.w = 9;
-//       dst.h = 14;
-//
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//
-//       src.w = 1;
-//       dst.x += 12;
-//       dst.w = 1;
-//       src.x = 1;
-//
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//
-//       dst.x++;
-//       src.x--;
-//
-//       if (8 != this->fontSize) this->openFont(8);
-//       SDL_Surface *seleccionado =
-//           TTF_RenderText_Solid(font,
-//                                i->getContainer(containerIndex)
-//                                    ->get_selector(sel)
-//                                    ->get_selected()
-//                                    .c_str(),
-//                                fontColor);
-//       i->getContainer(containerIndex)->get_selector(sel)->width =
-//           seleccionado->w + 8;
-//
-//       for (int an = 0; an < seleccionado->w + 8; an++) {
-//         SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//         dst.x++;
-//       }
-//
-//       src.x++;
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//
-//       dst.w = 9;
-//       dst.x += 4;
-//       src.x = 13;
-//       src.w = 9;
-//
-//       SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-//
-//       dst.x -= 8 + seleccionado->w;
-//       dst.y += 3;
-//       dst.w = seleccionado->w;
-//       dst.h = seleccionado->h;
-//
-//       SDL_Texture *seleccionadoTexture =
-//           SDL_CreateTextureFromSurface(renderer, seleccionado);
-//       SDL_RenderCopy(renderer, seleccionadoTexture, nullptr, &dst);
-//
-//       SDL_DestroyTexture(seleccionadoTexture);
-//       SDL_FreeSurface(seleccionado);
-//     }
-//   }
-// }
+void graphics::draw(ui_manager *i) {
+  SDL_Rect dst, src;
+
+  int containerIndex, lb, ib, bon, img;
+  for (containerIndex = 0; i->getContainer(containerIndex) != nullptr;
+       containerIndex++) {
+    if (i->getContainer(containerIndex)->visible) {
+      // Globales para todo el contenedor
+      src.w = 1;
+      src.h = 26;
+      src.y = 0;
+
+      // Fondo del contenedor
+      dst.x = i->getContainer(containerIndex)->x;
+      dst.y = i->getContainer(containerIndex)->y;
+      dst.w = i->getContainer(containerIndex)->width;
+      dst.h = i->getContainer(containerIndex)->height;
+
+      SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g,
+                             backgroundColor.b, SDL_ALPHA_OPAQUE);
+      SDL_RenderFillRect(renderer, &dst);
+
+      // Barras horizontales
+      dst.w = 1;
+      dst.h = 26;
+
+      src.x = 104;
+      dst.y -= 12;
+      dst.x--;
+      for (int y = 0; y < i->getContainer(containerIndex)->width; y++) {
+        dst.x++;
+        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+      }
+
+      dst.y += i->getContainer(containerIndex)->height;
+      dst.x = i->getContainer(containerIndex)->x - 1;
+      for (int y = 0; y < i->getContainer(containerIndex)->width; y++) {
+        dst.x++;
+        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+      }
+
+      // Barras verticales
+      src.x = 130;
+      src.w = 26;
+      src.h = 1;
+
+      dst.x = i->getContainer(containerIndex)->x - 11;
+      dst.y = i->getContainer(containerIndex)->y;
+      dst.h = 1;
+      dst.w = 26;
+
+      for (int y = 0; y < i->getContainer(containerIndex)->height; y++) {
+        dst.y++;
+        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+      }
+
+      dst.x += i->getContainer(containerIndex)->width - 4;
+      dst.y = i->getContainer(containerIndex)->y;
+      for (int y = 0; y < i->getContainer(containerIndex)->height; y++) {
+        dst.y++;
+        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+      }
+
+      // Todas las esquinas
+      src.w = 26;
+      src.h = 26;
+      dst.w = 26;
+      dst.h = 26;
+
+      src.x = 0;
+      src.y = 0;
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->width - 15;
+      dst.y = i->getContainer(containerIndex)->y - 12;
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+
+      src.x += 26;
+      dst.x -= i->getContainer(containerIndex)->width - 4;
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+
+      src.x += 26;
+      dst.y += i->getContainer(containerIndex)->height;
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->width - 15;
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+
+      src.x += 26;
+      dst.x -= i->getContainer(containerIndex)->width - 4;
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+    }
+
+    // Labels
+    for (lb = 0; i->getContainer(containerIndex)->get_label(lb) != nullptr;
+         lb++) {
+      if (i->getContainer(containerIndex)->get_label(lb)->get_size() !=
+          this->fontSize) {
+        this->openFont(
+            i->getContainer(containerIndex)->get_label(lb)->get_size());
+      }
+
+      SDL_Surface *textSurface = TTF_RenderText_Solid(
+          font, i->getContainer(containerIndex)->get_label(lb)->get_text(),
+          fontColor);
+      SDL_Texture *textTexture =
+          SDL_CreateTextureFromSurface(renderer, textSurface);
+
+      if (textSurface != nullptr) {
+        dst.x = i->getContainer(containerIndex)->get_label(lb)->x +
+                i->getContainer(containerIndex)->x;
+        dst.y = i->getContainer(containerIndex)->get_label(lb)->y +
+                i->getContainer(containerIndex)->y;
+        dst.w = textSurface->w;
+        dst.h = textSurface->h;
+
+        SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
+        SDL_FreeSurface(textSurface);
+        SDL_DestroyTexture(textTexture);
+      }
+    }
+
+    // InputBoxes
+    for (ib = 0; i->getContainer(containerIndex)->get_input_box(ib) != nullptr;
+         ++ib) {
+      // Se dibuja el input box
+      src.x = (i->getContainer(containerIndex)->get_input_box(ib)->focused &&
+               i->getContainer(containerIndex)->focused && !i->blocked)
+                  ? 1
+                  : 3;
+      src.y = 26;
+      src.w = 1;
+      src.h = 14;
+
+      dst.x = i->getContainer(containerIndex)->get_input_box(ib)->x +
+              i->getContainer(containerIndex)->x;
+      dst.y = i->getContainer(containerIndex)->get_input_box(ib)->y +
+              i->getContainer(containerIndex)->y;
+      dst.w = 1;
+      dst.h = 14;
+
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+      dst.x++;
+      src.x--;
+      for (int an = 0;
+           an < i->getContainer(containerIndex)->get_input_box(ib)->width - 2;
+           an++) {
+        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+        dst.x++;
+      }
+      src.x++;
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+
+      // La etiqueta del inputbox
+      if (8 != this->fontSize) {
+        this->openFont(8);
+      }
+
+      SDL_Surface *titleSurface = TTF_RenderText_Solid(
+          font, i->getContainer(containerIndex)->get_input_box(ib)->get_title(),
+          fontColor);
+      SDL_Texture *titleTexture =
+          SDL_CreateTextureFromSurface(renderer, titleSurface);
+
+      dst.x = i->getContainer(containerIndex)->get_input_box(ib)->x +
+              i->getContainer(containerIndex)->x - titleSurface->w - 5;
+      dst.y += 3;
+      dst.w = titleSurface->w;
+      dst.h = titleSurface->h;
+
+      SDL_RenderCopy(renderer, titleTexture, nullptr, &dst);
+
+      if (i->getContainer(containerIndex)
+              ->get_input_box(ib)
+              ->current_length() != 0) {
+        SDL_Surface *textSurface = TTF_RenderText_Solid(
+            font,
+            i->getContainer(containerIndex)->get_input_box(ib)->get_text(),
+            fontColor);
+        dst.x += titleSurface->w + 10;
+        dst.w =
+            std::min(i->getContainer(containerIndex)->get_input_box(ib)->width,
+                     textSurface->w);
+
+        SDL_Texture *textTexture =
+            SDL_CreateTextureFromSurface(renderer, textSurface);
+        SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
+        SDL_DestroyTexture(textTexture);
+        SDL_FreeSurface(textSurface);
+      }
+
+      SDL_DestroyTexture(titleTexture);
+      SDL_FreeSurface(titleSurface);
+    }
+
+    // Botones
+    for (bon = 0; i->getContainer(containerIndex)->get_button(bon) != nullptr;
+         bon++) {
+      if (i->getContainer(containerIndex)->get_button(bon)->press == 0)
+        SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
+      else
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->get_button(bon)->x;
+      dst.y = i->getContainer(containerIndex)->y +
+              i->getContainer(containerIndex)->get_button(bon)->y;
+      dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
+      dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
+
+      SDL_RenderFillRect(renderer, &dst);
+
+      if (i->getContainer(containerIndex)->get_button(bon)->press == 0)
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+      else
+        SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
+
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->get_button(bon)->x;
+      dst.y = i->getContainer(containerIndex)->y +
+              i->getContainer(containerIndex)->get_button(bon)->y;
+      dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
+      dst.h = 1;
+
+      SDL_RenderFillRect(renderer, &dst);
+
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->get_button(bon)->x;
+      dst.y = i->getContainer(containerIndex)->y +
+              i->getContainer(containerIndex)->get_button(bon)->y +
+              i->getContainer(containerIndex)->get_button(bon)->height;
+      dst.w = i->getContainer(containerIndex)->get_button(bon)->width;
+      dst.h = 1;
+
+      SDL_RenderFillRect(renderer, &dst);
+
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->get_button(bon)->x;
+      dst.y = i->getContainer(containerIndex)->y +
+              i->getContainer(containerIndex)->get_button(bon)->y;
+      dst.w = 1;
+      dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
+
+      SDL_RenderFillRect(renderer, &dst);
+
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->get_button(bon)->x +
+              i->getContainer(containerIndex)->get_button(bon)->width;
+      dst.y = i->getContainer(containerIndex)->y +
+              i->getContainer(containerIndex)->get_button(bon)->y;
+      dst.w = 1;
+      dst.h = i->getContainer(containerIndex)->get_button(bon)->height;
+
+      SDL_RenderFillRect(renderer, &dst);
+
+      // Dibujar la etiqueta
+      if (this->fontSize != 8) this->openFont(8);
+
+      SDL_Surface *titlebSurface = TTF_RenderText_Solid(
+          font, i->getContainer(containerIndex)->get_button(bon)->get_title(),
+          fontColor);
+      dst.y = i->getContainer(containerIndex)->y +
+              i->getContainer(containerIndex)->get_button(bon)->y +
+              (i->getContainer(containerIndex)->get_button(bon)->height / 2) -
+              (titlebSurface->h / 2);
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->get_button(bon)->x +
+              (i->getContainer(containerIndex)->get_button(bon)->width / 2) -
+              (titlebSurface->w / 2);
+      dst.w = titlebSurface->w;
+      dst.h = titlebSurface->h;
+
+      SDL_Texture *titlebTexture =
+          SDL_CreateTextureFromSurface(renderer, titlebSurface);
+      SDL_RenderCopy(renderer, titlebTexture, nullptr, &dst);
+      SDL_DestroyTexture(titlebTexture);
+      SDL_FreeSurface(titlebSurface);
+    }
+
+    // Imagenes
+    for (img = 0; i->getContainer(containerIndex)->get_image(img) != nullptr;
+         img++) {
+      if (i->getContainer(containerIndex)->get_image(img)->img != nullptr) {
+        dst.y = i->getContainer(containerIndex)->y +
+                i->getContainer(containerIndex)->get_image(img)->y;
+        dst.x = i->getContainer(containerIndex)->x +
+                i->getContainer(containerIndex)->get_image(img)->x;
+        dst.w = i->getContainer(containerIndex)->get_image(img)->img->w;
+        dst.h = i->getContainer(containerIndex)->get_image(img)->img->h;
+        // TODO(carlos): Fix this images thing
+        // SDL_BlitSurface(i->getContainer(containerIndex)->getImagen(img)->img,
+        // NULL, bbuffer, &dst);
+      } else {
+        logger::error("no image to draw");
+      }
+    }
+
+    // Selectores
+    for (int sel = 0;
+         i->getContainer(containerIndex)->get_selector(sel) != nullptr; sel++) {
+      src.x = 4;
+      src.y = 26;
+      src.w = 9;
+      src.h = 14;
+
+      dst.x = i->getContainer(containerIndex)->x +
+              i->getContainer(containerIndex)->get_selector(sel)->x;
+      dst.y = i->getContainer(containerIndex)->y +
+              i->getContainer(containerIndex)->get_selector(sel)->y;
+      dst.w = 9;
+      dst.h = 14;
+
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+
+      src.w = 1;
+      dst.x += 12;
+      dst.w = 1;
+      src.x = 1;
+
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+
+      dst.x++;
+      src.x--;
+
+      if (8 != this->fontSize) this->openFont(8);
+      SDL_Surface *seleccionado =
+          TTF_RenderText_Solid(font,
+                               i->getContainer(containerIndex)
+                                   ->get_selector(sel)
+                                   ->get_selected()
+                                   .c_str(),
+                               fontColor);
+      i->getContainer(containerIndex)->get_selector(sel)->width =
+          seleccionado->w + 8;
+
+      for (int an = 0; an < seleccionado->w + 8; an++) {
+        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+        dst.x++;
+      }
+
+      src.x++;
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+
+      dst.w = 9;
+      dst.x += 4;
+      src.x = 13;
+      src.w = 9;
+
+      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+
+      dst.x -= 8 + seleccionado->w;
+      dst.y += 3;
+      dst.w = seleccionado->w;
+      dst.h = seleccionado->h;
+
+      SDL_Texture *seleccionadoTexture =
+          SDL_CreateTextureFromSurface(renderer, seleccionado);
+      SDL_RenderCopy(renderer, seleccionadoTexture, nullptr, &dst);
+
+      SDL_DestroyTexture(seleccionadoTexture);
+      SDL_FreeSurface(seleccionado);
+    }
+  }
+}
 
 // void graphics::draw(player &p) {
 //   int tilexinic = p.x - 16;

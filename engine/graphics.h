@@ -20,7 +20,7 @@ class graphics {
   // void draw(int tile, int x, int y, int h, int v, bool fullLayer, bool layer)
   // todo: no reason these are not const
   // void draw(game_map *m, const player &p, bool layer);
-  // void draw(ui_manager *i);
+  void draw(ui_manager *i);
   // todo: no reason these are not const
   // void draw(const player &p);
 

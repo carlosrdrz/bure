@@ -12,7 +12,6 @@ namespace bure {
 class ui_manager {
  public:
   ui_manager();
-
   ~ui_manager();
 
   bool writing;
