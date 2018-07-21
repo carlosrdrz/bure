@@ -5,6 +5,7 @@
 #include <list>
 #include <map>
 #include <memory>
+
 #include "SDL.h"
 #include "events/event.h"
 

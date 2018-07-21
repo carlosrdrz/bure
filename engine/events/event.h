@@ -1,9 +1,9 @@
-# pragma once
+#pragma once
 
 namespace bure {
 namespace events {
 
-using event_id = std::string;
+enum event_id { close, keyboard };
 
 class event {
  public:
