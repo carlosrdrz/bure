@@ -10,7 +10,7 @@ graphics::graphics(std::string basePath) : basePath(basePath) {
 
   // Init SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    logger::log(SDL_GetError(), 3);
+    logger::error(SDL_GetError());
   }
 
   // Init video at 1024x768
@@ -25,27 +25,27 @@ graphics::graphics(std::string basePath) : basePath(basePath) {
 
   // Load the file tiles
   tilesSurface = IMG_Load((basePath + "data/tiles.png").c_str());
-  if (tilesSurface == nullptr) logger::log(SDL_GetError(), 2);
+  if (tilesSurface == nullptr) logger::error(SDL_GetError());
   tilesTexture = SDL_CreateTextureFromSurface(renderer, tilesSurface);
 
   playersSurface = IMG_Load((basePath + "data/personajes.png").c_str());
-  if (playersSurface == nullptr) logger::log(SDL_GetError(), 2);
+  if (playersSurface == nullptr) logger::error(SDL_GetError());
   playersTexture = SDL_CreateTextureFromSurface(renderer, playersSurface);
 
   elementsSurface = IMG_Load((basePath + "data/elements.png").c_str());
-  if (elementsSurface == nullptr) logger::log(SDL_GetError(), 2);
+  if (elementsSurface == nullptr) logger::error(SDL_GetError());
   elementsTexture = SDL_CreateTextureFromSurface(renderer, elementsSurface);
 
   uiImagesSurface = IMG_Load((basePath + "data/gui.png").c_str());
-  if (uiImagesSurface == nullptr) logger::log(SDL_GetError(), 2);
+  if (uiImagesSurface == nullptr) logger::error(SDL_GetError());
   uiImagesTexture = SDL_CreateTextureFromSurface(renderer, uiImagesSurface);
   SDL_SetTextureBlendMode(uiImagesTexture, SDL_BLENDMODE_BLEND);
 
   // Init SDL_ttf and load font
-  if (TTF_Init() < 0) logger::log(SDL_GetError(), 2);
+  if (TTF_Init() < 0) logger::error(SDL_GetError());
 
   font = TTF_OpenFont((basePath + "data/pixel_font.ttf").c_str(), 16);
-  if (!font) logger::log(TTF_GetError(), 2);
+  if (!font) logger::error(TTF_GetError());
 
   fontSize = 16;
 
@@ -58,7 +58,7 @@ graphics::graphics(std::string basePath) : basePath(basePath) {
 
   // Load background
   bgSurface = IMG_Load((basePath + "data/background.jpg").c_str());
-  if (bgSurface == nullptr) logger::log(SDL_GetError(), 2);
+  if (bgSurface == nullptr) logger::error(SDL_GetError());
   bgTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
 }
 
@@ -677,7 +677,7 @@ void graphics::openFont(int size) {
   TTF_CloseFont(font);
   font = TTF_OpenFont((basePath + "data/pixel_font.ttf").c_str(), size);
   if (!font) {
-    logger::log(TTF_GetError(), 2);
+    logger::error(TTF_GetError());
   }
   this->fontSize = size;
 }

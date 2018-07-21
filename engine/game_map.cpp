@@ -12,7 +12,7 @@ game_map::game_map(std::string basePath, std::string archivo) {
   xmlpp::DomParser parser;
   parser.parse_file(basePath + "/maps/" + archivo);
 
-  if (!parser) logger::log("Could not load map " + archivo, 2);
+  if (!parser) logger::error("could not load map %s", archivo.c_str());
 
   // Get the root element
   const auto rootNode = parser.get_document()->get_root_node();

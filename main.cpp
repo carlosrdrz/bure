@@ -49,7 +49,6 @@ int main(int argc, char* argv[]) {
   // Register close callback
   eventManager->addEventCallback(bure::events::event_id::close,
                                  [gamePointer](const bure::events::event& e) {
-                                   std::cout << "finishing game" << std::endl;
                                    gamePointer->finishGame();
                                  });
 

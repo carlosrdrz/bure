@@ -1,40 +1,44 @@
 #include "logger.h"
 
-#include <time.h>
-#include <fstream>
+#include <stdio.h>
+#include <ctime>
+#include <cstdarg>
+#include <iomanip>
+#include <iostream>
 
 namespace bure {
 
-void logger::log(std::string error, int import) {
-  std::ofstream salida("errores.txt", std::ios_base::app);
+void logger::log(level l, std::string format, va_list args) {
+  auto t = std::time(nullptr);
+  auto tm = *std::localtime(&t);
 
-  time_t fecha_hora;
-  time(&fecha_hora);
+  std::cout << "[" << std::put_time(&tm, "%F %T") << "]";
 
-  char buf[50];
-  ctime_r(&fecha_hora, buf);
-  salida << buf;
-  salida << " - ";
-
-  switch (import) {
-    case 0:
-      salida << "debug: ";
+  switch (l) {
+    case level::debug:
+      std::cout << " [DEBUG] ";
       break;
-    case 1:
-      salida << "warn: ";
-      break;
-    case 2:
-      salida << "error: ";
-      break;
-    case 3:
-      salida << "critical: ";
+    case level::error:
+      std::cout << " [ERROR] ";
       break;
   }
 
-  salida << error;
-  salida << "\n";
+  vfprintf(stdout, format.c_str(), args);
+  std::cout << std::endl;
+}
 
-  salida.close();
+void logger::debug(std::string format...) {
+  va_list args;
+  va_start(args, format);
+  log(level::debug, format, args);
+  va_end(args);
+}
+
+void logger::error(std::string format...) {
+  va_list args;
+  va_start(args, format);
+  log(level::error, format, args);
+  va_end(args);
 }
 
 }  // namespace bure

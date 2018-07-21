@@ -1,5 +1,6 @@
 #include "event_manager.h"
 #include "events/event_close.h"
+#include "utils/logger.h"
 
 namespace bure {
 
@@ -9,7 +10,6 @@ void event_manager::pollEvent() {
   while (SDL_PollEvent(&lastEvent)) {
     switch (lastEvent.type) {
       case SDL_QUIT:
-        std::cout << "just got sdl quit signal" << std::endl;
         events::event_close ec;
         processEvent(ec);
         break;
@@ -18,10 +18,22 @@ void event_manager::pollEvent() {
 }
 
 void event_manager::processEvent(const events::event& e) {
-  std::cout << "processing event id " << e.getID() << std::endl;
-  for (auto func : _eventCallbacks[e.getID()]) {
-    func(e);
+  logger::debug("processing event id %d", e.getID());
+  for (auto it : _eventCallbacks[e.getID()]) {
+    it.second(e);
   }
+}
+
+callback_handler event_manager::addEventCallback(
+    events::event_id event_id, std::function<void(const events::event&)> fun) {
+  logger::debug("adding callback for event id %d", event_id);
+  _eventCallbacks[event_id][++lastCallbackHandler] = fun;
+  return lastCallbackHandler;
+}
+
+void event_manager::removeEventCallback(events::event_id event_id,
+                                        callback_handler ch) {
+  _eventCallbacks[event_id].erase(ch);
 }
 
 // void event_manager::process_event(game& game) {

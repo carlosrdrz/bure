@@ -9,11 +9,12 @@ void config::readFile(std::string path) {
     return;
   }
 
+  auto configPath = path + "data/config.xml";
   xmlpp::DomParser parser;
-  parser.parse_file(path + "data/config.xml");
+  parser.parse_file(configPath);
 
   if (!parser) {
-    logger::log("Could not load config file", 3);
+    logger::error("could not load config file %s", configPath.c_str());
     return;
   }
 
