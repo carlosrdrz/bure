@@ -2,7 +2,6 @@
 
 #include "engine/engine.h"
 #include "engine/event_manager.h"
-#include "engine/events/event_close.h"
 #include "engine/graphics.h"
 #include "engine/utils/config.h"
 #include "game.h"
@@ -11,9 +10,9 @@ bure::config bure::config::instance;
 
 void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
   auto c = std::make_unique<bure::ui::container>(362, 309, 130, 60);
-  auto b = bure::ui::button("START GAME");
-  b.set(20, 20, 90, 20);
-  b.function = [g, ui](int) -> void {
+  auto b = std::make_unique<bure::ui::button>("START GAME");
+  b->set(20, 20, 90, 20);
+  b->function = [g, ui](int) -> void {
     g->changeMap("campo.tmx");
     g->getPlayer().setPosition(30, 36);
     g->playing = true;
@@ -21,7 +20,7 @@ void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
     ui->closeContainer(0);
   };
 
-  c->add(b);
+  c->add(std::move(b));
   ui->addContainer(std::move(c));
 }
 
@@ -45,10 +44,8 @@ int main(int argc, char* argv[]) {
   buildStartMenu(uiManager.get(), gamePointer);
 
   // Register close callback
-  eventManager->addEventCallback(bure::events::event_id::close,
-                                 [gamePointer](const bure::events::event& e) {
-                                   gamePointer->finishGame();
-                                 });
+  eventManager->addEventCallback(
+      SDL_QUIT, [gamePointer](SDL_Event e) { gamePointer->finishGame(); });
 
   // Main game loop
   while (!gameInstance->finished) {

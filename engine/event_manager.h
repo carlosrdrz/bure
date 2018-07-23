@@ -1,13 +1,10 @@
 #pragma once
 
 #include <functional>
-#include <iostream>
-#include <list>
 #include <memory>
 #include <unordered_map>
 
 #include "SDL.h"
-#include "events/event.h"
 
 namespace bure {
 
@@ -15,12 +12,13 @@ typedef uint_fast64_t callback_handler;
 
 class event_manager {
  public:
-  callback_handler addEventCallback(events::event_id event_id,
-                        std::function<void(const events::event&)> fun);
-  void removeEventCallback(events::event_id event_id, callback_handler ch);
+  event_manager();
+
+  callback_handler addEventCallback(SDL_EventType event_id,
+                        std::function<void(SDL_Event e)> fun);
+  void removeEventCallback(SDL_EventType event_id, callback_handler ch);
 
   void pollEvent();
-  void processEvent(const events::event& e);
 
   static event_manager& get() {
     if (_instance == nullptr) {
@@ -34,9 +32,9 @@ class event_manager {
   static event_manager* _instance;
 
   std::unordered_map<
-      events::event_id,
+      SDL_EventType,
       std::unordered_map<callback_handler,
-                         std::function<void(const events::event&)>>>
+                         std::function<void(SDL_Event e)>>>
       _eventCallbacks;
 
   SDL_Event lastEvent;

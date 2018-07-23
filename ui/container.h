@@ -1,6 +1,7 @@
 #pragma once
 
-#include <list>
+#include <vector>
+#include <memory>
 
 #include "button.h"
 #include "image.h"
@@ -23,11 +24,11 @@ class container : public widget {
   container(int x, int y, int w, int h);
   ~container();
 
-  void add(label w);
-  void add(input_box w);
-  void add(button w);
-  void add(image w);
-  void add(selector w);
+  void add(std::unique_ptr<label> w);
+  void add(std::unique_ptr<input_box> w);
+  void add(std::unique_ptr<button> w);
+  void add(std::unique_ptr<image> w);
+  void add(std::unique_ptr<selector> w);
 
   input_box* get_input_box(int ib);
   label* get_label(int lb);
@@ -42,11 +43,11 @@ class container : public widget {
   button* getButtonFocused() { return buttonOnFocus; }
 
  private:
-  std::list<label> labels;
-  std::list<input_box> inputBoxes;
-  std::list<button> buttons;
-  std::list<image> images;
-  std::list<selector> selectors;
+  std::vector<std::unique_ptr<label>> labels;
+  std::vector<std::unique_ptr<input_box>> inputBoxes;
+  std::vector<std::unique_ptr<button>> buttons;
+  std::vector<std::unique_ptr<image>> images;
+  std::vector<std::unique_ptr<selector>> selectors;
 
   input_box* inputBoxOnFocus = nullptr;
   button* buttonOnFocus = nullptr;
