@@ -7,6 +7,8 @@
 #include "container.h"
 #include "input_box.h"
 #include "selector.h"
+#include "../engine/event_manager.h"
+#include "../engine/utils/logger.h"
 
 namespace bure {
 namespace ui {
@@ -53,6 +55,8 @@ class ui_manager {
   container* containerOnFocus;
 
   void updateIndex();
+  void onClickDown(SDL_Event e);
+  void onClickUp(SDL_Event e);
 };
 
 }  // namespace ui

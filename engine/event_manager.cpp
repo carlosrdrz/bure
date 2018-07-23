@@ -3,6 +3,8 @@
 
 namespace bure {
 
+event_manager* event_manager::_instance;
+
 event_manager::event_manager() {
   SDL_SetEventFilter([](void *userdata, SDL_Event *e) {
     switch (e->type) {
@@ -47,60 +49,6 @@ void event_manager::removeEventCallback(SDL_EventType event_type,
 //   int y = lastEvent.button.y / 2;
 //
 //   switch (lastEvent.type) {
-//     case SDL_QUIT:
-//       game.finishGame();
-//       break;
-//   }
-//        case SDL_MOUSEBUTTONDOWN:
-//            if (!_ui.blocked && _ui.writing) {
-//                if (lastEvent.button.button == SDL_BUTTON_LEFT) {
-//                    if (_ui.clickOnContainer(x, y)) {
-//                        auto container = _ui.getContainerClicked(x, y);
-//
-//                        if (!container->focused)
-//                            _ui.changeContainerFocus(container->index);
-//                    }
-//
-//                    if (_ui.clickOnInputBox(x, y)) {
-//                        _ui.changeInputBoxFocus(_ui.getInputBoxClicked(x,
-//                        y)->index);
-//                    } else if (_ui.clickOnButton(x, y)) {
-//                        _ui.changeButtonFocus(_ui.getButtonClicked(x,
-//                        y)->index); _ui.getButtonFocused()->press = 1;
-//                        _ui.getContainerClicked(x, y)->buttonPressed = true;
-//                    } else if (_ui.clickOnSelector(x, y)) {
-//                        if (x > (_ui.getContainerFocused()->x +
-//                        _ui.getSelectorClicked(x, y)->x) &&
-//                            x < (_ui.getContainerFocused()->x
-//                                 + _ui.getSelectorClicked(x, y)->x + 9) &&
-//                            y > (_ui.getContainerFocused()->y +
-//                            _ui.getSelectorClicked(x, y)->y)
-//                            && y < (_ui.getContainerFocused()->y +
-//                            _ui.getSelectorClicked(x, y)->y + 14)) {
-//                            _ui.getSelectorClicked(x, y)->previous();
-//                        } else {
-//                            _ui.getSelectorClicked(x, y)->next();
-//                        }
-//                    }
-//                }
-//            }
-//            break;
-//
-//        case SDL_MOUSEBUTTONUP:
-//            if (!_ui.blocked && _ui.writing && _ui.getContainerFocused() !=
-//            nullptr) {
-//                if (_ui.getContainerFocused()->buttonPressed) {
-//                    _ui.getButtonFocused()->press = 0;
-//                    _ui.getContainerFocused()->buttonPressed = false;
-//                    if (_ui.clickOnButton(x, y)) {
-//                        if (_ui.getButtonClicked(x, y) ==
-//                        _ui.getButtonFocused())
-//                            _ui.execButton(_ui.getButtonClicked(x, y));
-//                    }
-//                }
-//            }
-//            break;
-//
 //        case SDL_KEYDOWN:
 //            if (!_ui.blocked) {
 //                if (lastEvent.key.keysym.sym == SDLK_ESCAPE) {
@@ -196,11 +144,5 @@ void event_manager::removeEventCallback(SDL_EventType event_type,
 //            break;
 //    }
 //}
-
-// template <class T>
-// void event_manager::addEventCallback(std::function<void(T)> callback) {
-//   auto id = T::EVENT_ID;
-//   _eventCallbacks[id].push_back(callback);
-// }
 
 }  // namespace bure

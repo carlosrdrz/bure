@@ -4,6 +4,7 @@
 #include "engine/event_manager.h"
 #include "engine/graphics.h"
 #include "engine/utils/config.h"
+#include "engine/utils/logger.h"
 #include "game.h"
 
 bure::config bure::config::instance;
@@ -13,6 +14,7 @@ void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
   auto b = std::make_unique<bure::ui::button>("START GAME");
   b->set(20, 20, 90, 20);
   b->function = [g, ui](int) -> void {
+    bure::logger::debug("button function being called");
     g->changeMap("campo.tmx");
     g->getPlayer().setPosition(30, 36);
     g->playing = true;
@@ -37,14 +39,13 @@ int main(int argc, char* argv[]) {
   auto graphicsInstance = std::make_unique<bure::graphics>(resourcesPath);
   auto gameInstance = std::make_unique<game>();
   auto gamePointer = gameInstance.get();
-  auto eventManager = std::make_unique<bure::event_manager>();
   auto uiManager = std::make_unique<bure::ui::ui_manager>();
 
   // Init start menu
   buildStartMenu(uiManager.get(), gamePointer);
 
   // Register close callback
-  eventManager->addEventCallback(
+  bure::event_manager::get().addEventCallback(
       SDL_QUIT, [gamePointer](SDL_Event e) { gamePointer->finishGame(); });
 
   // Main game loop
@@ -61,7 +62,7 @@ int main(int argc, char* argv[]) {
     graphicsInstance->flipBuffer();
 
     // manage events
-    eventManager->pollEvent();
+    bure::event_manager::get().pollEvent();
     SDL_Delay(10);
   }
 

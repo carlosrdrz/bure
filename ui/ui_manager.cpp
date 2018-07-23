@@ -1,4 +1,8 @@
+#include <functional>
+
 #include "ui_manager.h"
+
+using namespace std::placeholders;
 
 namespace bure {
 namespace ui {
@@ -6,6 +10,11 @@ namespace ui {
 ui_manager::ui_manager() {
   writing = true;
   blocked = false;
+
+  bure::event_manager::get().addEventCallback(
+      SDL_MOUSEBUTTONDOWN, std::bind(&ui_manager::onClickDown, this, _1));
+  bure::event_manager::get().addEventCallback(
+      SDL_MOUSEBUTTONUP, std::bind(&ui_manager::onClickUp, this, _1));
 }
 
 ui_manager::~ui_manager() { _containers.clear(); }
@@ -62,7 +71,7 @@ void ui_manager::updateIndex() {
   // }
 }
 
-container *ui_manager::getContainer(int cont) {
+container* ui_manager::getContainer(int cont) {
   if (cont > static_cast<int>(_containers.size()) - 1) return nullptr;
 
   for (auto&& c : _containers) {
@@ -74,7 +83,7 @@ container *ui_manager::getContainer(int cont) {
   return nullptr;
 }
 
-bool ui_manager::containerExists(container *p) {
+bool ui_manager::containerExists(container* p) {
   bool res = false;
 
   if (nullptr != p) {
@@ -128,8 +137,8 @@ button* ui_manager::getButtonFocused() {
 bool ui_manager::clickOnContainer(int x, int y) {
   if (static_cast<int>(_containers.size()) > 0) {
     for (auto&& c : _containers) {
-      if (x > c->x && x < (c->x + c->width) &&
-          y > c->y && y < (c->y + c->height)) {
+      if (x > c->x && x < (c->x + c->width) && y > c->y &&
+          y < (c->y + c->height)) {
         return true;
       }
     }
@@ -226,7 +235,7 @@ container* ui_manager::getContainerClicked(int x, int y) {
 
 input_box* ui_manager::getInputBoxClicked(int x, int y) {
   int z;
-  input_box *toreturn = NULL;
+  input_box* toreturn = NULL;
   for (z = 0; getContainerFocused()->get_input_box(z) != NULL; ++z) {
     if (x > (getContainerFocused()->x +
              getContainerFocused()->get_input_box(z)->x) &&
@@ -244,9 +253,9 @@ input_box* ui_manager::getInputBoxClicked(int x, int y) {
   return toreturn;
 }
 
-button *ui_manager::getButtonClicked(int x, int y) {
+button* ui_manager::getButtonClicked(int x, int y) {
   int z;
-  button *toreturn = NULL;
+  button* toreturn = NULL;
   for (z = 0; getContainerFocused()->get_button(z) != NULL; ++z) {
     if (x > (getContainerFocused()->x +
              getContainerFocused()->get_button(z)->x) &&
@@ -264,9 +273,9 @@ button *ui_manager::getButtonClicked(int x, int y) {
   return toreturn;
 }
 
-selector *ui_manager::getSelectorClicked(int x, int y) {
+selector* ui_manager::getSelectorClicked(int x, int y) {
   int z;
-  selector *toreturn = NULL;
+  selector* toreturn = NULL;
   for (z = 0; getContainerFocused()->get_selector(z) != NULL; ++z) {
     if ((x > (getContainerFocused()->x +
               getContainerFocused()->get_selector(z)->x) &&
@@ -295,8 +304,56 @@ selector *ui_manager::getSelectorClicked(int x, int y) {
 //////////////////////////
 // ACCIONES DE LOS BOTONES
 //////////////////////////
-void ui_manager::execButton(button *button) {
+void ui_manager::execButton(button* button) {
+  logger::debug("clicked in button!");
   button->function(button->parameter);
+}
+
+void ui_manager::onClickDown(SDL_Event e) {
+  int x = e.button.x / 2;
+  int y = e.button.y / 2;
+
+  if (!blocked && writing) {
+    if (e.button.button == SDL_BUTTON_LEFT) {
+      if (clickOnContainer(x, y)) {
+        auto container = getContainerClicked(x, y);
+        if (!container->focused) changeContainerFocus(container->index);
+      }
+
+      if (clickOnInputBox(x, y)) {
+        changeInputBoxFocus(getInputBoxClicked(x, y)->index);
+      } else if (clickOnButton(x, y)) {
+        changeButtonFocus(getButtonClicked(x, y)->index);
+        getButtonFocused()->press = 1;
+        getContainerClicked(x, y)->buttonPressed = true;
+      } else if (clickOnSelector(x, y)) {
+        if (x > (getContainerFocused()->x + getSelectorClicked(x, y)->x) &&
+            x < (getContainerFocused()->x + getSelectorClicked(x, y)->x + 9) &&
+            y > (getContainerFocused()->y + getSelectorClicked(x, y)->y) &&
+            y < (getContainerFocused()->y + getSelectorClicked(x, y)->y + 14)) {
+          getSelectorClicked(x, y)->previous();
+        } else {
+          getSelectorClicked(x, y)->next();
+        }
+      }
+    }
+  }
+}
+
+void ui_manager::onClickUp(SDL_Event e) {
+  int x = e.button.x / 2;
+  int y = e.button.y / 2;
+
+  if (!blocked && writing && getContainerFocused() != nullptr) {
+    if (getContainerFocused()->buttonPressed) {
+      getButtonFocused()->press = 0;
+      getContainerFocused()->buttonPressed = false;
+      if (clickOnButton(x, y)) {
+        if (getButtonClicked(x, y) == getButtonFocused())
+          execButton(getButtonClicked(x, y));
+      }
+    }
+  }
 }
 
 }  // namespace ui
