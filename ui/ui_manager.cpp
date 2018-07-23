@@ -1,56 +1,48 @@
-#include <sstream>
-
-#include "SDL.h"
 #include "ui_manager.h"
-#include "graphics.h"
-#include "ui/container.h"
-#include "utils/config.h"
-#include "utils/logger.h"
-
-using namespace std::placeholders;
-using namespace bure::ui;
 
 namespace bure {
+namespace ui {
+
 ui_manager::ui_manager() {
   writing = true;
   blocked = false;
 }
 
-ui_manager::~ui_manager() { containers.clear(); }
+ui_manager::~ui_manager() { _containers.clear(); }
 
-void ui_manager::addContainer(container *e) {
-  e->index = static_cast<int>(containers.size());
-  containers.push_back(e);
-  if (static_cast<int>(containers.size()) == 1) changeContainerFocus(0);
+void ui_manager::addContainer(std::unique_ptr<container> e) {
+  e->index = static_cast<int>(_containers.size());
+  _containers.push_back(std::move(e));
+  if (static_cast<int>(_containers.size()) == 1) changeContainerFocus(0);
 }
 
 void ui_manager::closeContainer(int in) {
-  std::list<container *>::iterator it;
+  std::vector<std::unique_ptr<container>>::iterator it;
 
-  for (it = containers.begin(); it != containers.end(); ++it) {
+  for (it = _containers.begin(); it != _containers.end(); ++it) {
     if ((*it)->index == in) {
       if ((*it)->index == getContainerFocused()->index) {
         changeContainerFocus(getContainerFocused()->index - 1);
       }
 
-      containers.erase(it);
+      _containers.erase(it);
       break;
     }
   }
   this->updateIndex();
 }
 
-void ui_manager::closeContainer(container *p) {
+void ui_manager::closeContainer(container* p) {
   if (NULL != p) {
-    std::list<container *>::iterator it;
+    std::vector<std::unique_ptr<container>>::iterator it;
 
-    for (it = containers.begin(); it != containers.end(); ++it) {
-      if ((*it) == p) {
-        if ((*it) == getContainerFocused()) {
+    for (it = _containers.begin(); it != _containers.end(); ++it) {
+      if ((*it).get() == p) {
+        if ((*it).get() == getContainerFocused()) {
           changeContainerFocus(getContainerFocused()->index - 1);
         }
 
-        containers.erase(it);
+        _containers.erase(it);
         break;
       }
     }
@@ -59,40 +51,35 @@ void ui_manager::closeContainer(container *p) {
 }
 
 void ui_manager::updateIndex() {
-  std::list<container *>::iterator it;
   int in = 0;
-  for (it = containers.begin(); it != containers.end(); ++it) {
-    (*it)->index = in;
-    in++;
+  for (auto&& c : _containers) {
+    c->index = in++;
   }
 
-  if (static_cast<int>(containers.size()) == 1) {
-    containerOnFocus = containers.begin();
-    (*containerOnFocus)->focused = true;
-  }
+  // if (static_cast<int>(containers.size()) == 1) {
+  //   containerOnFocus = containers.begin();
+  //   (*containerOnFocus)->focused = true;
+  // }
 }
 
 container *ui_manager::getContainer(int cont) {
-  std::list<container *>::iterator it;
+  if (cont > static_cast<int>(_containers.size()) - 1) return nullptr;
 
-  if (cont > static_cast<int>(containers.size()) - 1) return NULL;
-
-  for (it = containers.begin(); it != containers.end(); ++it) {
-    if ((*it)->index == cont) {
-      return (*it);
+  for (auto&& c : _containers) {
+    if (c->index == cont) {
+      return c.get();
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 bool ui_manager::containerExists(container *p) {
   bool res = false;
-  std::list<container *>::iterator it;
 
-  if (NULL != p) {
-    for (it = containers.begin(); it != containers.end(); ++it) {
-      if ((*it) == p) {
+  if (nullptr != p) {
+    for (auto&& c : _containers) {
+      if (c.get() == p) {
         res = true;
       }
     }
@@ -102,49 +89,47 @@ bool ui_manager::containerExists(container *p) {
 }
 
 void ui_manager::changeContainerFocus(int num) {
-  if (static_cast<int>(containers.size()) > 1) {
-    (*containerOnFocus)->focused = false;
+  if (static_cast<int>(_containers.size()) > 1) {
+    containerOnFocus->focused = false;
   }
 
-  std::list<container *>::iterator it;
-  for (it = containers.begin(); it != containers.end(); ++it) {
-    if ((*it)->index == num) {
-      containerOnFocus = it;
+  for (auto&& c : _containers) {
+    if (c->index == num) {
+      containerOnFocus = c.get();
       break;
     }
   }
 
-  (*containerOnFocus)->focused = true;
+  containerOnFocus->focused = true;
 }
 
 void ui_manager::changeInputBoxFocus(int num) {
-  (*containerOnFocus)->changeIBFocus(num);
+  containerOnFocus->changeIBFocus(num);
 }
 
 void ui_manager::changeButtonFocus(int num) {
-  (*containerOnFocus)->changeButtonFocus(num);
+  containerOnFocus->changeButtonFocus(num);
 }
 
-container *ui_manager::getContainerFocused() {
-  if (static_cast<int>(containers.size()) == 0) return NULL;
-  return (*containerOnFocus);
+container* ui_manager::getContainerFocused() {
+  if (static_cast<int>(_containers.size()) == 0) return NULL;
+  return containerOnFocus;
 }
 
-input_box *ui_manager::getInputBoxFocused() {
-  if (static_cast<int>(containers.size()) == 0) return NULL;
-  return (*containerOnFocus)->getIBFocused();
+input_box* ui_manager::getInputBoxFocused() {
+  if (static_cast<int>(_containers.size()) == 0) return NULL;
+  return containerOnFocus->getIBFocused();
 }
 
-button *ui_manager::getButtonFocused() {
-  return (*containerOnFocus)->getButtonFocused();
+button* ui_manager::getButtonFocused() {
+  return containerOnFocus->getButtonFocused();
 }
 
 bool ui_manager::clickOnContainer(int x, int y) {
-  if (static_cast<int>(containers.size()) > 0) {
-    std::list<container *>::iterator itib;
-    for (itib = containers.begin(); itib != containers.end(); ++itib) {
-      if (x > (*itib)->x && x < ((*itib)->x + (*itib)->width) &&
-          y > (*itib)->y && y < ((*itib)->y + (*itib)->height)) {
+  if (static_cast<int>(_containers.size()) > 0) {
+    for (auto&& c : _containers) {
+      if (x > c->x && x < (c->x + c->width) &&
+          y > c->y && y < (c->y + c->height)) {
         return true;
       }
     }
@@ -154,7 +139,7 @@ bool ui_manager::clickOnContainer(int x, int y) {
 
 bool ui_manager::clickOnInputBox(int x, int y) {
   int z;
-  if (static_cast<int>(containers.size()) > 0) {
+  if (static_cast<int>(_containers.size()) > 0) {
     for (z = 0; getContainerFocused()->get_input_box(z) != NULL; ++z) {
       if (x > (getContainerFocused()->x +
                getContainerFocused()->get_input_box(z)->x) &&
@@ -175,7 +160,7 @@ bool ui_manager::clickOnInputBox(int x, int y) {
 
 bool ui_manager::clickOnButton(int x, int y) {
   int z;
-  if (static_cast<int>(containers.size()) > 0) {
+  if (static_cast<int>(_containers.size()) > 0) {
     for (z = 0; getContainerFocused()->get_button(z) != NULL; ++z) {
       if (x > (getContainerFocused()->x +
                getContainerFocused()->get_button(z)->x) &&
@@ -196,7 +181,7 @@ bool ui_manager::clickOnButton(int x, int y) {
 
 bool ui_manager::clickOnSelector(int x, int y) {
   int z;
-  if (containers.size() > 0) {
+  if (_containers.size() > 0) {
     for (z = 0; getContainerFocused()->get_selector(z) != NULL; ++z) {
       if ((x > (getContainerFocused()->x +
                 getContainerFocused()->get_selector(z)->x) &&
@@ -226,22 +211,20 @@ bool ui_manager::clickOnSelector(int x, int y) {
   return false;
 }
 
-container *ui_manager::getContainerClicked(int x, int y) {
-  std::list<container *>::iterator itib, toreturn;
-  toreturn = containers.end();
-  for (itib = containers.begin(); itib != containers.end(); ++itib) {
-    if (x > (*itib)->x && x < ((*itib)->x + (*itib)->width) && y > (*itib)->y &&
-        y < ((*itib)->y + (*itib)->height)) {
-      toreturn = itib;
+container* ui_manager::getContainerClicked(int x, int y) {
+  container* result = nullptr;
+
+  for (auto&& c : _containers) {
+    if (x > c->x && x < (c->x + c->width) && y > c->y &&
+        y < (c->y + c->height)) {
+      result = c.get();
     }
   }
 
-  if (toreturn == containers.end()) return NULL;
-
-  return (*toreturn);
+  return result;
 }
 
-input_box *ui_manager::getInputBoxClicked(int x, int y) {
+input_box* ui_manager::getInputBoxClicked(int x, int y) {
   int z;
   input_box *toreturn = NULL;
   for (z = 0; getContainerFocused()->get_input_box(z) != NULL; ++z) {
@@ -315,4 +298,6 @@ selector *ui_manager::getSelectorClicked(int x, int y) {
 void ui_manager::execButton(button *button) {
   button->function(button->parameter);
 }
+
+}  // namespace ui
 }  // namespace bure

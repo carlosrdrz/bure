@@ -10,22 +10,20 @@
 #include "utils/config.h"
 
 namespace bure {
-class graphics {
+class graphics2 {
  public:
-  explicit graphics(std::string basePath);
-  ~graphics();
+  graphics2();
+  ~graphics2();
 
   // void draw(const game &g);
   // void draw(int tile, int x, int y, int h, int v, bool fullLayer, bool layer)
   // todo: no reason these are not const
   // void draw(game_map *m, const player &p, bool layer);
-  void draw(bure::ui::ui_manager *i);
+  // void draw(bure::ui::ui_manager *i);
   // todo: no reason these are not const
   // void draw(const player &p);
+  void drawSprite();
 
-  void renderBackground();
-
-  void openFont(int size);
   void clean();
   void flipBuffer();
 
@@ -40,5 +38,7 @@ class graphics {
   SDL_Color backgroundColor, fontColor;
   TTF_Font *font;
   int fontSize;
+
+  void openFont(int size);
 };
 }  // namespace bure

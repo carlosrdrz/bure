@@ -21,22 +21,23 @@ include_directories(${SDL2_INCLUDE_DIRS}
         ${LibXMLPP_INCLUDE_DIRS})
 
 add_library(bure-ui
-  engine/ui/container.cpp
-  engine/ui/input_box.cpp
-  engine/ui/label.cpp
-  engine/ui/selector.cpp
-  engine/ui/button.h
-  engine/ui/image.h
-  engine/ui/widget.h)
+  ui/ui_manager.cpp
+  ui/container.cpp
+  ui/input_box.cpp
+  ui/label.cpp
+  ui/selector.cpp
+  ui/button.h
+  ui/image.h
+  ui/widget.h)
 
 add_library(bure-engine
-  engine/system.cpp
-  engine/entity.cpp
+  engine/systems/system.cpp
+  engine/entities/entity.cpp
+  engine/components/position_component.cpp
   engine/engine.cpp
   engine/utils/config.cpp
   engine/utils/logger.cpp
   engine/graphics.cpp
-  engine/ui_manager.cpp
   engine/game_map.cpp
   engine/event_manager.cpp)
 

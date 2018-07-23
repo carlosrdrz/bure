@@ -1,8 +1,8 @@
 #include <memory>
 #include <set>
 #include <vector>
-
 #include <iostream>
+
 #include "engine/engine.h"
 #include "engine/event_manager.h"
 #include "engine/events/event_close.h"
@@ -12,8 +12,8 @@
 
 bure::config bure::config::instance;
 
-void buildStartMenu(bure::ui_manager* ui, game* g) {
-  auto c = new bure::ui::container(362, 309, 130, 60);
+void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
+  auto c = std::make_unique<bure::ui::container>(362, 309, 130, 60);
   auto b = bure::ui::button("START GAME");
   b.set(20, 20, 90, 20);
   b.function = [g, ui](int) -> void {
@@ -25,7 +25,7 @@ void buildStartMenu(bure::ui_manager* ui, game* g) {
   };
 
   c->add(b);
-  ui->addContainer(c);
+  ui->addContainer(std::move(c));
 }
 
 int main(int argc, char* argv[]) {
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
   auto gameInstance = std::make_unique<game>();
   auto gamePointer = gameInstance.get();
   auto eventManager = std::make_unique<bure::event_manager>();
-  auto uiManager = std::make_unique<bure::ui_manager>();
+  auto uiManager = std::make_unique<bure::ui::ui_manager>();
 
   // Init start menu
   buildStartMenu(uiManager.get(), gamePointer);
