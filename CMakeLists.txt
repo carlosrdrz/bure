@@ -26,9 +26,8 @@ add_library(bure-ui
   ui/input_box.cpp
   ui/label.cpp
   ui/selector.cpp
-  ui/button.h
-  ui/image.h
-  ui/widget.h)
+  ui/button.cpp
+  ui/widget.cpp)
 
 add_library(bure-engine
   engine/systems/system.cpp

@@ -17,8 +17,8 @@ class button : public widget {
     int press;
     int parameter;
 
-    button() : press{0}, parameter{0} {}
-    explicit button(std::string t) : title(t), press{0}, parameter{0} {}
+    button();
+    explicit button(std::string t);
     ~button() = default;
 
     const char *get_title() { return title.c_str(); }
@@ -29,6 +29,10 @@ class button : public widget {
         this->width = w;
         this->height = h;
     }
+
+ private:
+    void onClickDown(SDL_Event e);
+    void onClickUp(SDL_Event e);
 };
 
 }  // namespace ui

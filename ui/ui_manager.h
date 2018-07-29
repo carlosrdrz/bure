@@ -21,42 +21,37 @@ class ui_manager {
   bool writing;
   bool blocked;
 
-  void addContainer(std::unique_ptr<container> e);
+  void addContainer(std::unique_ptr<container> c);
 
   void closeContainer(int in);
   void closeContainer(ui::container *p);
 
-  void changeContainerFocus(int num);
-  void changeInputBoxFocus(int num);
-  void changeButtonFocus(int num);
+  // void changeContainerFocus(int num);
+  // void changeInputBoxFocus(int num);
+  // void changeButtonFocus(int num);
 
-  bool clickOnContainer(int x, int y);
-  bool clickOnInputBox(int x, int y);
-  bool clickOnButton(int x, int y);
-  bool clickOnSelector(int x, int y);
+  // bool clickOnContainer(int x, int y);
+  // bool clickOnInputBox(int x, int y);
+  // bool clickOnButton(int x, int y);
+  // bool clickOnSelector(int x, int y);
 
   bool containerExists(ui::container* p);
 
   ui::container* getContainer(int cont);
-  ui::container* getContainerClicked(int x, int y);
-  ui::input_box* getInputBoxClicked(int x, int y);
-  ui::button* getButtonClicked(int x, int y);
-  ui::selector* getSelectorClicked(int x, int y);
+  // ui::container* getContainerClicked(int x, int y);
+  // ui::input_box* getInputBoxClicked(int x, int y);
+  // ui::button* getButtonClicked(int x, int y);
+  // ui::selector* getSelectorClicked(int x, int y);
 
-  ui::container* getContainerFocused();
-  ui::input_box* getInputBoxFocused();
-  ui::button* getButtonFocused();
-
-  // Button actions
-  void execButton(ui::button* button);
+  // ui::container* getContainerFocused();
+  // ui::input_box* getInputBoxFocused();
+  // ui::button* getButtonFocused();
 
  private:
   std::vector<std::unique_ptr<container>> _containers;
-  container* containerOnFocus;
+  // container* containerOnFocus;
 
   void updateIndex();
-  void onClickDown(SDL_Event e);
-  void onClickUp(SDL_Event e);
 };
 
 }  // namespace ui

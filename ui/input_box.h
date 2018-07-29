@@ -32,6 +32,8 @@ class input_box : public widget {
 
  private:
   int max_length;
+
+  void onClickUp(SDL_Event e);
 };
 
 }  // namespace ui

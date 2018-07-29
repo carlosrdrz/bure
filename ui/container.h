@@ -36,12 +36,6 @@ class container : public widget {
   image* get_image(int im);
   selector* get_selector(int sel);
 
-  void changeIBFocus(int num);
-  void changeButtonFocus(int num);
-
-  input_box* getIBFocused() { return inputBoxOnFocus; }
-  button* getButtonFocused() { return buttonOnFocus; }
-
  private:
   std::vector<std::unique_ptr<label>> labels;
   std::vector<std::unique_ptr<input_box>> inputBoxes;
@@ -49,8 +43,7 @@ class container : public widget {
   std::vector<std::unique_ptr<image>> images;
   std::vector<std::unique_ptr<selector>> selectors;
 
-  input_box* inputBoxOnFocus = nullptr;
-  button* buttonOnFocus = nullptr;
+  void onClickUp(SDL_Event e);
 };
 
 }  // namespace ui
