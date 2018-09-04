@@ -25,25 +25,25 @@ void event_manager::pollEvent() {
 
   while (SDL_PollEvent(&lastEvent)) {
     logger::debug("processing event id %d", lastEvent.type);
-    funB(lastEvent);
-    // for (auto it :
-    //      _eventCallbacks[static_cast<SDL_EventType>(lastEvent.type)]) {
-    //   it.second(lastEvent);
-    // }
+    for (auto &st : _eventCallbacks) {
+      if (st.event_type == lastEvent.type) st.callback(lastEvent);
+      fun(lastEvent);
+    }
   }
 }
 
-callback_handler event_manager::addEventCallback(
+cb_handler event_manager::addEventCallback(
     SDL_EventType event_type, std::function<void(SDL_Event e)> fun) {
-  // _eventCallbacks[event_type][++lastCallbackHandler] = fun;
-  funB = fun;
-  return 1;
-  // lastCallbackHandler;
+  auto handler = _eventCallbacks.size();
+  _eventCallbacks.push_back(cb_struct{handler, fun, event_type});
+  this->fun = fun;
+  return handler;
 }
 
-void event_manager::removeEventCallback(SDL_EventType event_type,
-                                        callback_handler ch) {
-  _eventCallbacks[event_type].erase(ch);
+void event_manager::removeEventCallback(SDL_EventType et, cb_handler ch) {
+  for (auto it = _eventCallbacks.begin(); it != _eventCallbacks.end(); it++) {
+    if ((*it).handler == ch) _eventCallbacks.erase(it);
+  }
 }
 
 }  // namespace bure

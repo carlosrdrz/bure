@@ -7,6 +7,8 @@ namespace ui {
 
 class widget {
  public:
+  widget() : width(0), height(0), x(0), y(0), index(0), parent(nullptr) {}
+
   int width, height, x, y, index;
 
   int getAbsoluteX();
@@ -15,7 +17,7 @@ class widget {
 
   void setParent(widget* w);
   widget* getParent();
-  widget *parent;
+  widget* parent = nullptr;
 };
 
 }  // namespace ui

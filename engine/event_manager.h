@@ -2,21 +2,26 @@
 
 #include <functional>
 #include <memory>
-#include <unordered_map>
+#include <vector>
 
 #include "SDL.h"
 
 namespace bure {
 
-typedef uint_fast64_t callback_handler;
+typedef uint_fast64_t cb_handler;
+typedef std::function<void(SDL_Event e)> cb_callback;
+struct cb_struct  {
+  cb_handler handler;
+  cb_callback callback;
+  SDL_EventType event_type;
+};
 
 class event_manager {
  public:
   event_manager();
 
-  callback_handler addEventCallback(SDL_EventType event_id,
-                        std::function<void(SDL_Event e)> fun);
-  void removeEventCallback(SDL_EventType event_id, callback_handler ch);
+  cb_handler addEventCallback(SDL_EventType event_id, cb_callback fun);
+  void removeEventCallback(SDL_EventType event_id, cb_handler ch);
 
   void pollEvent();
 
@@ -30,16 +35,9 @@ class event_manager {
 
  private:
   static event_manager* _instance;
-
-  std::unordered_map<
-      SDL_EventType,
-      std::unordered_map<callback_handler,
-                         std::function<void(SDL_Event e)>>>
-      _eventCallbacks;
-
+  std::vector<cb_struct> _eventCallbacks;
   SDL_Event lastEvent;
-  callback_handler lastCallbackHandler;
-  std::function<void(SDL_Event e)> funB;
+  cb_callback fun;
 };
 
 }  // namespace bure
