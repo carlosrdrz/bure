@@ -15,8 +15,6 @@ class widget {
 
   void setParent(widget* w);
   widget* getParent();
-
- protected:
   widget *parent;
 };
 

@@ -31,7 +31,7 @@ class button : public widget {
     }
 
  private:
-    void onClickDown(SDL_Event e);
+    const void onClickDown(SDL_Event e);
     void onClickUp(SDL_Event e);
 };
 

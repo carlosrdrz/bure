@@ -8,22 +8,24 @@ namespace ui {
 
 button::button() : press{0}, parameter{0} {
   this->parent = nullptr;
-  logger::debug("button constructor");
+  logger::debug("button constructor this %p parent %p", this, this->parent);
 
   bure::event_manager::get().addEventCallback(
-      SDL_MOUSEBUTTONDOWN, std::bind(&button::onClickDown, this));
+    SDL_MOUSEBUTTONDOWN, std::bind(&button::onClickDown, this, _1));
   // bure::event_manager::get().addEventCallback(
   //     SDL_MOUSEBUTTONUP, std::bind(&button::onClickUp, this, _1));
+
+  // logger::debug("button constructor2 this %p parent %p", this, this->parent);
 }
 
 button::button(std::string t) : title(t) { button(); }
 
-void button::onClickDown(SDL_Event e) {
+const void button::onClickDown(SDL_Event e) {
   auto x = e.button.x;
   auto y = e.button.y;
-  logger::debug("checking if button was clicked on %d %d", x, y);
+  // logger::debug("checking if button was clicked on %d %d", x, y);
 
-  if (this->parent != nullptr) logger::debug("nopuedese");
+  logger::debug("callback this %p parent %p", this, this->parent);
 
   if (wasClicked(x, y)) {
     logger::debug("was clicked");

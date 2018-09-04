@@ -39,6 +39,7 @@ class event_manager {
 
   SDL_Event lastEvent;
   callback_handler lastCallbackHandler;
+  std::function<void(SDL_Event e)> funB;
 };
 
 }  // namespace bure

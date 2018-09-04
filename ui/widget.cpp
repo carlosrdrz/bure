@@ -6,7 +6,7 @@ namespace bure {
 namespace ui {
 
 int widget::getAbsoluteX() {
-  if (parent != nullptr) logger::debug("lol");
+  if (parent != nullptr) logger::debug("leel %p", parent);
   if (parent == nullptr) return x;
   return parent->getAbsoluteX() + x;
 }

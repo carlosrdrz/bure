@@ -13,8 +13,8 @@ container::container() {
     this->index = 0;
     this->visible = true;
 
-    bure::event_manager::get().addEventCallback(
-        SDL_MOUSEBUTTONUP, std::bind(&container::onClickUp, this, _1));
+    // bure::event_manager::get().addEventCallback(
+    //    SDL_MOUSEBUTTONUP, std::bind(&container::onClickUp, this, _1));
 }
 
 container::container(int x, int y, int w, int h) {
@@ -30,8 +30,8 @@ container::container(int x, int y, int w, int h) {
     this->visible = true;
     this->buttonPressed = false;
 
-    bure::event_manager::get().addEventCallback(
-        SDL_MOUSEBUTTONUP, std::bind(&container::onClickUp, this, _1));
+    // bure::event_manager::get().addEventCallback(
+    //    SDL_MOUSEBUTTONUP, std::bind(&container::onClickUp, this, _1));
 }
 
 container::~container() {
