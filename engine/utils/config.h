@@ -9,6 +9,7 @@ class config {
  public:
     void readFile(std::string path);
     bool getBoolValueOf(std::string of);
+    float getFloatValueOf(std::string of, float defaultValue);
     void setValueOf(std::string of, std::string on);
 
     static config instance;

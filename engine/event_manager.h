@@ -37,7 +37,6 @@ class event_manager {
   static event_manager* _instance;
   std::vector<cb_struct> _eventCallbacks;
   SDL_Event lastEvent;
-  cb_callback fun;
 };
 
 }  // namespace bure

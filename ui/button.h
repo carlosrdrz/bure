@@ -22,6 +22,7 @@ class button : public widget {
     ~button() = default;
 
     const char *get_title() { return title.c_str(); }
+    void init();
 
     void set(int x, int y, int w, int h) {
         this->x = x;

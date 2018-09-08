@@ -8,10 +8,10 @@ event_manager* event_manager::_instance;
 event_manager::event_manager() {
   SDL_SetEventFilter([](void *userdata, SDL_Event *e) {
     switch (e->type) {
-        // case SDL_QUIT:
+        case SDL_QUIT:
         case SDL_MOUSEBUTTONDOWN:
-        // case SDL_MOUSEBUTTONUP:
-        // case SDL_KEYDOWN:
+        case SDL_MOUSEBUTTONUP:
+        case SDL_KEYDOWN:
           return 1;
           break;
     }
@@ -27,7 +27,6 @@ void event_manager::pollEvent() {
     logger::debug("processing event id %d", lastEvent.type);
     for (auto &st : _eventCallbacks) {
       if (st.event_type == lastEvent.type) st.callback(lastEvent);
-      fun(lastEvent);
     }
   }
 }
@@ -35,8 +34,8 @@ void event_manager::pollEvent() {
 cb_handler event_manager::addEventCallback(
     SDL_EventType event_type, std::function<void(SDL_Event e)> fun) {
   auto handler = _eventCallbacks.size();
+  logger::debug("adding callback for event %d", event_type);
   _eventCallbacks.push_back(cb_struct{handler, fun, event_type});
-  this->fun = fun;
   return handler;
 }
 

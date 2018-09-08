@@ -7,16 +7,19 @@ namespace bure {
 namespace ui {
 
 button::button() : press{0}, parameter{0} {
+}
+
+button::button(std::string t) : title(t) { button(); }
+
+void button::init() {
   bure::event_manager::get().addEventCallback(
     SDL_MOUSEBUTTONDOWN, std::bind(&button::onClickDown, this, _1));
   // bure::event_manager::get().addEventCallback(
   //   SDL_MOUSEBUTTONUP, std::bind(&button::onClickUp, this, _1));
 }
 
-button::button(std::string t) : title(t) { button(); }
-
 void button::onClickDown(SDL_Event e) {
-  bure::logger::debug("for some reason this isnt nullptr -> %p", this->parent);
+  logger::debug("clicked %d %d position %d %d", e.button.x, e.button.y, getAbsoluteX(), getAbsoluteY());
   press = wasClicked(e.button.x, e.button.y) ? 1 : 0;
 }
 

@@ -12,7 +12,7 @@ bure::config bure::config::instance;
 void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
   auto c = std::make_unique<bure::ui::container>(362, 309, 130, 60);
   auto b = std::make_unique<bure::ui::button>("START GAME");
-  bure::logger::debug("this should be nullptr -> %p", b->parent);
+  b->init();
   b->set(20, 20, 90, 20);
   b->function = [g, ui](int) -> void {
     g->changeMap("campo.tmx");
@@ -45,8 +45,8 @@ int main(int argc, char* argv[]) {
   buildStartMenu(uiManager.get(), gamePointer);
 
   // Register close callback
-  // bure::event_manager::get().addEventCallback(
-  //    SDL_QUIT, [gamePointer](SDL_Event e) { gamePointer->finishGame(); });
+  bure::event_manager::get().addEventCallback(
+    SDL_QUIT, [gamePointer](SDL_Event e) { gamePointer->finishGame(); });
 
   // Main game loop
   while (!gameInstance->finished) {

@@ -31,6 +31,15 @@ void config::readFile(std::string path) {
 
 bool config::getBoolValueOf(std::string of) { return ("1" == configs[of]); }
 
+float config::getFloatValueOf(std::string of, float defaultValue) {
+  try {
+    auto configValue = configs.at(of);
+    return stof(configValue, nullptr);
+  } catch (std::out_of_range e) {
+    return defaultValue;
+  }
+}
+
 void config::setValueOf(std::string of, std::string on) { configs[of] = on; }
 
 }  // namespace bure

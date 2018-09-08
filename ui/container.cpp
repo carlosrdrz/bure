@@ -43,19 +43,19 @@ container::~container() {
 
 void container::add(std::unique_ptr<label> w) {
     w->index = static_cast<int>(labels.size());
-    // w->setParent(this);
+    w->setParent(this);
     labels.push_back(std::move(w));
 }
 
 void container::add(std::unique_ptr<button> w) {
     w->index = static_cast<int>(buttons.size());
-    // w->setParent(this);
+    w->setParent(this);
     buttons.push_back(std::move(w));
 }
 
 void container::add(std::unique_ptr<input_box> w) {
     w->index = static_cast<int>(inputBoxes.size());
-    // w->setParent(this);
+    w->setParent(this);
     inputBoxes.push_back(std::move(w));
     if (inputBoxes.size() == 1) {
         // inputBoxOnFocus = inputBoxes.at(0).get();
