@@ -1,11 +1,13 @@
 #include "event_manager.h"
 #include "utils/logger.h"
+#include "utils/config.h"
 
 namespace bure {
 
 event_manager* event_manager::_instance;
 
 event_manager::event_manager() {
+  scale = bure::config::instance.getFloatValueOf("scale", 1.0);
   SDL_SetEventFilter([](void *userdata, SDL_Event *e) {
     switch (e->type) {
         case SDL_QUIT:
@@ -25,6 +27,8 @@ void event_manager::pollEvent() {
 
   while (SDL_PollEvent(&lastEvent)) {
     logger::debug("processing event id %d", lastEvent.type);
+    lastEvent.button.x = lastEvent.button.x / scale;
+    lastEvent.button.y = lastEvent.button.y / scale;
     for (auto &st : _eventCallbacks) {
       if (st.event_type == lastEvent.type) st.callback(lastEvent);
     }

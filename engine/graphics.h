@@ -40,5 +40,6 @@ class graphics {
   SDL_Color backgroundColor, fontColor;
   TTF_Font *font;
   int fontSize;
+  float scale;
 };
 }  // namespace bure
