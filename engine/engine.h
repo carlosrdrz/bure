@@ -13,8 +13,6 @@ namespace bure {
 
 class engine {
  public:
-  engine();
-
   void addSystem(std::unique_ptr<systems::system> s);
   void addEntity(std::unique_ptr<entities::entity> e);
 
@@ -32,7 +30,6 @@ class engine {
  private:
   static engine* _instance;
   std::unique_ptr<bure::ui::ui_manager> _uiManager;
-
   std::vector<std::unique_ptr<bure::systems::system>> _systems;
   std::vector<std::unique_ptr<bure::entities::entity>> _entities;
 };

@@ -36,42 +36,42 @@ container::container(int x, int y, int w, int h) {
 
 container::~container() {
     labels.clear();
-    inputBoxes.clear();
+    // inputBoxes.clear();
     buttons.clear();
-    images.clear();
+    // images.clear();
 }
 
 void container::add(std::unique_ptr<label> w) {
-    w->index = static_cast<int>(labels.size());
+    // w->index = static_cast<int>(labels.size());
     w->setParent(this);
     labels.push_back(std::move(w));
 }
 
 void container::add(std::unique_ptr<button> w) {
-    w->index = static_cast<int>(buttons.size());
+    // w->index = static_cast<int>(buttons.size());
     w->setParent(this);
     buttons.push_back(std::move(w));
 }
 
-void container::add(std::unique_ptr<input_box> w) {
-    w->index = static_cast<int>(inputBoxes.size());
-    w->setParent(this);
-    inputBoxes.push_back(std::move(w));
-    if (inputBoxes.size() == 1) {
-        // inputBoxOnFocus = inputBoxes.at(0).get();
-        w->focused = true;
-    }
-}
+// void container::add(std::unique_ptr<input_box> w) {
+//     w->index = static_cast<int>(inputBoxes.size());
+//     w->setParent(this);
+//     inputBoxes.push_back(std::move(w));
+//     if (inputBoxes.size() == 1) {
+//         // inputBoxOnFocus = inputBoxes.at(0).get();
+//         w->focused = true;
+//     }
+// }
 
-void container::add(std::unique_ptr<image> w) {
-    w->index = static_cast<int>(images.size());
-    images.push_back(std::move(w));
-}
-
-void container::add(std::unique_ptr<selector> w) {
-    w->index = static_cast<int>(selectors.size());
-    selectors.push_back(std::move(w));
-}
+// void container::add(std::unique_ptr<image> w) {
+//     w->index = static_cast<int>(images.size());
+//     images.push_back(std::move(w));
+// }
+//
+// void container::add(std::unique_ptr<selector> w) {
+//     w->index = static_cast<int>(selectors.size());
+//     selectors.push_back(std::move(w));
+// }
 
 // void container::changeButtonFocus(int num) {
 //     for (auto&& button : buttons) {
@@ -91,64 +91,84 @@ void container::add(std::unique_ptr<selector> w) {
 //     }
 // }
 
-input_box* container::get_input_box(int id) {
-    if (id > static_cast<int>(inputBoxes.size()) - 1) return nullptr;
+// input_box* container::get_input_box(int id) {
+//     if (id > static_cast<int>(inputBoxes.size()) - 1) return nullptr;
+//
+//     for (auto&& e : inputBoxes) {
+//         if (e->index == id) {
+//             return e.get();
+//         }
+//     }
+//
+//     return nullptr;
+// }
 
-    for (auto&& e : inputBoxes) {
-        if (e->index == id) {
-            return e.get();
-        }
-    }
+// label* container::get_label(int id) {
+//     if (id > static_cast<int>(labels.size()) - 1) return nullptr;
+//
+//     for (auto&& e : labels) {
+//         if (e->index == id) {
+//             return e.get();
+//         }
+//     }
+//
+//     return nullptr;
+// }
+//
+// button* container::get_button(int id) {
+//     if (id > static_cast<int>(buttons.size()) - 1) return nullptr;
+//
+//     for (auto&& e : buttons) {
+//         if (e->index == id) {
+//             return e.get();
+//         }
+//     }
+//
+//     return nullptr;
+// }
 
-    return nullptr;
+// image* container::get_image(int id) {
+//     if (id > static_cast<int>(images.size()) - 1) return nullptr;
+//
+//     for (auto&& e : images) {
+//         if (e->index == id) {
+//             return e.get();
+//         }
+//     }
+//
+//     return nullptr;
+// }
+//
+// selector* container::get_selector(int id) {
+//     if (id > static_cast<int>(selectors.size()) - 1) return nullptr;
+//
+//     for (auto&& e : selectors) {
+//         if (e->index == id) {
+//             return e.get();
+//         }
+//     }
+//
+//     return nullptr;
+// }
+
+std::vector<std::reference_wrapper<label>> container::getLabels() {
+  std::vector<std::reference_wrapper<label>> ret;
+
+  for (auto& l : labels) {
+    ret.emplace_back(std::ref(*l));
+  }
+
+  return ret;
 }
 
-label* container::get_label(int id) {
-    if (id > static_cast<int>(labels.size()) - 1) return nullptr;
+std::vector<std::reference_wrapper<button>> container::getButtons() {
+  std::vector<std::reference_wrapper<button>> ret;
 
-    for (auto&& e : labels) {
-        if (e->index == id) {
-            return e.get();
-        }
-    }
+  for (auto& b : buttons) {
+    ret.emplace_back(std::ref(*b));
+  }
 
-    return nullptr;
-}
-
-button* container::get_button(int id) {
-    if (id > static_cast<int>(buttons.size()) - 1) return nullptr;
-
-    for (auto&& e : buttons) {
-        if (e->index == id) {
-            return e.get();
-        }
-    }
-
-    return nullptr;
-}
-
-image* container::get_image(int id) {
-    if (id > static_cast<int>(images.size()) - 1) return nullptr;
-
-    for (auto&& e : images) {
-        if (e->index == id) {
-            return e.get();
-        }
-    }
-
-    return nullptr;
-}
-
-selector* container::get_selector(int id) {
-    if (id > static_cast<int>(selectors.size()) - 1) return nullptr;
-
-    for (auto&& e : selectors) {
-        if (e->index == id) {
-            return e.get();
-        }
-    }
-
-    return nullptr;
+  return ret;
 }
 
 void container::onClickUp(SDL_Event e) {

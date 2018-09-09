@@ -3,9 +3,11 @@
 #include "engine/engine.h"
 #include "engine/event_manager.h"
 #include "engine/graphics.h"
+#include "engine/systems/drawing_system.h"
 #include "engine/utils/config.h"
 #include "engine/utils/logger.h"
 #include "game.h"
+#include "ui/ui_renderer.h"
 
 bure::config bure::config::instance;
 
@@ -36,33 +38,40 @@ int main(int argc, char* argv[]) {
   bure::config::instance.readFile(resourcesPath);
 
   // Init main objects
-  auto graphicsInstance = std::make_unique<bure::graphics>(resourcesPath);
   auto gameInstance = std::make_unique<game>();
   auto gamePointer = gameInstance.get();
-  auto uiManager = std::make_unique<bure::ui::ui_manager>();
+  auto uiManager = std::make_shared<bure::ui::ui_manager>();
+
+  auto graphicsInstance = std::make_unique<bure::graphics2>(resourcesPath);
+  auto drawingSystem = std::make_unique<bure::systems::drawing_system>(
+      std::move(graphicsInstance));
+  auto uiRenderer = std::make_unique<bure::ui::ui_renderer>(uiManager);
+  drawingSystem->addRenderer(std::move(uiRenderer));
+  bure::engine::get().addSystem(std::move(drawingSystem));
 
   // Init start menu
   buildStartMenu(uiManager.get(), gamePointer);
 
   // Register close callback
   bure::event_manager::get().addEventCallback(
-    SDL_QUIT, [gamePointer](SDL_Event e) { gamePointer->finishGame(); });
+      SDL_QUIT, [gamePointer](SDL_Event e) { gamePointer->finishGame(); });
 
   // Main game loop
   while (!gameInstance->finished) {
-    if (gameInstance->playing) {
-      graphicsInstance->clean();
-      // graphicsInstance->draw(*gameInstance);
-      gameInstance->nextFrame();
-    } else {
-      graphicsInstance->renderBackground();
-    }
+    // if (gameInstance->playing) {
+    //   graphicsInstance->clean();
+    //   // graphicsInstance->draw(gameInstance.get());
+    //   gameInstance->nextFrame();
+    // } else {
+    //   graphicsInstance->renderBackground();
+    // }
 
-    graphicsInstance->draw(uiManager.get());
-    graphicsInstance->flipBuffer();
+    // graphicsInstance->draw(uiManager.get());
+    // graphicsInstance->flipBuffer();
 
     // manage events
     bure::event_manager::get().pollEvent();
+    bure::engine::get().update();
     SDL_Delay(10);
   }
 

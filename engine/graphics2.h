@@ -10,35 +10,45 @@
 #include "utils/config.h"
 
 namespace bure {
+
+struct color {
+  int r;
+  int g;
+  int b;
+  int alpha;
+};
+
+struct rect {
+  int x;
+  int y;
+  int width;
+  int height;
+};
+
 class graphics2 {
  public:
-  graphics2();
+  explicit graphics2(std::string basePath);
   ~graphics2();
 
-  // void draw(const game &g);
-  // void draw(int tile, int x, int y, int h, int v, bool fullLayer, bool layer)
-  // todo: no reason these are not const
-  // void draw(game_map *m, const player &p, bool layer);
-  // void draw(bure::ui::ui_manager *i);
-  // todo: no reason these are not const
-  // void draw(const player &p);
   void drawSprite();
+  void drawRect(rect r, color c);
+  void drawText(std::string text, int x, int y, int size, color c);
+  void drawTextCentered(std::string text, int x, int y, int size, color c);
 
   void clean();
   void flipBuffer();
 
  private:
-  std::string basePath;
+  void drawFullTexture(SDL_Texture *txt, rect r);
+  void setRenderColor(color c);
+  SDL_Rect rectToSDLRect(rect r);
+  void openFont(int size);
+
   SDL_Window *window;
   SDL_Renderer *renderer;
-  SDL_Surface *tilesSurface, *playersSurface, *elementsSurface,
-      *uiImagesSurface, *bgSurface;
-  SDL_Texture *tilesTexture, *playersTexture, *elementsTexture,
-      *uiImagesTexture, *bgTexture;
-  SDL_Color backgroundColor, fontColor;
+  std::string basePath;
   TTF_Font *font;
   int fontSize;
-
-  void openFont(int size);
+  float scale;
 };
 }  // namespace bure

@@ -38,6 +38,7 @@ class ui_manager {
   bool containerExists(ui::container* p);
 
   ui::container* getContainer(int cont);
+  std::vector<std::reference_wrapper<container>> getContainers();
   // ui::container* getContainerClicked(int x, int y);
   // ui::input_box* getInputBoxClicked(int x, int y);
   // ui::button* getButtonClicked(int x, int y);

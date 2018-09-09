@@ -10,14 +10,12 @@ namespace ui {
 class label : public widget {
  public:
   explicit label(std::string title, int size = 16);
-  ~label() = default;
+
+  std::string getText() const { return text; }
+  int getSize() const { return size; }
 
   void set(int x, int y);
-
-  const char *get_text() { return text.c_str(); }
-  void set_text(std::string que);
-
-  int get_size() { return size; }
+  void setText(std::string que);
 
  private:
   std::string text;

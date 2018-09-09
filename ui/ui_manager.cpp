@@ -90,6 +90,17 @@ bool ui_manager::containerExists(container* p) {
 
   return res;
 }
+
+std::vector<std::reference_wrapper<container>> ui_manager::getContainers() {
+  std::vector<std::reference_wrapper<container>> conts;
+
+  for (auto& c : _containers) {
+    conts.emplace_back(std::ref(*c));
+  }
+
+  return conts;
+}
+
 //
 // void ui_manager::changeContainerFocus(int num) {
 //   if (static_cast<int>(_containers.size()) > 1) {

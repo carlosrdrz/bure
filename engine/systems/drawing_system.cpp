@@ -3,17 +3,26 @@
 namespace bure {
 namespace systems {
 
+drawing_system::drawing_system(std::unique_ptr<bure::graphics2> gr) {
+  _graphics = std::move(gr);
+}
+
 void drawing_system::init() {
-  graphics = std::make_unique<graphics2>();
 }
 
 void drawing_system::update() {
-  auto entities = engine::getInstance().getEntities();
-  for (auto& entity : entities) {
-    auto pc = entity.getComponentByType<position_component>();
-    auto scbc = entity.getComponentByType<static_color_background_component>();
-    auto sc = entity.getComponentByType<sprite_component>();
+  _graphics->clean();
+
+  for (auto& r : _renderers) {
+    r->render();
   }
+
+  _graphics->flipBuffer();
+}
+
+void drawing_system::addRenderer(std::unique_ptr<bure::renderer> rend) {
+  rend->init(_graphics);
+  _renderers.emplace_back(std::move(rend));
 }
 
 }  // namespace systems

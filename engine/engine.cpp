@@ -2,6 +2,8 @@
 
 namespace bure {
 
+engine* engine::_instance;
+
 void engine::addSystem(std::unique_ptr<systems::system> s) {
     s->init();
     _systems.push_back(std::move(s));

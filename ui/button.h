@@ -19,9 +19,8 @@ class button : public widget {
 
     button();
     explicit button(std::string t);
-    ~button() = default;
 
-    const char *get_title() { return title.c_str(); }
+    std::string getTitle() const { return title; }
     void init();
 
     void set(int x, int y, int w, int h) {

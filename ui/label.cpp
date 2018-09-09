@@ -13,7 +13,7 @@ void label::set(int x, int y) {
     this->y = y;
 }
 
-void label::set_text(std::string value) {
+void label::setText(std::string value) {
     this->text = value;
 }
 

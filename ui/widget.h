@@ -9,14 +9,20 @@ class widget {
  public:
   widget() : width(0), height(0), x(0), y(0), index(0), parent(nullptr) {}
 
-  int width, height, x, y, index;
+  int getRelativeX() const;
+  int getRelativeY() const;
+  int getAbsoluteX() const;
+  int getAbsoluteY() const;
+  int getWidth() const;
+  int getHeight() const;
 
-  int getAbsoluteX();
-  int getAbsoluteY();
-  bool wasClicked(int x, int y);
+  bool wasClicked(int x, int y) const;
 
   void setParent(widget* w);
-  widget* getParent();
+  widget* getParent() const;
+
+ protected:
+  int width, height, x, y, index;
   widget* parent = nullptr;
 };
 

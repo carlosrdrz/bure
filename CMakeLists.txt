@@ -22,6 +22,7 @@ include_directories(${SDL2_INCLUDE_DIRS}
 
 add_library(bure-ui
   ui/ui_manager.cpp
+  ui/ui_renderer.cpp
   ui/container.cpp
   ui/input_box.cpp
   ui/label.cpp
@@ -31,6 +32,7 @@ add_library(bure-ui
 
 add_library(bure-engine
   engine/systems/system.cpp
+  engine/systems/drawing_system.cpp
   engine/entities/entity.cpp
   engine/components/position_component.cpp
   engine/engine.cpp
@@ -38,7 +40,10 @@ add_library(bure-engine
   engine/utils/logger.cpp
   engine/graphics.cpp
   engine/game_map.cpp
-  engine/event_manager.cpp)
+  engine/event_manager.cpp
+  engine/renderer.cpp
+  engine/entity_renderer.cpp
+  engine/graphics2.cpp)
 
 add_executable(client
   main.cpp

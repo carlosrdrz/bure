@@ -273,27 +273,27 @@ void graphics::renderBackground() {
 }
 
 void graphics::draw(bure::ui::ui_manager *i) {
-  SDL_Rect dst, src;
-
-  int containerIndex, lb, ib, bon;
-  for (containerIndex = 0; i->getContainer(containerIndex) != nullptr;
-       containerIndex++) {
-    auto container = i->getContainer(containerIndex);
-    if (container->visible) {
-      // Globales para todo el contenedor
-      src.w = 1;
-      src.h = 26;
-      src.y = 0;
-
-      // Fondo del contenedor
-      dst.x = container->getAbsoluteX();
-      dst.y = container->getAbsoluteY();
-      dst.w = container->width;
-      dst.h = container->height;
-
-      SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g,
-                             backgroundColor.b, SDL_ALPHA_OPAQUE);
-      SDL_RenderFillRect(renderer, &dst);
+  // SDL_Rect dst, src;
+  //
+  // int containerIndex, lb, ib, bon;
+  // for (containerIndex = 0; i->getContainer(containerIndex) != nullptr;
+  //      containerIndex++) {
+  //   auto container = i->getContainer(containerIndex);
+  //   if (container->visible) {
+  //     // Globales para todo el contenedor
+  //     src.w = 1;
+  //     src.h = 26;
+  //     src.y = 0;
+  //
+  //     // Fondo del contenedor
+  //     dst.x = container->getAbsoluteX();
+  //     dst.y = container->getAbsoluteY();
+  //     dst.w = container->width;
+  //     dst.h = container->height;
+  //
+  //     SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g,
+  //                            backgroundColor.b, SDL_ALPHA_OPAQUE);
+  //     SDL_RenderFillRect(renderer, &dst);
       //
       // // Barras horizontales
       // dst.w = 1;
@@ -362,169 +362,169 @@ void graphics::draw(bure::ui::ui_manager *i) {
       // src.x += 26;
       // dst.x -= container->width - 4;
       // SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    }
-
-    // Labels
-    for (lb = 0; container->get_label(lb) != nullptr;
-         lb++) {
-      auto label = container->get_label(lb);
-      if (label->get_size() != this->fontSize) {
-        this->openFont(label->get_size());
-      }
-
-      SDL_Surface *textSurface = TTF_RenderText_Solid(
-          font, label->get_text(), fontColor);
-      SDL_Texture *textTexture =
-          SDL_CreateTextureFromSurface(renderer, textSurface);
-
-      if (textSurface != nullptr) {
-        dst.x = label->getAbsoluteX();
-        dst.y = label->getAbsoluteY();
-        dst.w = textSurface->w;
-        dst.h = textSurface->h;
-
-        SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
-        SDL_FreeSurface(textSurface);
-        SDL_DestroyTexture(textTexture);
-      }
-    }
-
-    // InputBoxes
-    for (ib = 0; container->get_input_box(ib) != nullptr;
-         ++ib) {
-      auto inputBox = container->get_input_box(ib);
-      // Se dibuja el input box
-      src.x = (inputBox->focused &&
-               container->focused && !i->blocked)
-                  ? 1
-                  : 3;
-      src.y = 26;
-      src.w = 1;
-      src.h = 14;
-
-      dst.x = inputBox->getAbsoluteX();
-      dst.y = inputBox->getAbsoluteY();
-      dst.w = 1;
-      dst.h = 14;
-
-      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-      dst.x++;
-      src.x--;
-      for (int an = 0; an < inputBox->width - 2; an++) {
-        SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-        dst.x++;
-      }
-      src.x++;
-      SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-
-      // La etiqueta del inputbox
-      if (8 != this->fontSize) {
-        this->openFont(8);
-      }
-
-      SDL_Surface *titleSurface = TTF_RenderText_Solid(
-          font, inputBox->get_title(), fontColor);
-      SDL_Texture *titleTexture =
-          SDL_CreateTextureFromSurface(renderer, titleSurface);
-
-      dst.x = inputBox->getAbsoluteX() - titleSurface->w - 5;
-      dst.y += 3;
-      dst.w = titleSurface->w;
-      dst.h = titleSurface->h;
-
-      SDL_RenderCopy(renderer, titleTexture, nullptr, &dst);
-
-      if (inputBox->current_length() != 0) {
-        SDL_Surface *textSurface = TTF_RenderText_Solid(
-            font,
-            inputBox->get_text(),
-            fontColor);
-        dst.x += titleSurface->w + 10;
-        dst.w = std::min(inputBox->width, textSurface->w);
-
-        SDL_Texture *textTexture =
-            SDL_CreateTextureFromSurface(renderer, textSurface);
-        SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
-        SDL_DestroyTexture(textTexture);
-        SDL_FreeSurface(textSurface);
-      }
-
-      SDL_DestroyTexture(titleTexture);
-      SDL_FreeSurface(titleSurface);
-    }
-
-    // Botones
-    for (bon = 0; container->get_button(bon) != nullptr;
-         bon++) {
-      auto button = container->get_button(bon);
-      if (button->press == 0)
-        SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
-      else
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-
-      dst.x = button->getAbsoluteX();
-      dst.y = button->getAbsoluteY();
-      dst.w = button->width;
-      dst.h = button->height;
-
-      SDL_RenderFillRect(renderer, &dst);
-
-      if (button->press == 0)
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-      else
-        SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
-
-      dst.x = button->getAbsoluteX();
-      dst.y = button->getAbsoluteY();
-      dst.w = button->width;
-      dst.h = 1;
-
-      SDL_RenderFillRect(renderer, &dst);
-
-      dst.x = button->getAbsoluteX();
-      dst.y = button->getAbsoluteY() +
-              button->height;
-      dst.w = button->width;
-      dst.h = 1;
-
-      SDL_RenderFillRect(renderer, &dst);
-
-      dst.x = button->getAbsoluteX();
-      dst.y = button->getAbsoluteY();
-      dst.w = 1;
-      dst.h = button->height;
-
-      SDL_RenderFillRect(renderer, &dst);
-
-      dst.x = button->getAbsoluteX() +
-              button->width;
-      dst.y = button->getAbsoluteY();
-      dst.w = 1;
-      dst.h = button->height;
-
-      SDL_RenderFillRect(renderer, &dst);
-
-      // Dibujar la etiqueta
-      if (this->fontSize != 8) this->openFont(8);
-
-      SDL_Surface *titlebSurface = TTF_RenderText_Solid(
-          font, button->get_title(),
-          fontColor);
-      dst.y = button->getAbsoluteY() +
-              (button->height / 2) -
-              (titlebSurface->h / 2);
-      dst.x = button->getAbsoluteX() +
-              (button->width / 2) -
-              (titlebSurface->w / 2);
-      dst.w = titlebSurface->w;
-      dst.h = titlebSurface->h;
-
-      SDL_Texture *titlebTexture =
-          SDL_CreateTextureFromSurface(renderer, titlebSurface);
-      SDL_RenderCopy(renderer, titlebTexture, nullptr, &dst);
-      SDL_DestroyTexture(titlebTexture);
-      SDL_FreeSurface(titlebSurface);
-    }
+    // }
+    //
+    // // Labels
+    // for (lb = 0; container->get_label(lb) != nullptr;
+    //      lb++) {
+    //   auto label = container->get_label(lb);
+    //   if (label->get_size() != this->fontSize) {
+    //     this->openFont(label->get_size());
+    //   }
+    //
+    //   SDL_Surface *textSurface = TTF_RenderText_Solid(
+    //       font, label->get_text(), fontColor);
+    //   SDL_Texture *textTexture =
+    //       SDL_CreateTextureFromSurface(renderer, textSurface);
+    //
+    //   if (textSurface != nullptr) {
+    //     dst.x = label->getAbsoluteX();
+    //     dst.y = label->getAbsoluteY();
+    //     dst.w = textSurface->w;
+    //     dst.h = textSurface->h;
+    //
+    //     SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
+    //     SDL_FreeSurface(textSurface);
+    //     SDL_DestroyTexture(textTexture);
+    //   }
+    // }
+    //
+    // // InputBoxes
+    // for (ib = 0; container->get_input_box(ib) != nullptr;
+    //      ++ib) {
+    //   auto inputBox = container->get_input_box(ib);
+    //   // Se dibuja el input box
+    //   src.x = (inputBox->focused &&
+    //            container->focused && !i->blocked)
+    //               ? 1
+    //               : 3;
+    //   src.y = 26;
+    //   src.w = 1;
+    //   src.h = 14;
+    //
+    //   dst.x = inputBox->getAbsoluteX();
+    //   dst.y = inputBox->getAbsoluteY();
+    //   dst.w = 1;
+    //   dst.h = 14;
+    //
+    //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+    //   dst.x++;
+    //   src.x--;
+    //   for (int an = 0; an < inputBox->width - 2; an++) {
+    //     SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+    //     dst.x++;
+    //   }
+    //   src.x++;
+    //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
+    //
+    //   // La etiqueta del inputbox
+    //   if (8 != this->fontSize) {
+    //     this->openFont(8);
+    //   }
+    //
+    //   SDL_Surface *titleSurface = TTF_RenderText_Solid(
+    //       font, inputBox->get_title(), fontColor);
+    //   SDL_Texture *titleTexture =
+    //       SDL_CreateTextureFromSurface(renderer, titleSurface);
+    //
+    //   dst.x = inputBox->getAbsoluteX() - titleSurface->w - 5;
+    //   dst.y += 3;
+    //   dst.w = titleSurface->w;
+    //   dst.h = titleSurface->h;
+    //
+    //   SDL_RenderCopy(renderer, titleTexture, nullptr, &dst);
+    //
+    //   if (inputBox->current_length() != 0) {
+    //     SDL_Surface *textSurface = TTF_RenderText_Solid(
+    //         font,
+    //         inputBox->get_text(),
+    //         fontColor);
+    //     dst.x += titleSurface->w + 10;
+    //     dst.w = std::min(inputBox->width, textSurface->w);
+    //
+    //     SDL_Texture *textTexture =
+    //         SDL_CreateTextureFromSurface(renderer, textSurface);
+    //     SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
+    //     SDL_DestroyTexture(textTexture);
+    //     SDL_FreeSurface(textSurface);
+    //   }
+    //
+    //   SDL_DestroyTexture(titleTexture);
+    //   SDL_FreeSurface(titleSurface);
+    // }
+    //
+    // // Botones
+    // for (bon = 0; container->get_button(bon) != nullptr;
+    //      bon++) {
+    //   auto button = container->get_button(bon);
+    //   if (button->press == 0)
+    //     SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
+    //   else
+    //     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    //
+    //   dst.x = button->getAbsoluteX();
+    //   dst.y = button->getAbsoluteY();
+    //   dst.w = button->width;
+    //   dst.h = button->height;
+    //
+    //   SDL_RenderFillRect(renderer, &dst);
+    //
+    //   if (button->press == 0)
+    //     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    //   else
+    //     SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
+    //
+    //   dst.x = button->getAbsoluteX();
+    //   dst.y = button->getAbsoluteY();
+    //   dst.w = button->width;
+    //   dst.h = 1;
+    //
+    //   SDL_RenderFillRect(renderer, &dst);
+    //
+    //   dst.x = button->getAbsoluteX();
+    //   dst.y = button->getAbsoluteY() +
+    //           button->height;
+    //   dst.w = button->width;
+    //   dst.h = 1;
+    //
+    //   SDL_RenderFillRect(renderer, &dst);
+    //
+    //   dst.x = button->getAbsoluteX();
+    //   dst.y = button->getAbsoluteY();
+    //   dst.w = 1;
+    //   dst.h = button->height;
+    //
+    //   SDL_RenderFillRect(renderer, &dst);
+    //
+    //   dst.x = button->getAbsoluteX() +
+    //           button->width;
+    //   dst.y = button->getAbsoluteY();
+    //   dst.w = 1;
+    //   dst.h = button->height;
+    //
+    //   SDL_RenderFillRect(renderer, &dst);
+    //
+    //   // Dibujar la etiqueta
+    //   if (this->fontSize != 8) this->openFont(8);
+    //
+    //   SDL_Surface *titlebSurface = TTF_RenderText_Solid(
+    //       font, button->get_title(),
+    //       fontColor);
+    //   dst.y = button->getAbsoluteY() +
+    //           (button->height / 2) -
+    //           (titlebSurface->h / 2);
+    //   dst.x = button->getAbsoluteX() +
+    //           (button->width / 2) -
+    //           (titlebSurface->w / 2);
+    //   dst.w = titlebSurface->w;
+    //   dst.h = titlebSurface->h;
+    //
+    //   SDL_Texture *titlebTexture =
+    //       SDL_CreateTextureFromSurface(renderer, titlebSurface);
+    //   SDL_RenderCopy(renderer, titlebTexture, nullptr, &dst);
+    //   SDL_DestroyTexture(titlebTexture);
+    //   SDL_FreeSurface(titlebSurface);
+    // }
 
     // Imagenes
     // for (img = 0; container->get_image(img) != nullptr;
@@ -611,8 +611,8 @@ void graphics::draw(bure::ui::ui_manager *i) {
     //   SDL_DestroyTexture(seleccionadoTexture);
     //   SDL_FreeSurface(seleccionado);
     // }
-  }
-}
+//   }
+// }
 
 // void graphics::draw(player &p) {
 //   int tilexinic = p.x - 16;
@@ -648,6 +648,7 @@ void graphics::draw(bure::ui::ui_manager *i) {
 //   SDL_DestroyTexture(nombreTexture);
 //   SDL_FreeSurface(nombre);
 // }
+}
 
 void graphics::flipBuffer() { SDL_RenderPresent(renderer); }
 
