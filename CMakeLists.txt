@@ -18,17 +18,18 @@ include_directories(${SDL2_INCLUDE_DIRS}
         ${SDL2_IMAGE_INCLUDE_DIRS}
         ${SDL2_NET_INCLUDE_DIRS}
         ${SDL2_TTF_INCLUDE_DIRS}
-        ${LibXMLPP_INCLUDE_DIRS})
+        ${LibXMLPP_INCLUDE_DIRS}
+        engine)
 
 add_library(bure-ui
-  ui/ui_manager.cpp
-  ui/ui_renderer.cpp
-  ui/container.cpp
-  ui/input_box.cpp
-  ui/label.cpp
-  ui/selector.cpp
-  ui/button.cpp
-  ui/widget.cpp)
+  engine/ui/ui_manager.cpp
+  engine/ui/ui_renderer.cpp
+  engine/ui/container.cpp
+  engine/ui/input_box.cpp
+  engine/ui/label.cpp
+  engine/ui/selector.cpp
+  engine/ui/button.cpp
+  engine/ui/widget.cpp)
 
 add_library(bure-engine
   engine/systems/system.cpp

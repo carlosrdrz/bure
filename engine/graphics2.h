@@ -6,7 +6,7 @@
 #include <string>
 
 #include "game_map.h"
-#include "../ui/ui_manager.h"
+#include "ui/ui_manager.h"
 #include "utils/config.h"
 
 namespace bure {

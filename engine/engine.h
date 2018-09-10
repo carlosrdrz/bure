@@ -4,7 +4,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "../ui/ui_manager.h"
+#include "ui/ui_manager.h"
 #include "entities/entity.h"
 #include "event_manager.h"
 #include "systems/system.h"

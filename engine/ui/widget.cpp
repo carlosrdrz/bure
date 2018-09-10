@@ -1,6 +1,6 @@
 #include "widget.h"
 
-#include "../engine/utils/logger.h"
+#include "utils/logger.h"
 
 namespace bure {
 namespace ui {

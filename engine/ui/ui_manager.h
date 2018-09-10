@@ -7,8 +7,8 @@
 #include "container.h"
 #include "input_box.h"
 #include "selector.h"
-#include "../engine/event_manager.h"
-#include "../engine/utils/logger.h"
+#include "event_manager.h"
+#include "utils/logger.h"
 
 namespace bure {
 namespace ui {
