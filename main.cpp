@@ -20,7 +20,6 @@ void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
     g->changeMap("campo.tmx");
     g->getPlayer().setPosition(30, 36);
     g->playing = true;
-    ui->writing = false;
     ui->closeContainer(0);
   };
 
