@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "button.h"
 #include "image.h"
@@ -13,40 +13,23 @@
 namespace bure {
 namespace ui {
 
+struct container_child {
+  std::unique_ptr<widget> child;
+  widget_type type;
+};
+
 class container : public widget {
  public:
-  int visible;
-  int index;
-  bool buttonPressed;
-  bool focused;
-
-  container();
   container(int x, int y, int w, int h);
-  ~container();
 
-  void add(std::unique_ptr<label> w);
-  // void add(std::unique_ptr<input_box> w);
-  void add(std::unique_ptr<button> w);
-  // void add(std::unique_ptr<image> w);
-  // void add(std::unique_ptr<selector> w);
+  void add(std::unique_ptr<widget> w);
 
-  // input_box* get_input_box(int ib);
-  // label* get_label(int lb);
-  // button* get_button(int b);
-  // image* get_image(int im);
-  // selector* get_selector(int sel);
-
-  std::vector<std::reference_wrapper<label>> getLabels();
-  std::vector<std::reference_wrapper<button>> getButtons();
+  widget_type getType() const { return widget_type::container; }
+  std::vector<std::reference_wrapper<widget>> getChildrenByType(
+      widget_type type);
 
  private:
-  std::vector<std::unique_ptr<label>> labels;
-  // std::vector<std::unique_ptr<input_box>> inputBoxes;
-  std::vector<std::unique_ptr<button>> buttons;
-  // std::vector<std::unique_ptr<image>> images;
-  // std::vector<std::unique_ptr<selector>> selectors;
-
-  void onClickUp(SDL_Event e);
+  std::vector<container_child> _children;
 };
 
 }  // namespace ui

@@ -21,6 +21,7 @@ class selector : public widget {
   void previous();
 
   std::list<std::string>::iterator options_it;
+  widget_type getType() const { return widget_type::selector; }
 
  private:
   std::list<std::string> options;

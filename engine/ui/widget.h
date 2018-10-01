@@ -5,9 +5,26 @@
 namespace bure {
 namespace ui {
 
+enum class widget_type {
+  widget,
+  container,
+  button,
+  input_box,
+  image,
+  label,
+  selector
+};
+
 class widget {
  public:
-  widget() : width(0), height(0), x(0), y(0), index(0), parent(nullptr) {}
+  widget() : index(0), x(0), y(0), width(0), height(0) {}
+
+  // TODO(carlosrdrz): This probably should not be a public member
+  int index;
+
+  // Called when the widget is added to a container
+  // Do initialization stuff here like adding event handlers
+  virtual void init() {}
 
   int getRelativeX() const;
   int getRelativeY() const;
@@ -20,9 +37,10 @@ class widget {
 
   void setParent(widget* w);
   widget* getParent() const;
+  virtual widget_type getType() const;
 
  protected:
-  int width, height, x, y, index;
+  int x, y, width, height;
   widget* parent = nullptr;
 };
 

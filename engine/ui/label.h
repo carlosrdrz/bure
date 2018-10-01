@@ -16,6 +16,7 @@ class label : public widget {
 
   void set(int x, int y);
   void setText(std::string que);
+  widget_type getType() const { return widget_type::label; }
 
  private:
   std::string text;

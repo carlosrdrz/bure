@@ -14,7 +14,6 @@ bure::config bure::config::instance;
 void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
   auto c = std::make_unique<bure::ui::container>(362, 309, 130, 60);
   auto b = std::make_unique<bure::ui::button>("START GAME");
-  b->init();
   b->set(20, 20, 90, 20);
   b->function = [g, ui](int) -> void {
     g->changeMap("campo.tmx");
@@ -57,18 +56,6 @@ int main(int argc, char* argv[]) {
 
   // Main game loop
   while (!gameInstance->finished) {
-    // if (gameInstance->playing) {
-    //   graphicsInstance->clean();
-    //   // graphicsInstance->draw(gameInstance.get());
-    //   gameInstance->nextFrame();
-    // } else {
-    //   graphicsInstance->renderBackground();
-    // }
-
-    // graphicsInstance->draw(uiManager.get());
-    // graphicsInstance->flipBuffer();
-
-    // manage events
     bure::event_manager::get().pollEvent();
     bure::engine::get().update();
     SDL_Delay(10);

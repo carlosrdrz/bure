@@ -16,11 +16,11 @@ class ui_manager {
   void addContainer(std::unique_ptr<container> c);
 
   void closeContainer(int in);
-  void closeContainer(ui::container *p);
+  void closeContainer(container *p);
 
-  bool containerExists(ui::container* p);
+  bool containerExists(container* p);
 
-  ui::container* getContainer(int cont);
+  container* getContainer(int cont);
   std::vector<std::reference_wrapper<container>> getContainers();
 
  private:

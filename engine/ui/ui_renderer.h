@@ -3,6 +3,10 @@
 #include <memory>
 
 #include "renderer.h"
+#include "ui_manager.h"
+#include "container.h"
+#include "label.h"
+#include "button.h"
 
 namespace bure {
 namespace ui {

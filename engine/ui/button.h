@@ -30,6 +30,8 @@ class button : public widget {
         this->height = h;
     }
 
+    widget_type getType() const { return widget_type::button; }
+
  private:
     void onClickDown(SDL_Event e);
     void onClickUp(SDL_Event e);

@@ -1,17 +1,14 @@
 #include "widget.h"
 
+#include <cassert>
 #include "utils/logger.h"
 
 namespace bure {
 namespace ui {
 
-int widget::getRelativeX() const {
-  return x;
-}
+int widget::getRelativeX() const { return x; }
 
-int widget::getRelativeY() const {
-  return y;
-}
+int widget::getRelativeY() const { return y; }
 
 int widget::getAbsoluteX() const {
   if (parent == nullptr) return x;
@@ -23,28 +20,25 @@ int widget::getAbsoluteY() const {
   return parent->getAbsoluteY() + y;
 }
 
-int widget::getWidth() const {
-  return width;
-}
+int widget::getWidth() const { return width; }
 
-int widget::getHeight() const {
-  return height;
-}
+int widget::getHeight() const { return height; }
 
 bool widget::wasClicked(int clickX, int clickY) const {
   auto x = getAbsoluteX();
   auto y = getAbsoluteY();
 
-  return (clickX > x && clickX < (x + width) &&
-          clickY > y && clickY < (y + height));
+  return (clickX > x && clickX < (x + width) && clickY > y &&
+          clickY < (y + height));
 }
 
-void widget::setParent(widget* w) {
-  parent = w;
-}
+void widget::setParent(widget* w) { parent = w; }
 
-widget* widget::getParent() const {
-  return parent;
+widget* widget::getParent() const { return parent; }
+
+widget_type widget::getType() const {
+  assert(false);
+  return widget_type::widget;
 }
 
 }  // namespace ui

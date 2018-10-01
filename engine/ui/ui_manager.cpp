@@ -8,7 +8,6 @@ namespace ui {
 
 void ui_manager::addContainer(std::unique_ptr<container> c) {
   c->index = static_cast<int>(_containers.size());
-  if (static_cast<int>(_containers.size()) == 0) c->focused = true;
   _containers.push_back(std::move(c));
 }
 

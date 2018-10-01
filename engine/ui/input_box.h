@@ -29,6 +29,7 @@ class input_box : public widget {
   const char *get_title() { return title.c_str(); }
 
   int current_length() { return static_cast<int>(text.size()); }
+  widget_type getType() const { return widget_type::input_box; }
 
  private:
   int max_length;
