@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include "sprite_manager.h"
 #include "graphics2.h"
 #include "utils/config.h"
 #include "utils/logger.h"
@@ -8,7 +9,9 @@
 
 namespace bure {
 // todo: fix basepath
-graphics2::graphics2(std::string basePath) : basePath(basePath) {
+graphics2::graphics2(std::string basePath) :
+  basePath(basePath),
+  _spriteManager(basePath) {
   atexit(SDL_Quit);
 
   // Init SDL
@@ -66,6 +69,14 @@ void graphics2::drawRect(rect r, color c) {
   SDL_Rect dst = rectToSDLRect(r);
   setRenderColor(c);
   SDL_RenderFillRect(renderer, &dst);
+}
+
+void graphics2::drawSprite(sprite_id spriteId, rect s, rect d) {
+  SDL_Rect src = rectToSDLRect(s);
+  SDL_Rect dst = rectToSDLRect(d);
+  auto sprite = _spriteManager.getSprite(spriteId);
+  auto texture = SDL_CreateTextureFromSurface(renderer, sprite);
+  SDL_RenderCopy(renderer, texture, &src, &dst);
 }
 
 void graphics2::drawText(std::string text, int x, int y, int size, color c) {

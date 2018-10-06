@@ -42,6 +42,7 @@ add_library(bure-engine
   engine/graphics.cpp
   engine/game_map.cpp
   engine/event_manager.cpp
+  engine/sprite_manager.cpp
   engine/renderer.cpp
   engine/entity_renderer.cpp
   engine/graphics2.cpp)

@@ -1,5 +1,6 @@
 #include "ui_renderer.h"
 
+#include "sprite_manager.h"
 #include "utils/logger.h"
 
 namespace bure {
@@ -36,10 +37,73 @@ void ui_renderer::render() {
 }
 
 void ui_renderer::renderContainer(const bure::ui::container& c) {
-  bure::rect r = {c.getAbsoluteX(), c.getAbsoluteY(), c.getWidth(),
+  bure::rect src = {104, 0, 1, 26};
+  bure::rect dst = {c.getAbsoluteX(), c.getAbsoluteY(), c.getWidth(),
                   c.getHeight()};
 
-  _graphics->drawRect(r, _bgColor);
+  _graphics->drawRect(dst, _bgColor);
+
+  dst.y -= 12;
+  dst.x--;
+  dst.width = 1;
+  dst.height = 26;
+
+  for (int y = 0; y < c.getWidth(); y++) {
+    dst.x++;
+    _graphics->drawSprite("gui", src, dst);
+  }
+
+  dst.y += c.getHeight();
+  dst.x = c.getAbsoluteX() - 1;
+  for (int y = 0; y < c.getWidth(); y++) {
+     dst.x++;
+     _graphics->drawSprite("gui", src, dst);
+  }
+
+  src.x = 130;
+  src.width = 26;
+  src.height = 1;
+
+  dst.x = c.getAbsoluteX() - 11;
+  dst.y = c.getAbsoluteY();
+  dst.height = 1;
+  dst.width = 26;
+
+  for (int y = 0; y < c.getHeight(); y++) {
+    dst.y++;
+    _graphics->drawSprite("gui", src, dst);
+  }
+
+  dst.x += c.getWidth() - 4;
+  dst.y = c.getAbsoluteY();
+  for (int y = 0; y < c.getHeight(); y++) {
+    dst.y++;
+    _graphics->drawSprite("gui", src, dst);
+  }
+
+  src.width = 26;
+  src.height = 26;
+  dst.width = 26;
+  dst.height = 26;
+
+  src.x = 0;
+  src.y = 0;
+  dst.x = c.getAbsoluteX() + c.getWidth() - 15;
+  dst.y = c.getAbsoluteY() - 12;
+  _graphics->drawSprite("gui", src, dst);
+
+  src.x += 26;
+  dst.x -= c.getWidth() - 4;
+  _graphics->drawSprite("gui", src, dst);
+
+  src.x += 26;
+  dst.y += c.getHeight();
+  dst.x = c.getAbsoluteX() + c.getWidth() - 15;
+  _graphics->drawSprite("gui", src, dst);
+
+  src.x += 26;
+  dst.x -= c.getWidth() - 4;
+  _graphics->drawSprite("gui", src, dst);
 }
 
 void ui_renderer::renderLabel(const bure::ui::label& l) {
