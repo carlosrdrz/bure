@@ -21,8 +21,8 @@ graphics2::graphics2(std::string basePath) : basePath(basePath) {
   auto resX = 1024 * scale;
   auto resY = 768 * scale;
 
-  Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
-  if (config::instance.getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_OPENGL;
+  Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI & SDL_WINDOW_OPENGL;
+  if (config::instance.getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_FULLSCREEN;
   window = SDL_CreateWindow("Bure", SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, resX, resY, flags);
   renderer = SDL_CreateRenderer(window, -1, 0);
