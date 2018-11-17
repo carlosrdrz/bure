@@ -12,10 +12,10 @@ SDL_Surface* sprite_manager::getSprite(sprite_id id) {
     return search->second.get();
   }
 
-  logger::debug("loading sprite %s\n", (_basePath + "data/" + id + ".png").c_str());
+  logger::debug("loading sprite %s", (_basePath + "data/" + id + ".png").c_str());
   auto surface = IMG_Load((_basePath + "data/" + id + ".png").c_str());
   if (!surface) {
-    logger::error("IMG_Load: %s\n", IMG_GetError());
+    logger::error("IMG_Load: %s", IMG_GetError());
     // TODO(carlosrdrz): deal with this error here. maybe just crash?
   }
 

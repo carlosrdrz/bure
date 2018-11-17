@@ -22,10 +22,6 @@ class game {public:
   // Finishes the actual game and closes the client
   void finishGame();
 
-  // Map
-  bure::game_map *getMap() { return _map.get(); }
-  void changeMap(std::string mapName);
-
   // Player
   player &getPlayer() { return *_player; }
 
@@ -34,5 +30,4 @@ class game {public:
 
  private:
   std::unique_ptr<player> _player;
-  std::unique_ptr<bure::game_map> _map;
 };

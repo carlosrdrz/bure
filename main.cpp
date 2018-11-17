@@ -8,10 +8,11 @@
 #include "engine/utils/logger.h"
 #include "game.h"
 #include "ui/ui_renderer.h"
+#include "entity_renderer.h"
+#include "game_map_renderer.h"
 #include "entities/entity.h"
 #include "components/position_component.h"
 #include "components/sprite_component.h"
-#include "entity_renderer.h"
 
 bure::config bure::config::instance;
 
@@ -22,7 +23,8 @@ void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
   auto b = std::make_unique<bure::ui::button>("START GAME");
   b->set(20, 20, 90, 20);
   b->function = [g, ui](int) -> void {
-    g->changeMap("campo.tmx");
+    bure::engine::get().clearEntities();
+    bure::engine::get().setMap("campo.tmx");
     g->getPlayer().setPosition(30, 36);
     g->playing = true;
     ui->closeContainer(0);
@@ -51,8 +53,10 @@ int main(int argc, char* argv[]) {
       std::move(graphicsInstance));
   auto uiRenderer = std::make_unique<bure::ui::ui_renderer>(uiManager);
   auto entityRenderer = std::make_unique<bure::entity_renderer>();
+  auto gameMapRenderer = std::make_unique<bure::game_map_renderer>();
   drawingSystem->addRenderer(std::move(uiRenderer));
   drawingSystem->addRenderer(std::move(entityRenderer));
+  drawingSystem->addRenderer(std::move(gameMapRenderer));
   bure::engine::get().addSystem(std::move(drawingSystem));
 
   // Init start menu
@@ -61,6 +65,20 @@ int main(int argc, char* argv[]) {
   // Register close callback
   bure::event_manager::get().addEventCallback(
       SDL_QUIT, [gamePointer](SDL_Event e) { gamePointer->finishGame(); });
+
+  // Just something silly so we can move around the map
+  bure::event_manager::get().addEventCallback(
+    SDL_KEYDOWN, [](SDL_Event e) {
+      if (e.key.keysym.scancode == SDL_SCANCODE_A) {
+        bure::engine::get().globalX--;
+      } else if (e.key.keysym.scancode == SDL_SCANCODE_D) {
+        bure::engine::get().globalX++;
+      } else if (e.key.keysym.scancode == SDL_SCANCODE_W) {
+        bure::engine::get().globalY--;
+      } else if (e.key.keysym.scancode == SDL_SCANCODE_S) {
+        bure::engine::get().globalY++;
+      }
+    });
 
   // add entity for background
   auto backgroundEntity = std::make_unique<bure::entities::entity>();

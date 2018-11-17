@@ -9,9 +9,4 @@ void game::finishGame() {
   playing = false;
 }
 
-void game::changeMap(std::string mapName) {
-  // todo: fix base path
-  _map = make_unique<bure::game_map>("/home/carlosrdrz/dev/bure", mapName);
-}
-
 void game::nextFrame() { _player->nextWalkingFrame(); }

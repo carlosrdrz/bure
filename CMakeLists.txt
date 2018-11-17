@@ -45,7 +45,9 @@ add_library(bure-engine
   engine/sprite_manager.cpp
   engine/renderer.cpp
   engine/entity_renderer.cpp
-  engine/graphics2.cpp)
+  engine/game_map_renderer.cpp
+  engine/graphics2.cpp
+  backward.cpp)
 
 add_executable(client
   main.cpp

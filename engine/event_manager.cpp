@@ -26,7 +26,6 @@ void event_manager::pollEvent() {
   SDL_Event lastEvent;
 
   while (SDL_PollEvent(&lastEvent)) {
-    logger::debug("processing event id %d", lastEvent.type);
     lastEvent.button.x = lastEvent.button.x / scale;
     lastEvent.button.y = lastEvent.button.y / scale;
     for (auto &st : _eventCallbacks) {
