@@ -51,6 +51,7 @@ void game_map_renderer::renderTile(int tile, int x, int y, int layer) {
     }
     tilex = (tile - 1) * 32;
   }
+
   src.x = tilex;
   src.y = tiley;
   src.width = TILE_SIZE;

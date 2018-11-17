@@ -46,7 +46,9 @@ game_map::game_map(std::string basePath, std::string archivo) {
   for (const auto& child : dataNode->get_children("tile")) {
     auto node = static_cast<xmlpp::Element*>(child);
     std::string value = node->get_attribute_value("gid");
-    elementos[num++] = atoi(value.c_str());
+    // TODO(carlosrdrz): this is bad. get the value from the tmx file or
+    // figure out another way of doing this
+    elementos[num++] = atoi(value.c_str()) - 98;
   }
 
   do {
