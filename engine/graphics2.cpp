@@ -74,40 +74,27 @@ void graphics2::drawRect(rect r, color c) {
 void graphics2::drawSprite(sprite_id spriteId, rect s, rect d) {
   SDL_Rect src = rectToSDLRect(s);
   SDL_Rect dst = rectToSDLRect(d);
-  auto sprite = _spriteManager.getSprite(spriteId);
-  auto texture = SDL_CreateTextureFromSurface(renderer, sprite);
+  auto texture = getSpriteTexture(spriteId);
   SDL_RenderCopy(renderer, texture, &src, &dst);
 }
 
 void graphics2::drawText(std::string text, int x, int y, int size, color c) {
-  if (size != this->fontSize) this->openFont(size);
-
-  auto textSurface = TTF_RenderText_Solid(font, text.c_str(),
-                                          {(Uint8)c.r, (Uint8)c.g, (Uint8)c.b});
-  auto textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-  if (textSurface != nullptr) {
+  auto textTexture = getTextTexture(text, size, c);
+  auto textSurface = getTextSurface(text);
+  if (textTexture != nullptr) {
     drawFullTexture(textTexture, {x, y, textSurface->w, textSurface->h});
-    SDL_FreeSurface(textSurface);
-    SDL_DestroyTexture(textTexture);
   }
 }
 
 void graphics2::drawTextCentered(std::string text, int x, int y, int size,
                                  color c) {
-  if (size != this->fontSize) this->openFont(size);
-
-  auto textSurface = TTF_RenderText_Solid(font, text.c_str(),
-                                          {(Uint8)c.r, (Uint8)c.g, (Uint8)c.b});
-  auto textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
+  auto textTexture = getTextTexture(text, size, c);
+  auto textSurface = getTextSurface(text);
   int xCenter = x - textSurface->w / 2;
   int yCenter = y - textSurface->h / 2;
   if (textSurface != nullptr) {
     drawFullTexture(textTexture,
-                    {xCenter, yCenter, textSurface->w, textSurface->h});
-    SDL_FreeSurface(textSurface);
-    SDL_DestroyTexture(textTexture);
+                    { xCenter, yCenter, textSurface->w, textSurface->h });
   }
 }
 
@@ -121,4 +108,38 @@ void graphics2::openFont(int size) {
   }
   this->fontSize = size;
 }
+
+SDL_Texture* graphics2::getSpriteTexture(sprite_id id) {
+  auto search = _textures.find(id);
+  if (search != _textures.end()) {
+    return search->second;
+  }
+
+  // TODO(carlosrdrz): we are not removing this memory here
+  auto sprite = _spriteManager.getSprite(id);
+  auto texture = SDL_CreateTextureFromSurface(renderer, sprite);
+  _textures[id] = texture;
+  return _textures[id];
+}
+
+SDL_Texture* graphics2::getTextTexture(std::string text, int size, color c) {
+  auto search = _textures.find(text);
+  if (search != _textures.end()) {
+    return search->second;
+  }
+
+  // TODO(carlosrdrz): we are not removing this memory here
+  if (size != this->fontSize) this->openFont(size);
+
+  auto textSurface = TTF_RenderText_Solid(font, text.c_str(), {(Uint8)c.r, (Uint8)c.g, (Uint8)c.b});
+  auto texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+  _textSurfaces[text] = textSurface;
+  _textures[text] = texture;
+  return _textures[text];
+}
+
+SDL_Surface* graphics2::getTextSurface(std::string text) {
+  return _textSurfaces[text];
+}
+
 }  // namespace bure

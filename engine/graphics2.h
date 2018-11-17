@@ -39,6 +39,10 @@ class graphics2 {
   void clean();
   void flipBuffer();
 
+  SDL_Texture* getSpriteTexture(sprite_id id);
+  SDL_Texture* getTextTexture(std::string text, int size, color c);
+  SDL_Surface* getTextSurface(std::string text);
+
  private:
   void drawFullTexture(SDL_Texture *txt, rect r);
   void setRenderColor(color c);
@@ -52,5 +56,8 @@ class graphics2 {
   TTF_Font *font;
   int fontSize;
   float scale;
+
+  std::map<std::string, SDL_Texture*> _textures;
+  std::map<std::string, SDL_Surface*> _textSurfaces;
 };
 }  // namespace bure
