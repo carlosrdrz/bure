@@ -30,5 +30,17 @@ void entity::removeChild(entity *e) {
   }
 }
 
+void entity::setLayer(int layer) {
+  _layer = layer;
+}
+
+int entity::getLayer() {
+  if (_parent == nullptr || _layer != 0) {
+    return _layer;
+  } else {
+    return _parent->getLayer();
+  }
+}
+
 }  // namespace entities
 }  // namespace bure

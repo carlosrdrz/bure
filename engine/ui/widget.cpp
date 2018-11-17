@@ -41,5 +41,17 @@ widget_type widget::getType() const {
   return widget_type::widget;
 }
 
+void widget::setLayer(int layer) {
+  _layer = layer;
+}
+
+int widget::getLayer() {
+  if (parent == nullptr || _layer != 0) {
+    return _layer;
+  } else {
+    return parent->getLayer();
+  }
+}
+
 }  // namespace ui
 }  // namespace bure

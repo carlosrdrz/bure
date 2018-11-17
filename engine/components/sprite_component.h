@@ -3,21 +3,32 @@
 #include <string>
 
 #include "component.h"
+#include "sprite_manager.h"
+#include "graphics2.h"
 
 namespace bure {
 namespace components {
 
-typedef std::string texture_id;
-
 class sprite_component : public component {
- public:
-  explicit sprite_component(const bure::entities::entity& e) : component(e) {}
+ using component::component;
 
-  int getWidth() { return w; }
-  int getHeight() { return h; }
-  texture_id getTexture() { return texture; }
-  int w, h;
-  texture_id texture;
+ public:
+  void setSpriteID(sprite_id spriteId) { _spriteId = spriteId; }
+  void setSrcRect(rect src) { _src = src; }
+  void setSize(int width, int height) {
+    _width = width;
+    _height = height;
+  }
+
+  int getWidth() { return _width; }
+  int getHeight() { return _height; }
+  sprite_id getSpriteID() { return _spriteId; }
+  rect getSrcRect() { return _src; }
+
+ private:
+  int _width, _height;
+  sprite_id _spriteId;
+  rect _src;
 };
 
 }  // namespace components

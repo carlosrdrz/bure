@@ -3,23 +3,28 @@
 namespace bure {
 namespace components {
 
+void position_component::setCoords(int x, int y) {
+  _x = x;
+  _y = y;
+}
+
 int position_component::getX() {
   if (_entity.getParent() == nullptr) {
-    return x;
+    return _x;
   } else {
-    return getParentPositionComponent().getX() + x;
+    return getParentPos().getX() + _x;
   }
 }
 
 int position_component::getY() {
   if (_entity.getParent() == nullptr) {
-    return y;
+    return _y;
   } else {
-    return getParentPositionComponent().getY() + y;
+    return getParentPos().getY() + _y;
   }
 }
 
-position_component& position_component::getParentPositionComponent() {
+position_component& position_component::getParentPos() {
   return *_entity.getParent()->getComponentByType<position_component>();
 }
 

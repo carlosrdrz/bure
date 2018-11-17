@@ -20,8 +20,10 @@ ui_renderer::ui_renderer(std::shared_ptr<bure::ui::ui_manager> ui) {
   _bgColor.alpha = SDL_ALPHA_OPAQUE;
 }
 
-void ui_renderer::render() {
+void ui_renderer::render(int layer) {
   for (bure::ui::container& c : _uiManager->getContainers()) {
+    if (c.getLayer() != layer) continue;
+
     renderContainer(c);
 
     for (auto& w : c.getChildrenByType(widget_type::label)) {

@@ -39,8 +39,12 @@ class widget {
   widget* getParent() const;
   virtual widget_type getType() const;
 
+  void setLayer(int layer);
+  int getLayer();
+
  protected:
   int x, y, width, height;
+  int _layer = 0;
   widget* parent = nullptr;
 };
 

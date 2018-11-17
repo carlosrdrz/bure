@@ -12,6 +12,7 @@ SDL_Surface* sprite_manager::getSprite(sprite_id id) {
     return search->second.get();
   }
 
+  logger::debug("loading sprite %s\n", (_basePath + "data/" + id + ".png").c_str());
   auto surface = IMG_Load((_basePath + "data/" + id + ".png").c_str());
   if (!surface) {
     logger::error("IMG_Load: %s\n", IMG_GetError());

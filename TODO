@@ -1,7 +1,10 @@
-- Create dir in personal folder for configs and files
-- Move maps and images to resources
-- Remove uses of c_str()
-- shared_ptr and unique_ptr
-- migrate to libsdl2 cpp wrapper
-- if path not provided, then take a default one
-- remove shared extern variables
+- create dir in personal folder for configs and files
+- move maps and images to resources
+- add service locator (otherwise it will be more difficult to test)
+- tests
+- maybe should use enum for sprites IDs instead of strings
+- finally remove graphics and rename graphics2
+- move all initialization to engine so that callers don't care about internals
+- work on entities
+- maybe should move declarations of types like rect to their own files
+- layer management is very poor. need to improve it.

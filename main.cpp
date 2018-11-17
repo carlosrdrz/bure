@@ -8,11 +8,17 @@
 #include "engine/utils/logger.h"
 #include "game.h"
 #include "ui/ui_renderer.h"
+#include "entities/entity.h"
+#include "components/position_component.h"
+#include "components/sprite_component.h"
+#include "entity_renderer.h"
 
 bure::config bure::config::instance;
 
 void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
   auto c = std::make_unique<bure::ui::container>(362, 309, 130, 60);
+  c->setLayer(1);
+
   auto b = std::make_unique<bure::ui::button>("START GAME");
   b->set(20, 20, 90, 20);
   b->function = [g, ui](int) -> void {
@@ -44,7 +50,9 @@ int main(int argc, char* argv[]) {
   auto drawingSystem = std::make_unique<bure::systems::drawing_system>(
       std::move(graphicsInstance));
   auto uiRenderer = std::make_unique<bure::ui::ui_renderer>(uiManager);
+  auto entityRenderer = std::make_unique<bure::entity_renderer>();
   drawingSystem->addRenderer(std::move(uiRenderer));
+  drawingSystem->addRenderer(std::move(entityRenderer));
   bure::engine::get().addSystem(std::move(drawingSystem));
 
   // Init start menu
@@ -53,6 +61,18 @@ int main(int argc, char* argv[]) {
   // Register close callback
   bure::event_manager::get().addEventCallback(
       SDL_QUIT, [gamePointer](SDL_Event e) { gamePointer->finishGame(); });
+
+  // add entity for background
+  auto backgroundEntity = std::make_unique<bure::entities::entity>();
+  auto spriteComponent =
+      backgroundEntity->addComponent<bure::components::sprite_component>();
+  auto positionComponent =
+      backgroundEntity->addComponent<bure::components::position_component>();
+  positionComponent->setCoords(0, 0);
+  spriteComponent->setSpriteID("background");
+  spriteComponent->setSrcRect({ 0, 0, 1024, 768 });
+  spriteComponent->setSize(1024, 768);
+  bure::engine::get().addEntity(std::move(backgroundEntity));
 
   // Main game loop
   while (!gameInstance->finished) {

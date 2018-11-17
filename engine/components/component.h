@@ -13,9 +13,7 @@ namespace components {
 class component {
  public:
   explicit component(const bure::entities::entity& e) : _entity(e) {}
-
-  virtual void update() {}
-  virtual void destroy() {}
+  virtual ~component() = default;
 
  protected:
   const bure::entities::entity& _entity;

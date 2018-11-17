@@ -14,7 +14,7 @@ namespace ui {
 class ui_renderer : public renderer {
  public:
   explicit ui_renderer(std::shared_ptr<bure::ui::ui_manager> ui);
-  void render() override;
+  void render(int layer) override;
 
  private:
   void renderContainer(const ui::container &c);

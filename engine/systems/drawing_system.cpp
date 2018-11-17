@@ -13,8 +13,14 @@ void drawing_system::init() {
 void drawing_system::update() {
   _graphics->clean();
 
+  // TODO(carlosrdrz): This sucks :) Need to improve the way we handle layers
+
   for (auto& r : _renderers) {
-    r->render();
+    r->render(0);
+  }
+
+  for (auto& r : _renderers) {
+    r->render(1);
   }
 
   _graphics->flipBuffer();

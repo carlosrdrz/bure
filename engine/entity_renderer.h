@@ -8,7 +8,7 @@ namespace bure {
 
 class entity_renderer : public renderer {
  public:
-  void render();
+  void render(int layer);
 };
 
 }  // namespace bure

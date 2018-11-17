@@ -9,7 +9,7 @@ namespace bure {
 class renderer {
  public:
   void init(std::shared_ptr<bure::graphics2> gr);
-  virtual void render() {}
+  virtual void render(int layer) {}
 
  protected:
   std::shared_ptr<bure::graphics2> _graphics;

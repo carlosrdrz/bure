@@ -18,6 +18,7 @@ typedef unsigned int entity_id;
 class entity {
  public:
   entity() : _parent(nullptr) {}
+  virtual ~entity() = default;
 
   void init() {}
   void update() {}
@@ -27,6 +28,9 @@ class entity {
   std::list<entity*> getChildren() const;
   void addChild(std::unique_ptr<entity> e);
   void removeChild(entity *e);
+
+  void setLayer(int layer);
+  int getLayer();
 
   template <class T>
   T* addComponent() {
@@ -50,6 +54,9 @@ class entity {
   std::list<std::unique_ptr<bure::components::component>> _components;
   std::list<std::unique_ptr<entity>> _children;
   entity *_parent;
+
+  // higher layers means it will be rendered later
+  int _layer = 0;
 };
 }  // namespace entities
 }  // namespace bure
