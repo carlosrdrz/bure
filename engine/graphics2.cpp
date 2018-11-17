@@ -1,6 +1,5 @@
 #include <algorithm>
 
-#include "sprite_manager.h"
 #include "graphics2.h"
 #include "utils/config.h"
 #include "utils/logger.h"
@@ -10,8 +9,7 @@
 namespace bure {
 // todo: fix basepath
 graphics2::graphics2(std::string basePath) :
-  basePath(basePath),
-  _spriteManager(basePath) {
+  basePath(basePath) {
   atexit(SDL_Quit);
 
   // Init SDL
@@ -74,28 +72,24 @@ void graphics2::drawRect(rect r, color c) {
 void graphics2::drawSprite(sprite_id spriteId, rect s, rect d) {
   SDL_Rect src = rectToSDLRect(s);
   SDL_Rect dst = rectToSDLRect(d);
-  auto texture = getSpriteTexture(spriteId);
-  SDL_RenderCopy(renderer, texture, &src, &dst);
+  auto cachedSprite = getCachedSprite(spriteId);
+  SDL_RenderCopy(renderer, cachedSprite.texture, &src, &dst);
 }
 
 void graphics2::drawText(std::string text, int x, int y, int size, color c) {
-  auto textTexture = getTextTexture(text, size, c);
-  auto textSurface = getTextSurface(text);
-  if (textTexture != nullptr) {
-    drawFullTexture(textTexture, {x, y, textSurface->w, textSurface->h});
-  }
+  auto cachedText = getCachedText(text, size, c);
+  auto textSurface = cachedText.surface;
+  drawFullTexture(cachedText.texture, {x, y, textSurface->w, textSurface->h});
 }
 
 void graphics2::drawTextCentered(std::string text, int x, int y, int size,
                                  color c) {
-  auto textTexture = getTextTexture(text, size, c);
-  auto textSurface = getTextSurface(text);
+  auto cachedText = getCachedText(text, size, c);
+  auto textSurface = cachedText.surface;
   int xCenter = x - textSurface->w / 2;
   int yCenter = y - textSurface->h / 2;
-  if (textSurface != nullptr) {
-    drawFullTexture(textTexture,
-                    { xCenter, yCenter, textSurface->w, textSurface->h });
-  }
+  drawFullTexture(cachedText.texture,
+                  { xCenter, yCenter, textSurface->w, textSurface->h });
 }
 
 void graphics2::flipBuffer() { SDL_RenderPresent(renderer); }
@@ -109,37 +103,40 @@ void graphics2::openFont(int size) {
   this->fontSize = size;
 }
 
-SDL_Texture* graphics2::getSpriteTexture(sprite_id id) {
-  auto search = _textures.find(id);
-  if (search != _textures.end()) {
+cached_sprite graphics2::getCachedSprite(sprite_id id) {
+  auto search = _cached_sprites.find(id);
+  if (search != _cached_sprites.end()) {
     return search->second;
   }
 
   // TODO(carlosrdrz): we are not removing this memory here
-  auto sprite = _spriteManager.getSprite(id);
+  auto sprite = IMG_Load((basePath + "data/" + id + ".png").c_str());
+  if (!sprite) {
+    logger::error("IMG_Load: %s", IMG_GetError());
+    // TODO(carlosrdrz): deal with this error here. maybe just crash?
+  }
+
   auto texture = SDL_CreateTextureFromSurface(renderer, sprite);
-  _textures[id] = texture;
-  return _textures[id];
+
+  struct cached_sprite entry = {id, texture, sprite};
+  _cached_sprites[id] = entry;
+  return _cached_sprites[id];
 }
 
-SDL_Texture* graphics2::getTextTexture(std::string text, int size, color c) {
-  auto search = _textures.find(text);
-  if (search != _textures.end()) {
+cached_text graphics2::getCachedText(std::string text, int size, color c) {
+  auto search = _cached_texts.find(text);
+  if (search != _cached_texts.end()) {
     return search->second;
   }
 
   // TODO(carlosrdrz): we are not removing this memory here
   if (size != this->fontSize) this->openFont(size);
+  auto surface = TTF_RenderText_Solid(font, text.c_str(), {(Uint8)c.r, (Uint8)c.g, (Uint8)c.b});
+  auto texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-  auto textSurface = TTF_RenderText_Solid(font, text.c_str(), {(Uint8)c.r, (Uint8)c.g, (Uint8)c.b});
-  auto texture = SDL_CreateTextureFromSurface(renderer, textSurface);
-  _textSurfaces[text] = textSurface;
-  _textures[text] = texture;
-  return _textures[text];
-}
-
-SDL_Surface* graphics2::getTextSurface(std::string text) {
-  return _textSurfaces[text];
+  struct cached_text entry = { text, texture, surface };
+  _cached_texts[text] = entry;
+  return _cached_texts[text];
 }
 
 }  // namespace bure

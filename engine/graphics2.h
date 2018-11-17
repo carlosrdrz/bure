@@ -6,7 +6,6 @@
 #include <string>
 
 #include "game_map.h"
-#include "sprite_manager.h"
 #include "ui/ui_manager.h"
 #include "utils/config.h"
 
@@ -26,6 +25,21 @@ struct rect {
   int height;
 };
 
+typedef std::string cache_id;
+typedef std::string sprite_id;
+
+struct cached_text {
+  cache_id id;
+  SDL_Texture* texture;
+  SDL_Surface* surface;
+};
+
+struct cached_sprite {
+  cache_id id;
+  SDL_Texture* texture;
+  SDL_Surface* surface;
+};
+
 class graphics2 {
  public:
   explicit graphics2(std::string basePath);
@@ -39,25 +53,23 @@ class graphics2 {
   void clean();
   void flipBuffer();
 
-  SDL_Texture* getSpriteTexture(sprite_id id);
-  SDL_Texture* getTextTexture(std::string text, int size, color c);
-  SDL_Surface* getTextSurface(std::string text);
-
  private:
+  cached_sprite getCachedSprite(sprite_id id);
+  cached_text getCachedText(std::string text, int size, color c);
+
   void drawFullTexture(SDL_Texture *txt, rect r);
   void setRenderColor(color c);
   SDL_Rect rectToSDLRect(rect r);
   void openFont(int size);
 
   std::string basePath;
-  sprite_manager _spriteManager;
   SDL_Window *window;
   SDL_Renderer *renderer;
   TTF_Font *font;
   int fontSize;
   float scale;
 
-  std::map<std::string, SDL_Texture*> _textures;
-  std::map<std::string, SDL_Surface*> _textSurfaces;
+  std::map<cache_id, cached_sprite> _cached_sprites;
+  std::map<cache_id, cached_text> _cached_texts;
 };
 }  // namespace bure

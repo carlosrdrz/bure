@@ -1,6 +1,5 @@
 #include "ui_renderer.h"
 
-#include "sprite_manager.h"
 #include "utils/logger.h"
 
 namespace bure {

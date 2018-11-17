@@ -15,6 +15,7 @@ void engine::addEntity(std::unique_ptr<entities::entity> e) {
 }
 
 void engine::clearEntities() {
+  // TODO(carlosrdrz): do we need to call here deinit methods or smth?
   _entities.clear();
 }
 

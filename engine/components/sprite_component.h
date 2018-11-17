@@ -3,7 +3,6 @@
 #include <string>
 
 #include "component.h"
-#include "sprite_manager.h"
 #include "graphics2.h"
 
 namespace bure {
