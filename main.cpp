@@ -1,18 +1,18 @@
 #include <memory>
 
-#include "engine/engine.h"
-#include "engine/event_manager.h"
-#include "engine/graphics.h"
-#include "engine/systems/drawing_system.h"
-#include "engine/utils/config.h"
-#include "engine/utils/logger.h"
 #include "game.h"
-#include "ui/ui_renderer.h"
-#include "entity_renderer.h"
+#include "engine.h"
+#include "event_manager.h"
+#include "graphics.h"
 #include "game_map_renderer.h"
+#include "entity_renderer.h"
 #include "entities/entity.h"
 #include "components/position_component.h"
 #include "components/sprite_component.h"
+#include "systems/drawing_system.h"
+#include "ui/ui_renderer.h"
+#include "utils/config.h"
+#include "utils/logger.h"
 
 bure::config bure::config::instance;
 
