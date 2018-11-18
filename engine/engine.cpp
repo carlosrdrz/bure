@@ -1,4 +1,9 @@
 #include "engine.h"
+#include "graphics.h"
+#include "game_map_renderer.h"
+#include "entity_renderer.h"
+#include "systems/drawing_system.h"
+#include "ui/ui_renderer.h"
 
 namespace bure {
 
@@ -28,10 +33,33 @@ void engine::removeEntity(entities::entity *e) {
   }
 }
 
+void engine::init(std::string resourcesPath) {
+  _resourcesPath = resourcesPath;
+
+  // initialize ui manager
+  _uiManager = std::make_shared<bure::ui::ui_manager>();
+
+  // initialize drawing system
+  auto graphicsInstance = std::make_unique<bure::graphics>(resourcesPath);
+  auto drawingSystem = std::make_unique<bure::systems::drawing_system>(
+      std::move(graphicsInstance));
+  auto uiRenderer = std::make_unique<bure::ui::ui_renderer>(_uiManager);
+  auto entityRenderer = std::make_unique<bure::entity_renderer>();
+  auto gameMapRenderer = std::make_unique<bure::game_map_renderer>();
+  drawingSystem->addRenderer(std::move(uiRenderer));
+  drawingSystem->addRenderer(std::move(entityRenderer));
+  drawingSystem->addRenderer(std::move(gameMapRenderer));
+  this->addSystem(std::move(drawingSystem));
+}
+
 void engine::update() {
   for (auto&& s : _systems) {
     s->update();
   }
+}
+
+ui::ui_manager* engine::getUIManager() {
+  return _uiManager.get();
 }
 
 std::vector<std::reference_wrapper<entities::entity>> engine::getEntities() {

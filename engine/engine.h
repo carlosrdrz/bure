@@ -25,7 +25,10 @@ class engine {
   void setMap(std::string mapName);
   game_map* getMap();
 
+  void init(std::string resourcesPath);
   void update();
+
+  ui::ui_manager* getUIManager();
 
   // TODO(carlosrdrz): remove these
   // these are global position methods for debugging
@@ -41,10 +44,13 @@ class engine {
   }
  private:
   static engine* _instance;
-  std::unique_ptr<bure::game_map> _currentMap;
-  std::unique_ptr<bure::ui::ui_manager> _uiManager;
+  std::string _resourcesPath;
+
   std::vector<std::unique_ptr<bure::systems::system>> _systems;
   std::vector<std::unique_ptr<bure::entities::entity>> _entities;
+
+  std::shared_ptr<bure::ui::ui_manager> _uiManager;
+  std::unique_ptr<bure::game_map> _currentMap;
 };
 
 }  // namespace bure
