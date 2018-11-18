@@ -11,7 +11,7 @@ void ui_manager::addContainer(std::unique_ptr<container> c) {
   _containers.push_back(std::move(c));
 }
 
-void ui_manager::closeContainer(int in) {
+void ui_manager::removeContainer(int in) {
   std::vector<std::unique_ptr<container>>::iterator it;
 
   for (it = _containers.begin(); it != _containers.end(); ++it) {
@@ -24,7 +24,7 @@ void ui_manager::closeContainer(int in) {
   this->updateIndex();
 }
 
-void ui_manager::closeContainer(container* p) {
+void ui_manager::removeContainer(container* p) {
   if (nullptr != p) {
     std::vector<std::unique_ptr<container>>::iterator it;
 

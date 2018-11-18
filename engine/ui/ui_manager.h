@@ -15,8 +15,8 @@ class ui_manager {
  public:
   void addContainer(std::unique_ptr<container> c);
 
-  void closeContainer(int in);
-  void closeContainer(container *p);
+  void removeContainer(int in);
+  void removeContainer(container *p);
 
   bool containerExists(container* p);
 

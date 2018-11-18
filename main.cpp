@@ -25,9 +25,7 @@ void buildStartMenu(bure::ui::ui_manager* ui, game* g) {
   b->function = [g, ui](int) -> void {
     bure::engine::get().clearEntities();
     bure::engine::get().setMap("campo.tmx");
-    g->getPlayer().setPosition(30, 36);
-    g->playing = true;
-    ui->closeContainer(0);
+    ui->removeContainer(0);
   };
 
   c->add(std::move(b));
