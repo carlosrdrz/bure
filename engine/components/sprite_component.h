@@ -3,7 +3,7 @@
 #include <string>
 
 #include "component.h"
-#include "graphics2.h"
+#include "graphics.h"
 
 namespace bure {
 namespace components {

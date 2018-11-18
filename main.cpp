@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
   auto gamePointer = gameInstance.get();
   auto uiManager = std::make_shared<bure::ui::ui_manager>();
 
-  auto graphicsInstance = std::make_unique<bure::graphics2>(resourcesPath);
+  auto graphicsInstance = std::make_unique<bure::graphics>(resourcesPath);
   auto drawingSystem = std::make_unique<bure::systems::drawing_system>(
       std::move(graphicsInstance));
   auto uiRenderer = std::make_unique<bure::ui::ui_renderer>(uiManager);

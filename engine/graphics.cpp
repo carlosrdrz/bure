@@ -1,14 +1,15 @@
 #include <algorithm>
 
 #include "graphics.h"
-#include "utils/logger.h"
 #include "utils/config.h"
+#include "utils/logger.h"
 
 #define TILE_SIZE 32
 
 namespace bure {
 // todo: fix basepath
-graphics::graphics(std::string basePath) : basePath(basePath) {
+graphics::graphics(std::string basePath) :
+  basePath(basePath) {
   atexit(SDL_Quit);
 
   // Init SDL
@@ -21,8 +22,8 @@ graphics::graphics(std::string basePath) : basePath(basePath) {
   auto resX = 1024 * scale;
   auto resY = 768 * scale;
 
-  Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
-  if (config::instance.getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_OPENGL;
+  Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI & SDL_WINDOW_OPENGL;
+  if (config::instance.getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_FULLSCREEN;
   window = SDL_CreateWindow("Bure", SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, resX, resY, flags);
   renderer = SDL_CreateRenderer(window, -1, 0);
@@ -30,58 +31,15 @@ graphics::graphics(std::string basePath) : basePath(basePath) {
   SDL_RenderSetScale(renderer, scale, scale);
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-  // Load the file tiles
-  tilesSurface = IMG_Load((basePath + "data/tiles.png").c_str());
-  if (tilesSurface == nullptr) logger::error(SDL_GetError());
-  tilesTexture = SDL_CreateTextureFromSurface(renderer, tilesSurface);
-
-  playersSurface = IMG_Load((basePath + "data/personajes.png").c_str());
-  if (playersSurface == nullptr) logger::error(SDL_GetError());
-  playersTexture = SDL_CreateTextureFromSurface(renderer, playersSurface);
-
-  elementsSurface = IMG_Load((basePath + "data/elements.png").c_str());
-  if (elementsSurface == nullptr) logger::error(SDL_GetError());
-  elementsTexture = SDL_CreateTextureFromSurface(renderer, elementsSurface);
-
-  uiImagesSurface = IMG_Load((basePath + "data/gui.png").c_str());
-  if (uiImagesSurface == nullptr) logger::error(SDL_GetError());
-  uiImagesTexture = SDL_CreateTextureFromSurface(renderer, uiImagesSurface);
-  SDL_SetTextureBlendMode(uiImagesTexture, SDL_BLENDMODE_BLEND);
-
   // Init SDL_ttf and load font
   if (TTF_Init() < 0) logger::error(SDL_GetError());
 
-  font = TTF_OpenFont((basePath + "data/pixel_font.ttf").c_str(), 16);
-  if (!font) logger::error(TTF_GetError());
-
   fontSize = 16;
-
-  fontColor.r = 255;
-  fontColor.g = 255;
-  fontColor.b = 255;
-  backgroundColor.r = 114;
-  backgroundColor.g = 107;
-  backgroundColor.b = 82;
-
-  // Load background
-  bgSurface = IMG_Load((basePath + "data/background.jpg").c_str());
-  if (bgSurface == nullptr) logger::error(SDL_GetError());
-  bgTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
+  font = TTF_OpenFont((basePath + "data/pixel_font.ttf").c_str(), fontSize);
+  if (!font) logger::error(TTF_GetError());
 }
 
 graphics::~graphics() {
-  SDL_DestroyTexture(tilesTexture);
-  SDL_DestroyTexture(uiImagesTexture);
-  SDL_DestroyTexture(playersTexture);
-  SDL_DestroyTexture(elementsTexture);
-  SDL_DestroyTexture(bgTexture);
-
-  SDL_FreeSurface(tilesSurface);
-  SDL_FreeSurface(uiImagesSurface);
-  SDL_FreeSurface(playersSurface);
-  SDL_FreeSurface(elementsSurface);
-  SDL_FreeSurface(bgSurface);
-
   TTF_CloseFont(font);
   TTF_Quit();
 
@@ -91,563 +49,47 @@ graphics::~graphics() {
 
 void graphics::clean() { SDL_RenderClear(renderer); }
 
-// void graphics::draw(game &g) {
-//   draw(g.getMap(), g.getPlayer(), false);
-//   draw(g.getPlayer());
-//   draw(g.getMap(), g.getPlayer(), true);
-// }
-
-// void graphics::draw(int tile, int x, int y, int h, int v, bool fullLayer,
-//                     bool layer = false) {
-//   SDL_Rect src, dst;
-//
-//   int tilex = 0;
-//   int tiley = 0;
-//   if (!layer) {
-//     while (tile > 7) {
-//       tile -= 7;
-//       tiley += 32;
-//     }
-//     tilex = (tile - 1) * 32;
-//   } else {
-//     while (tile > 8) {
-//       tile -= 8;
-//       tiley += 32;
-//     }
-//     tilex = (tile - 1) * 32;
-//   }
-//
-//   if (fullLayer) {
-//     src.x = tilex;
-//     src.y = tiley;
-//     src.w = TILE_SIZE;
-//     src.h = TILE_SIZE;
-//
-//     dst.x = x + h;
-//     dst.y = y + v;
-//     dst.w = TILE_SIZE;
-//     dst.h = TILE_SIZE;
-//   } else {
-//     if (h > 0) {
-//       src.x = tilex + 32 - h;
-//       src.y = tiley;
-//       src.w = TILE_SIZE - (32 - h);
-//       src.h = TILE_SIZE;
-//
-//       dst.x = x;
-//       dst.y = y;
-//       dst.w = TILE_SIZE - (32 - h);
-//       dst.h = TILE_SIZE;
-//     } else if (h < 0) {
-//       src.x = tilex;
-//       src.y = tiley;
-//       src.w = h;
-//       src.h = TILE_SIZE;
-//
-//       dst.x = x;
-//       dst.y = y;
-//       dst.w = h;
-//       dst.h = TILE_SIZE;
-//     } else if (v > 0) {
-//       src.x = tilex;
-//       src.y = tiley + (32 - v);
-//       src.w = TILE_SIZE;
-//       src.h = v;
-//
-//       dst.x = x;
-//       dst.y = y;
-//       dst.w = TILE_SIZE;
-//       dst.h = v;
-//     } else if (v < 0) {
-//       src.x = tilex;
-//       src.y = tiley;
-//       src.w = TILE_SIZE;
-//       src.h = 32 - v;
-//
-//       dst.x = x;
-//       dst.y = y;
-//       dst.w = TILE_SIZE;
-//       dst.h = v;
-//     }
-//   }
-//
-//   if (!layer)
-//     SDL_RenderCopy(renderer, tilesTexture, &src, &dst);
-//   else
-//     SDL_RenderCopy(renderer, elementsTexture, &src, &dst);
-// }
-
-// void graphics::draw(game_map *m, player &p, bool layer) {
-//   int empezar_x, empezar_y = 0;
-//   int jug_y = p.y;
-//   int jug_x = p.x;
-//   int x, y;
-//
-//   p.moviendo = false;
-//
-//   if (p.h_offset > 0) {
-//     empezar_y = 0;
-//     for (y = (jug_y - 12); y < (jug_y + 12); y++) {
-//       if (y >= 0 && y < m->height) {
-//         if (!layer)
-//           draw(m->mapa[(jug_x - 16) + y * m->width],
-//  0, empezar_y, p.h_offset,
-//                p.v_offset, false);
-//         else
-//           draw(m->elementos[(jug_x - 16) + y * m->width], 0, empezar_y,
-//                p.h_offset, p.v_offset, false, true);
-//       }
-//       empezar_y += TILE_SIZE;
-//     }
-//     jug_x++;
-//   }
-//
-//   if (p.h_offset < 0) {
-//     empezar_y = 0;
-//     for (y = (jug_y - 12); y < (jug_y + 12); y++) {
-//       if (y >= 0 && y < m->height) {
-//         if (!layer)
-//           draw(m->mapa[(jug_x + 15) + y * m->width], 1024 + p.h_offset,
-//                empezar_y, p.h_offset, p.v_offset, false);
-//         else
-//           draw(m->elementos[(jug_x + 15) + y * m->width], 1024 + p.h_offset,
-//                empezar_y, p.h_offset, p.v_offset, false, true);
-//       }
-//       empezar_y += TILE_SIZE;
-//     }
-//     jug_x--;
-//   }
-//   if (p.v_offset > 0) {
-//     empezar_x = 0;
-//     for (x = (jug_x - 16); x < (jug_x + 16); x++) {
-//       if (x >= 0 && x < m->width) {
-//         if (!layer)
-//           draw(m->mapa[(x + ((jug_y - 12) * m->width))], empezar_x, 0,
-//                p.h_offset, p.v_offset, false);
-//         else
-//           draw(m->elementos[(x + ((jug_y - 12) * m->width))], empezar_x, 0,
-//                p.h_offset, p.v_offset, false, true);
-//       }
-//       empezar_x += TILE_SIZE;
-//     }
-//     jug_y++;
-//   }
-//   if (p.v_offset < 0) {
-//     empezar_x = 0;
-//     for (x = (jug_x - 16); x < (jug_x + 16); x++) {
-//       if (x >= 0 && x < m->width) {
-//         if (!layer)
-//           draw(m->mapa[(x + ((jug_y + 11) * m->width))], empezar_x,
-//                768 + p.v_offset, p.h_offset, p.v_offset, false);
-//         else
-//           draw(m->elementos[(x + ((jug_y + 11) * m->width))], empezar_x,
-//                768 + p.v_offset, p.h_offset, p.v_offset, false, true);
-//       }
-//       empezar_x += TILE_SIZE;
-//     }
-//     jug_y--;
-//   }
-//
-//   empezar_x = empezar_y = 0;
-//
-//   for (y = (jug_y - 12); y < (jug_y + 12); y++) {
-//     for (x = (jug_x - 16); x < (jug_x + 16); x++) {
-//       if (x >= 0 && y >= 0 && x < m->width && y < m->height) {
-//         if (!layer)
-//           draw(m->mapa[(x + (y * m->width))],
-// empezar_x, empezar_y, p.h_offset,
-//                p.v_offset, true);
-//         else
-//           draw(m->elementos[(x + (y * m->width))], empezar_x, empezar_y,
-//                p.h_offset, p.v_offset, true, true);
-//       }
-//       empezar_x += TILE_SIZE;
-//     }
-//     empezar_x = 0;
-//     empezar_y += TILE_SIZE;
-//   }
-// }
-
-void graphics::renderBackground() {
-  SDL_RenderCopy(renderer, bgTexture, nullptr, nullptr);
+SDL_Rect graphics::rectToSDLRect(rect r) {
+  SDL_Rect rect = {r.x, r.y, r.width, r.height};
+  return rect;
 }
 
-void graphics::draw(bure::ui::ui_manager *i) {
-  // SDL_Rect dst, src;
-  //
-  // int containerIndex, lb, ib, bon;
-  // for (containerIndex = 0; i->getContainer(containerIndex) != nullptr;
-  //      containerIndex++) {
-  //   auto container = i->getContainer(containerIndex);
-  //   if (container->visible) {
-  //     // Globales para todo el contenedor
-  //     src.w = 1;
-  //     src.h = 26;
-  //     src.y = 0;
-  //
-  //     // Fondo del contenedor
-  //     dst.x = container->getAbsoluteX();
-  //     dst.y = container->getAbsoluteY();
-  //     dst.w = container->width;
-  //     dst.h = container->height;
-  //
-  //     SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g,
-  //                            backgroundColor.b, SDL_ALPHA_OPAQUE);
-  //     SDL_RenderFillRect(renderer, &dst);
-      //
-      // // Barras horizontales
-      // dst.w = 1;
-      // dst.h = 26;
-      //
-      // src.x = 104;
-      // dst.y -= 12;
-      // dst.x--;
-      // for (int y = 0; y < container->width; y++) {
-      //   dst.x++;
-      //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-      // }
-      //
-      // dst.y += container->height;
-      // dst.x = container->x - 1;
-      // for (int y = 0; y < container->width; y++) {
-      //   dst.x++;
-      //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-      // }
-      //
-      // // Barras verticales
-      // src.x = 130;
-      // src.w = 26;
-      // src.h = 1;
-      //
-      // dst.x = container->x - 11;
-      // dst.y = container->y;
-      // dst.h = 1;
-      // dst.w = 26;
-      //
-      // for (int y = 0; y < container->height; y++) {
-      //   dst.y++;
-      //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-      // }
-      //
-      // dst.x += container->width - 4;
-      // dst.y = container->y;
-      // for (int y = 0; y < container->height; y++) {
-      //   dst.y++;
-      //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-      // }
-      //
-      // // Todas las esquinas
-      // src.w = 26;
-      // src.h = 26;
-      // dst.w = 26;
-      // dst.h = 26;
-      //
-      // src.x = 0;
-      // src.y = 0;
-      // dst.x = container->x +
-      //         container->width - 15;
-      // dst.y = container->y - 12;
-      // SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-      //
-      // src.x += 26;
-      // dst.x -= container->width - 4;
-      // SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-      //
-      // src.x += 26;
-      // dst.y += container->height;
-      // dst.x = container->x +
-      //         container->width - 15;
-      // SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-      //
-      // src.x += 26;
-      // dst.x -= container->width - 4;
-      // SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    // }
-    //
-    // // Labels
-    // for (lb = 0; container->get_label(lb) != nullptr;
-    //      lb++) {
-    //   auto label = container->get_label(lb);
-    //   if (label->get_size() != this->fontSize) {
-    //     this->openFont(label->get_size());
-    //   }
-    //
-    //   SDL_Surface *textSurface = TTF_RenderText_Solid(
-    //       font, label->get_text(), fontColor);
-    //   SDL_Texture *textTexture =
-    //       SDL_CreateTextureFromSurface(renderer, textSurface);
-    //
-    //   if (textSurface != nullptr) {
-    //     dst.x = label->getAbsoluteX();
-    //     dst.y = label->getAbsoluteY();
-    //     dst.w = textSurface->w;
-    //     dst.h = textSurface->h;
-    //
-    //     SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
-    //     SDL_FreeSurface(textSurface);
-    //     SDL_DestroyTexture(textTexture);
-    //   }
-    // }
-    //
-    // // InputBoxes
-    // for (ib = 0; container->get_input_box(ib) != nullptr;
-    //      ++ib) {
-    //   auto inputBox = container->get_input_box(ib);
-    //   // Se dibuja el input box
-    //   src.x = (inputBox->focused &&
-    //            container->focused && !i->blocked)
-    //               ? 1
-    //               : 3;
-    //   src.y = 26;
-    //   src.w = 1;
-    //   src.h = 14;
-    //
-    //   dst.x = inputBox->getAbsoluteX();
-    //   dst.y = inputBox->getAbsoluteY();
-    //   dst.w = 1;
-    //   dst.h = 14;
-    //
-    //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    //   dst.x++;
-    //   src.x--;
-    //   for (int an = 0; an < inputBox->width - 2; an++) {
-    //     SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    //     dst.x++;
-    //   }
-    //   src.x++;
-    //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    //
-    //   // La etiqueta del inputbox
-    //   if (8 != this->fontSize) {
-    //     this->openFont(8);
-    //   }
-    //
-    //   SDL_Surface *titleSurface = TTF_RenderText_Solid(
-    //       font, inputBox->get_title(), fontColor);
-    //   SDL_Texture *titleTexture =
-    //       SDL_CreateTextureFromSurface(renderer, titleSurface);
-    //
-    //   dst.x = inputBox->getAbsoluteX() - titleSurface->w - 5;
-    //   dst.y += 3;
-    //   dst.w = titleSurface->w;
-    //   dst.h = titleSurface->h;
-    //
-    //   SDL_RenderCopy(renderer, titleTexture, nullptr, &dst);
-    //
-    //   if (inputBox->current_length() != 0) {
-    //     SDL_Surface *textSurface = TTF_RenderText_Solid(
-    //         font,
-    //         inputBox->get_text(),
-    //         fontColor);
-    //     dst.x += titleSurface->w + 10;
-    //     dst.w = std::min(inputBox->width, textSurface->w);
-    //
-    //     SDL_Texture *textTexture =
-    //         SDL_CreateTextureFromSurface(renderer, textSurface);
-    //     SDL_RenderCopy(renderer, textTexture, nullptr, &dst);
-    //     SDL_DestroyTexture(textTexture);
-    //     SDL_FreeSurface(textSurface);
-    //   }
-    //
-    //   SDL_DestroyTexture(titleTexture);
-    //   SDL_FreeSurface(titleSurface);
-    // }
-    //
-    // // Botones
-    // for (bon = 0; container->get_button(bon) != nullptr;
-    //      bon++) {
-    //   auto button = container->get_button(bon);
-    //   if (button->press == 0)
-    //     SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
-    //   else
-    //     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    //
-    //   dst.x = button->getAbsoluteX();
-    //   dst.y = button->getAbsoluteY();
-    //   dst.w = button->width;
-    //   dst.h = button->height;
-    //
-    //   SDL_RenderFillRect(renderer, &dst);
-    //
-    //   if (button->press == 0)
-    //     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    //   else
-    //     SDL_SetRenderDrawColor(renderer, 63, 63, 63, SDL_ALPHA_OPAQUE);
-    //
-    //   dst.x = button->getAbsoluteX();
-    //   dst.y = button->getAbsoluteY();
-    //   dst.w = button->width;
-    //   dst.h = 1;
-    //
-    //   SDL_RenderFillRect(renderer, &dst);
-    //
-    //   dst.x = button->getAbsoluteX();
-    //   dst.y = button->getAbsoluteY() +
-    //           button->height;
-    //   dst.w = button->width;
-    //   dst.h = 1;
-    //
-    //   SDL_RenderFillRect(renderer, &dst);
-    //
-    //   dst.x = button->getAbsoluteX();
-    //   dst.y = button->getAbsoluteY();
-    //   dst.w = 1;
-    //   dst.h = button->height;
-    //
-    //   SDL_RenderFillRect(renderer, &dst);
-    //
-    //   dst.x = button->getAbsoluteX() +
-    //           button->width;
-    //   dst.y = button->getAbsoluteY();
-    //   dst.w = 1;
-    //   dst.h = button->height;
-    //
-    //   SDL_RenderFillRect(renderer, &dst);
-    //
-    //   // Dibujar la etiqueta
-    //   if (this->fontSize != 8) this->openFont(8);
-    //
-    //   SDL_Surface *titlebSurface = TTF_RenderText_Solid(
-    //       font, button->get_title(),
-    //       fontColor);
-    //   dst.y = button->getAbsoluteY() +
-    //           (button->height / 2) -
-    //           (titlebSurface->h / 2);
-    //   dst.x = button->getAbsoluteX() +
-    //           (button->width / 2) -
-    //           (titlebSurface->w / 2);
-    //   dst.w = titlebSurface->w;
-    //   dst.h = titlebSurface->h;
-    //
-    //   SDL_Texture *titlebTexture =
-    //       SDL_CreateTextureFromSurface(renderer, titlebSurface);
-    //   SDL_RenderCopy(renderer, titlebTexture, nullptr, &dst);
-    //   SDL_DestroyTexture(titlebTexture);
-    //   SDL_FreeSurface(titlebSurface);
-    // }
+void graphics::setRenderColor(color c) {
+  SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.alpha);
+}
 
-    // Imagenes
-    // for (img = 0; container->get_image(img) != nullptr;
-    //      img++) {
-    //   if (container->get_image(img)->img != nullptr) {
-    //     dst.y = container->y +
-    //             container->get_image(img)->y;
-    //     dst.x = container->x +
-    //             container->get_image(img)->x;
-    //     dst.w = container->get_image(img)->img->w;
-    //     dst.h = container->get_image(img)->img->h;
-    //     // TODO(carlos): Fix this images thing
-    //     // SDL_BlitSurface(container
-    //     // ->getImagen(img)->img,
-    //     // NULL, bbuffer, &dst);
-    //   } else {
-    //     logger::error("no image to draw");
-    //   }
-    // }
+void graphics::drawFullTexture(SDL_Texture *txt, rect r) {
+  SDL_Rect dst = rectToSDLRect(r);
+  SDL_RenderCopy(renderer, txt, nullptr, &dst);
+}
 
-    // Selectores
-    // for (int sel = 0;
-    //      container->get_selector(sel)
-    //      != nullptr; sel++) {
-    //   src.x = 4;
-    //   src.y = 26;
-    //   src.w = 9;
-    //   src.h = 14;
-    //
-    //   dst.x = container->x +
-    //           container->get_selector(sel)->x;
-    //   dst.y = container->y +
-    //           container->get_selector(sel)->y;
-    //   dst.w = 9;
-    //   dst.h = 14;
-    //
-    //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    //
-    //   src.w = 1;
-    //   dst.x += 12;
-    //   dst.w = 1;
-    //   src.x = 1;
-    //
-    //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    //
-    //   dst.x++;
-    //   src.x--;
-    //
-    //   if (8 != this->fontSize) this->openFont(8);
-    //   SDL_Surface *seleccionado =
-    //       TTF_RenderText_Solid(font,
-    //                            container
-    //                                ->get_selector(sel)
-    //                                ->get_selected()
-    //                                .c_str(),
-    //                            fontColor);
-    //   container->get_selector(sel)->width =
-    //       seleccionado->w + 8;
-    //
-    //   for (int an = 0; an < seleccionado->w + 8; an++) {
-    //     SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    //     dst.x++;
-    //   }
-    //
-    //   src.x++;
-    //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    //
-    //   dst.w = 9;
-    //   dst.x += 4;
-    //   src.x = 13;
-    //   src.w = 9;
-    //
-    //   SDL_RenderCopy(renderer, uiImagesTexture, &src, &dst);
-    //
-    //   dst.x -= 8 + seleccionado->w;
-    //   dst.y += 3;
-    //   dst.w = seleccionado->w;
-    //   dst.h = seleccionado->h;
-    //
-    //   SDL_Texture *seleccionadoTexture =
-    //       SDL_CreateTextureFromSurface(renderer, seleccionado);
-    //   SDL_RenderCopy(renderer, seleccionadoTexture, nullptr, &dst);
-    //
-    //   SDL_DestroyTexture(seleccionadoTexture);
-    //   SDL_FreeSurface(seleccionado);
-    // }
-//   }
-// }
+void graphics::drawRect(rect r, color c) {
+  SDL_Rect dst = rectToSDLRect(r);
+  setRenderColor(c);
+  SDL_RenderFillRect(renderer, &dst);
+}
 
-// void graphics::draw(player &p) {
-//   int tilexinic = p.x - 16;
-//   int tileyinic = p.y - 12;
-//   if (this->fontSize != 8) this->openFont(8);
-//
-//   SDL_Rect dst, src;
-//   dst.x = 1024 / 2;
-//   dst.y = 768 / 2;
-//   dst.w = 32;
-//   dst.h = 32;
-//
-//   src.x = 32 * p.spriteState;
-//   src.y = 32 * (p.traje - 1);
-//   src.w = 32;
-//   src.h = 32;
-//
-//   SDL_RenderCopy(renderer, playersTexture, &src, &dst);
-//
-//   // Dibuja etiqueta de tu personaje
-//   SDL_Surface *nombre =
-//       TTF_RenderText_Solid(font, (char *)p.nombre.c_str(), fontColor);
-//   SDL_Texture *nombreTexture = SDL_CreateTex
-// tureFromSurface(renderer, nombre);
-//
-//   dst.x = 528 - (nombre->w / 2);
-//   dst.y = 420;
-//   dst.w = nombre->w;
-//   dst.h = nombre->h;
-//
-//   SDL_RenderCopy(renderer, nombreTexture, nullptr, &dst);
-//
-//   SDL_DestroyTexture(nombreTexture);
-//   SDL_FreeSurface(nombre);
-// }
+void graphics::drawSprite(sprite_id spriteId, rect s, rect d) {
+  SDL_Rect src = rectToSDLRect(s);
+  SDL_Rect dst = rectToSDLRect(d);
+  auto cachedSprite = getCachedSprite(spriteId);
+  SDL_RenderCopy(renderer, cachedSprite.texture, &src, &dst);
+}
+
+void graphics::drawText(std::string text, int x, int y, int size, color c) {
+  auto cachedText = getCachedText(text, size, c);
+  auto textSurface = cachedText.surface;
+  drawFullTexture(cachedText.texture, {x, y, textSurface->w, textSurface->h});
+}
+
+void graphics::drawTextCentered(std::string text, int x, int y, int size,
+                                 color c) {
+  auto cachedText = getCachedText(text, size, c);
+  auto textSurface = cachedText.surface;
+  int xCenter = x - textSurface->w / 2;
+  int yCenter = y - textSurface->h / 2;
+  drawFullTexture(cachedText.texture,
+                  { xCenter, yCenter, textSurface->w, textSurface->h });
 }
 
 void graphics::flipBuffer() { SDL_RenderPresent(renderer); }
@@ -660,4 +102,41 @@ void graphics::openFont(int size) {
   }
   this->fontSize = size;
 }
+
+cached_sprite graphics::getCachedSprite(sprite_id id) {
+  auto search = _cached_sprites.find(id);
+  if (search != _cached_sprites.end()) {
+    return search->second;
+  }
+
+  // TODO(carlosrdrz): we are not removing this memory here
+  auto sprite = IMG_Load((basePath + "data/" + id + ".png").c_str());
+  if (!sprite) {
+    logger::error("IMG_Load: %s", IMG_GetError());
+    // TODO(carlosrdrz): deal with this error here. maybe just crash?
+  }
+
+  auto texture = SDL_CreateTextureFromSurface(renderer, sprite);
+
+  struct cached_sprite entry = {id, texture, sprite};
+  _cached_sprites[id] = entry;
+  return _cached_sprites[id];
+}
+
+cached_text graphics::getCachedText(std::string text, int size, color c) {
+  auto search = _cached_texts.find(text);
+  if (search != _cached_texts.end()) {
+    return search->second;
+  }
+
+  // TODO(carlosrdrz): we are not removing this memory here
+  if (size != this->fontSize) this->openFont(size);
+  auto surface = TTF_RenderText_Solid(font, text.c_str(), {(Uint8)c.r, (Uint8)c.g, (Uint8)c.b});
+  auto texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+  struct cached_text entry = { text, texture, surface };
+  _cached_texts[text] = entry;
+  return _cached_texts[text];
+}
+
 }  // namespace bure

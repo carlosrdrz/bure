@@ -2,17 +2,17 @@
 
 #include <memory>
 
-#include "graphics2.h"
+#include "graphics.h"
 
 namespace bure {
 
 class renderer {
  public:
-  void init(std::shared_ptr<bure::graphics2> gr);
+  void init(std::shared_ptr<bure::graphics> gr);
   virtual void render(int layer) {}
 
  protected:
-  std::shared_ptr<bure::graphics2> _graphics;
+  std::shared_ptr<bure::graphics> _graphics;
 };
 
 }  // namespace bure

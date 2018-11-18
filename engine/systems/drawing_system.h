@@ -11,7 +11,7 @@ namespace systems {
 
 class drawing_system : public system {
  public:
-  explicit drawing_system(std::unique_ptr<bure::graphics2> gr);
+  explicit drawing_system(std::unique_ptr<bure::graphics> gr);
 
   void init() override;
   void update() override;
@@ -20,7 +20,7 @@ class drawing_system : public system {
 
  private:
   std::vector<std::unique_ptr<bure::renderer>> _renderers;
-  std::shared_ptr<bure::graphics2> _graphics;
+  std::shared_ptr<bure::graphics> _graphics;
 };
 
 }  // namespace systems

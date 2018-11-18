@@ -3,7 +3,7 @@
 namespace bure {
 namespace systems {
 
-drawing_system::drawing_system(std::unique_ptr<bure::graphics2> gr) {
+drawing_system::drawing_system(std::unique_ptr<bure::graphics> gr) {
   _graphics = std::move(gr);
 }
 
