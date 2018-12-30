@@ -13,6 +13,7 @@ void entity_renderer::render(int layer) {
 
     auto sprite = entity.get().getComponentByType<bure::components::sprite_component>();
     auto position = entity.get().getComponentByType<bure::components::position_component>();
+    if (sprite == nullptr || position == nullptr) continue;
 
     bure::rect dst = {position->getX(), position->getY(), sprite->getWidth(), sprite->getHeight()};
     _graphics->drawSprite(sprite->getSpriteID(), sprite->getSrcRect(), dst);

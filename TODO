@@ -3,8 +3,8 @@
 - add service locator (otherwise it will be more difficult to test)
 - tests
 - maybe should use enum for sprites IDs instead of strings
-- finally remove graphics and rename graphics2
-- move all initialization to engine so that callers don't care about internals
-- work on entities
 - maybe should move declarations of types like rect to their own files
 - layer management is very poor. need to improve it.
+- remove all hardcoded constants. specially in the map rendering process.
+- maybe add all dependencies to the repo instead of expecting people to install them on their package managers
+- extract sprite management from engine

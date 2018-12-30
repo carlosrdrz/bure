@@ -8,4 +8,7 @@ class game {
 
   void startMenu();
   void finishGame();
+
+ private:
+   void startGame(int unused);
 };

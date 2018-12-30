@@ -3,9 +3,6 @@
 #include "game.h"
 #include "engine.h"
 #include "event_manager.h"
-#include "entities/entity.h"
-#include "components/position_component.h"
-#include "components/sprite_component.h"
 
 #include "utils/config.h"
 #include "utils/logger.h"
@@ -28,9 +25,9 @@ int main(int argc, char* argv[]) {
 
   // Register close callback
   bure::event_manager::get().addEventCallback(
-      SDL_QUIT, [gamePointer = gameInstance.get()](SDL_Event e) {
-        gamePointer->finishGame();
-      });
+    SDL_QUIT, [gamePointer = gameInstance.get()](SDL_Event e) {
+      gamePointer->finishGame();
+    });
 
   // Just something silly so we can move around the map
   bure::event_manager::get().addEventCallback(
@@ -45,18 +42,6 @@ int main(int argc, char* argv[]) {
         bure::engine::get().globalY++;
       }
     });
-
-  // add entity for background
-  auto backgroundEntity = std::make_unique<bure::entities::entity>();
-  auto spriteComponent =
-      backgroundEntity->addComponent<bure::components::sprite_component>();
-  auto positionComponent =
-      backgroundEntity->addComponent<bure::components::position_component>();
-  positionComponent->setCoords(0, 0);
-  spriteComponent->setSpriteID("background");
-  spriteComponent->setSrcRect({ 0, 0, 1024, 768 });
-  spriteComponent->setSize(1024, 768);
-  bure::engine::get().addEntity(std::move(backgroundEntity));
 
   // Main game loop
   while (!gameInstance->finished) {

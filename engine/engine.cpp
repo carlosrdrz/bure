@@ -15,8 +15,8 @@ void engine::addSystem(std::unique_ptr<systems::system> s) {
 }
 
 void engine::addEntity(std::unique_ptr<entities::entity> e) {
-    e->init();
-    _entities.push_back(std::move(e));
+  e->init();
+  _entities.push_back(std::move(e));
 }
 
 void engine::clearEntities() {

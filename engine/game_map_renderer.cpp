@@ -13,7 +13,8 @@ void game_map_renderer::render(int layer) {
 
   int jug_y = bure::engine::get().globalY;
   int jug_x = bure::engine::get().globalX;
-  int empezar_x, empezar_y = 0;
+  int empezar_x = 0;
+  int empezar_y = 0;
   int x, y;
 
   for (y = (jug_y - 12); y < (jug_y + 12); y++) {
@@ -27,6 +28,7 @@ void game_map_renderer::render(int layer) {
       }
       empezar_x += TILE_SIZE;
     }
+
     empezar_x = 0;
     empezar_y += TILE_SIZE;
   }
