@@ -12,6 +12,13 @@ class sprite_component : public component {
  using component::component;
 
  public:
+  void setAll(sprite_id spriteId, rect src, int width, int height) {
+    _spriteId = spriteId;
+    _src = src;
+    _width = width;
+    _height = height;
+  }
+
   void setSpriteID(sprite_id spriteId) { _spriteId = spriteId; }
   void setSrcRect(rect src) { _src = src; }
   void setSize(int width, int height) {

@@ -1,23 +1,39 @@
 #include "entity_renderer.h"
 
 #include "engine.h"
-#include "components/sprite_component.h"
-#include "components/position_component.h"
 #include "utils/logger.h"
 
 namespace bure {
 
 void entity_renderer::render(int layer) {
   for (auto& entity : bure::engine::get().getEntities()) {
-    if (entity.get().getLayer() != layer) continue;
+    auto& e = entity.get();
 
-    auto sprite = entity.get().getComponentByType<bure::components::sprite_component>();
-    auto position = entity.get().getComponentByType<bure::components::position_component>();
-    if (sprite == nullptr || position == nullptr) continue;
+    if (e.getLayer() != layer) continue;
 
-    bure::rect dst = {position->getX(), position->getY(), sprite->getWidth(), sprite->getHeight()};
-    _graphics->drawSprite(sprite->getSpriteID(), sprite->getSrcRect(), dst);
+    auto position = e.getComponentByType<position_component>();
+    if (position == nullptr) continue;
+
+    auto sprite = e.getComponentByType<sprite_component>();
+    if (sprite != nullptr) {
+      renderSprite(*position, *sprite);
+      continue;
+    }
+
+    auto animation = e.getComponentByType<animation_component>();
+    if (animation != nullptr) {
+      auto animationSprite = animation->tickAndGetSprite();
+      renderSprite(*position, animationSprite);
+      continue;
+    }
+
+    // Render animation FSM
   }
+}
+
+void entity_renderer::renderSprite(position_component &p, sprite_component &s) {
+  bure::rect dst = {p.getX(), p.getY(), s.getWidth(), s.getHeight()};
+  _graphics->drawSprite(s.getSpriteID(), s.getSrcRect(), dst);
 }
 
 }  // namespace bure

@@ -4,6 +4,7 @@
 #include "entities/entity.h"
 #include "components/position_component.h"
 #include "components/sprite_component.h"
+#include "components/animation_component.h"
 #include "scripts/character_script_component.h"
 
 game::game()
@@ -49,15 +50,20 @@ void game::startGame(int unused) {
 
   // add game character
   auto characterEntity = std::make_unique<bure::entities::entity>();
-  auto spriteComponent =
-      characterEntity->addComponent<bure::components::sprite_component>();
   auto positionComponent =
       characterEntity->addComponent<bure::components::position_component>();
   characterEntity->addComponent<character_script_component>();
-  positionComponent->setCoords(496, 368);
-  spriteComponent->setSpriteID("personajes");
-  spriteComponent->setSrcRect({ 127, 0, 32, 32 });
-  spriteComponent->setSize(32, 32);
   characterEntity->setLayer(1);
+  positionComponent->setCoords(496, 368);
+
+  auto sprite1 = bure::components::sprite_component(*characterEntity);
+  sprite1.setAll("personajes", { 95, 0, 32, 32 }, 32, 32);
+  auto sprite2 = bure::components::sprite_component(*characterEntity);
+  sprite2.setAll("personajes", { 159, 0, 32, 32 }, 32, 32);
+  auto animation = characterEntity->addComponent<bure::components::animation_component>();
+  animation->addSprite(sprite1);
+  animation->addSprite(sprite2);
+  animation->setAnimationTicks(20);
+
   bure::engine::get().addEntity(std::move(characterEntity));
 }
