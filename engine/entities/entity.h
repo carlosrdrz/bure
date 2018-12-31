@@ -37,6 +37,7 @@ class entity {
     auto ptr = std::make_unique<T>(*this);
     auto toReturn = ptr.get();
     _components.push_back(std::move(ptr));
+    toReturn->onInit();
     return toReturn;
   }
 

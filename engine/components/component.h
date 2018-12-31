@@ -15,6 +15,8 @@ class component {
   explicit component(const bure::entities::entity& e) : _entity(e) {}
   virtual ~component() = default;
 
+  virtual void onInit() {}
+
  protected:
   const bure::entities::entity& _entity;
 };

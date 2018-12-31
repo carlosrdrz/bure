@@ -29,20 +29,6 @@ int main(int argc, char* argv[]) {
       gamePointer->finishGame();
     });
 
-  // Just something silly so we can move around the map
-  bure::event_manager::get().addEventCallback(
-    SDL_KEYDOWN, [](SDL_Event e) {
-      if (e.key.keysym.scancode == SDL_SCANCODE_A) {
-        bure::engine::get().globalX--;
-      } else if (e.key.keysym.scancode == SDL_SCANCODE_D) {
-        bure::engine::get().globalX++;
-      } else if (e.key.keysym.scancode == SDL_SCANCODE_W) {
-        bure::engine::get().globalY--;
-      } else if (e.key.keysym.scancode == SDL_SCANCODE_S) {
-        bure::engine::get().globalY++;
-      }
-    });
-
   // Main game loop
   while (!gameInstance->finished) {
     bure::event_manager::get().pollEvent();

@@ -4,6 +4,7 @@
 #include "entities/entity.h"
 #include "components/position_component.h"
 #include "components/sprite_component.h"
+#include "scripts/character_script_component.h"
 
 game::game()
     : finished(false) {}
@@ -52,6 +53,7 @@ void game::startGame(int unused) {
       characterEntity->addComponent<bure::components::sprite_component>();
   auto positionComponent =
       characterEntity->addComponent<bure::components::position_component>();
+  characterEntity->addComponent<character_script_component>();
   positionComponent->setCoords(496, 368);
   spriteComponent->setSpriteID("personajes");
   spriteComponent->setSrcRect({ 127, 0, 32, 32 });

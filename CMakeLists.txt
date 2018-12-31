@@ -50,7 +50,8 @@ add_library(bure-engine
 add_executable(client
   main.cpp
   game.cpp
-  player.cpp)
+  player.cpp
+  scripts/character_script_component.cpp)
 
 target_link_libraries(client bure-engine bure-ui)
 target_link_libraries(client

@@ -8,3 +8,5 @@
 - remove all hardcoded constants. specially in the map rendering process.
 - maybe add all dependencies to the repo instead of expecting people to install them on their package managers
 - extract sprite management from engine
+- entity builder
+- script components onTick method
