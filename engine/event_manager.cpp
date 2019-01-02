@@ -14,6 +14,7 @@ event_manager::event_manager() {
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
         case SDL_KEYDOWN:
+        case SDL_KEYUP:
           return 1;
           break;
     }

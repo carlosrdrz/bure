@@ -50,6 +50,19 @@ class entity {
     return nullptr;
   }
 
+  template <class T>
+  void removeComponentByType() {
+    auto it = _components.begin();
+
+    while (it != _components.end()) {
+      if (T* componentType = dynamic_cast<T*>((*it).get())) {
+        it = _components.erase(it);
+      } else {
+        ++it;
+      }
+    }
+  }
+
  private:
   std::list<std::unique_ptr<bure::components::component>> _components;
   std::list<std::unique_ptr<entity>> _children;

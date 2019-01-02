@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/script_component.h"
+#include "../entities/character_entity.h"
 #include "event_manager.h"
 
 class character_script_component : public bure::components::script_component {
@@ -10,5 +11,8 @@ class character_script_component : public bure::components::script_component {
   void onInit() override;
 
  private:
-  void onMove(SDL_Event e);
+  character_entity* _character;
+
+  void onKeyDown(SDL_Event e);
+  void onKeyUp(SDL_Event e);
 };
