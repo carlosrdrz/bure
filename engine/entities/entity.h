@@ -20,8 +20,7 @@ class entity {
   entity() : _parent(nullptr) {}
   virtual ~entity() = default;
 
-  void init() {}
-  void update() {}
+  virtual void init() {}
   void destroy();
 
   entity* getParent() const;

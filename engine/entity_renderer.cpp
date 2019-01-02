@@ -26,8 +26,6 @@ void entity_renderer::render(int layer) {
       renderSprite(*position, animationSprite);
       continue;
     }
-
-    // Render animation FSM
   }
 }
 

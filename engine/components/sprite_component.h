@@ -12,24 +12,16 @@ class sprite_component : public component {
  using component::component;
 
  public:
-  void setAll(sprite_id spriteId, rect src, int width, int height) {
-    _spriteId = spriteId;
-    _src = src;
-    _width = width;
-    _height = height;
-  }
+  void setAll(sprite_id spriteId, rect src, int width, int height);
 
-  void setSpriteID(sprite_id spriteId) { _spriteId = spriteId; }
-  void setSrcRect(rect src) { _src = src; }
-  void setSize(int width, int height) {
-    _width = width;
-    _height = height;
-  }
+  void setSpriteID(sprite_id spriteId);
+  void setSrcRect(rect src);
+  void setSize(int width, int height);
 
-  int getWidth() { return _width; }
-  int getHeight() { return _height; }
-  sprite_id getSpriteID() { return _spriteId; }
-  rect getSrcRect() { return _src; }
+  int getWidth();
+  int getHeight();
+  sprite_id getSpriteID();
+  rect getSrcRect();
 
  private:
   int _width, _height;

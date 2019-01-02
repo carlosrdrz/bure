@@ -36,6 +36,8 @@ add_library(bure-engine
   engine/systems/drawing_system.cpp
   engine/entities/entity.cpp
   engine/components/position_component.cpp
+  engine/components/sprite_component.cpp
+  engine/components/animation_component.cpp
   engine/engine.cpp
   engine/utils/config.cpp
   engine/utils/logger.cpp
@@ -51,7 +53,9 @@ add_executable(client
   main.cpp
   game.cpp
   player.cpp
-  scripts/character_script_component.cpp)
+  scripts/character_script_component.cpp
+  entities/character_entity.cpp
+  entities/background_entity.cpp)
 
 target_link_libraries(client bure-engine bure-ui)
 target_link_libraries(client

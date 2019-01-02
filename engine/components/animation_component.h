@@ -10,18 +10,10 @@ class animation_component : public component {
  using component::component;
 
  public:
-  void addSprite(sprite_component s) { _sprites.push_back(s); }
-  void setAnimationTicks(int t) { _animationTicks = t; }
-  sprite_component tickAndGetSprite() {
-    auto s = _sprites.at(_currentSprite);
-
-    if (++_currentTicks > _animationTicks) {
-      _currentSprite = ++_currentSprite % _sprites.size();
-      _currentTicks = 0;
-    }
-
-    return s;
-  }
+  void addSprite(sprite_component s);
+  void addSprite(sprite_id spriteId, rect src, int width, int height);
+  void setAnimationTicks(int t);
+  sprite_component tickAndGetSprite();
 
  private:
   std::vector<sprite_component> _sprites;
