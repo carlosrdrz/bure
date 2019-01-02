@@ -35,7 +35,7 @@ graphics::graphics(std::string basePath) :
   if (TTF_Init() < 0) logger::error(SDL_GetError());
 
   fontSize = 16;
-  font = TTF_OpenFont((basePath + "data/pixel_font.ttf").c_str(), fontSize);
+  font = TTF_OpenFont((basePath + "resources/pixel_font.ttf").c_str(), fontSize);
   if (!font) logger::error(TTF_GetError());
 }
 
@@ -96,7 +96,7 @@ void graphics::flipBuffer() { SDL_RenderPresent(renderer); }
 
 void graphics::openFont(int size) {
   TTF_CloseFont(font);
-  font = TTF_OpenFont((basePath + "data/pixel_font.ttf").c_str(), size);
+  font = TTF_OpenFont((basePath + "resources/pixel_font.ttf").c_str(), size);
   if (!font) {
     logger::error(TTF_GetError());
   }
@@ -110,7 +110,7 @@ cached_sprite graphics::getCachedSprite(sprite_id id) {
   }
 
   // TODO(carlosrdrz): we are not removing this memory here
-  auto sprite = IMG_Load((basePath + "data/" + id + ".png").c_str());
+  auto sprite = IMG_Load((basePath + "resources/" + id + ".png").c_str());
   if (!sprite) {
     logger::error("IMG_Load: %s", IMG_GetError());
     // TODO(carlosrdrz): deal with this error here. maybe just crash?

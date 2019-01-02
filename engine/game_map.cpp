@@ -10,7 +10,7 @@ game_map::game_map(std::string basePath, std::string archivo) {
   pisable = nullptr;
 
   xmlpp::DomParser parser;
-  parser.parse_file(basePath + "/maps/" + archivo);
+  parser.parse_file(basePath + "/resources/maps/" + archivo);
 
   if (!parser) logger::error("could not load map %s", archivo.c_str());
 

@@ -2,10 +2,10 @@
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="80" height="50" tilewidth="32" tileheight="32">
  <tileset name="General" firstgid="1" tilewidth="32" tileheight="32">
-  <image source="../data/tiles.png"/>
+  <image source="../resources/tiles.png"/>
  </tileset>
  <tileset name="Elementos" firstgid="99" tilewidth="32" tileheight="32">
-  <image source="../data/elements.png"/>
+  <image source="../resources/elements.png"/>
  </tileset>
  <layer name="Capa 0" width="80" height="50">
   <data>

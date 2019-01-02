@@ -9,7 +9,7 @@ void config::readFile(std::string path) {
     return;
   }
 
-  auto configPath = path + "data/config.xml";
+  auto configPath = path + "resources/config.xml";
   xmlpp::DomParser parser;
   parser.parse_file(configPath);
 
