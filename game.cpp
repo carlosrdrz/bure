@@ -1,10 +1,6 @@
 #include "game.h"
 #include "engine.h"
 #include "utils/logger.h"
-#include "entities/entity.h"
-#include "components/position_component.h"
-#include "components/sprite_component.h"
-#include "components/animation_component.h"
 #include "entities/character_entity.h"
 #include "entities/background_entity.h"
 
