@@ -17,11 +17,13 @@ void sprite_component::setSize(int width, int height) {
   _width = width;
   _height = height;
 }
+void sprite_component::setScale(int scale) { _scale = scale; }
 
 int sprite_component::getWidth() { return _width; }
 int sprite_component::getHeight() { return _height; }
 sprite_id sprite_component::getSpriteID() { return _spriteId; }
 rect sprite_component::getSrcRect() { return _src; }
+int sprite_component::getScale() { return _scale; }
 
 }  // namespace components
 }  // namespace bure

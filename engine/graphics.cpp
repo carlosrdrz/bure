@@ -19,8 +19,8 @@ graphics::graphics(std::string basePath) :
 
   // Init video at 1024x768 or scaled
   scale = config::instance.getFloatValueOf("scale", 1.0);
-  auto resX = 1024 * scale;
-  auto resY = 768 * scale;
+  auto resX = 1280 * scale;
+  auto resY = 720 * scale;
 
   Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI & SDL_WINDOW_OPENGL;
   if (config::instance.getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_FULLSCREEN;
