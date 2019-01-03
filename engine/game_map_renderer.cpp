@@ -3,8 +3,6 @@
 #include "engine.h"
 #include "utils/logger.h"
 
-#define TILE_SIZE 32
-
 namespace bure {
 
 void game_map_renderer::render(int layer) {
@@ -13,62 +11,43 @@ void game_map_renderer::render(int layer) {
 
   int jug_y = bure::engine::get().globalY;
   int jug_x = bure::engine::get().globalX;
-  int empezar_x = 0;
-  int empezar_y = 0;
+  int abs_x = 0;
+  int abs_y = 0;
   int x, y;
 
-  for (y = (jug_y - 12); y < (jug_y + 12); y++) {
-    for (x = (jug_x - 16); x < (jug_x + 16); x++) {
-      if (x >= 0 && y >= 0 && x < map->width && y < map->height) {
-        if (layer == 0) {
-          renderTile(map->mapa[(x + (y * map->width))], empezar_x, empezar_y, layer);
-        } else {
-          renderTile(map->elementos[(x + (y * map->width))], empezar_x, empezar_y, layer);
+  for (y = (jug_y - 11); y < (jug_y + 12); y++) {
+    for (x = (jug_x - 20); x < (jug_x + 20); x++) {
+      if (x >= 0 && y >= 0 && x < map->getWidth() && y < map->getHeight()) {
+        auto mapLayer = map->getLayer(layer);
+        auto tileGid = mapLayer.data[(x + (y * map->getWidth()))];
+
+        if (tileGid != 0 && mapLayer.visible) {
+          renderTile(map->getTileData(tileGid), abs_x, abs_y,
+                     map->getTileWidth(), map->getTileHeight());
         }
       }
-      empezar_x += TILE_SIZE;
+      abs_x += map->getTileWidth();
     }
 
-    empezar_x = 0;
-    empezar_y += TILE_SIZE;
+    abs_x = 0;
+    abs_y += map->getTileHeight();
   }
 }
 
-void game_map_renderer::renderTile(int tile, int x, int y, int layer) {
+void game_map_renderer::renderTile(tile t, int x, int y, int width, int height) {
   rect src, dst;
 
-  int tilex = 0;
-  int tiley = 0;
-
-  if (layer == 0) {
-    while (tile > 7) {
-      tile -= 7;
-      tiley += 32;
-    }
-    tilex = (tile - 1) * 32;
-  } else {
-    while (tile > 8) {
-      tile -= 8;
-      tiley += 32;
-    }
-    tilex = (tile - 1) * 32;
-  }
-
-  src.x = tilex;
-  src.y = tiley;
-  src.width = TILE_SIZE;
-  src.height = TILE_SIZE;
+  src.x = t.srcX;
+  src.y = t.srcY;
+  src.width = width;
+  src.height = height;
 
   dst.x = x;
   dst.y = y;
-  dst.width = TILE_SIZE;
-  dst.height = TILE_SIZE;
+  dst.width = width;
+  dst.height = height;
 
-  if (layer == 0) {
-    _graphics->drawSprite("tiles", src, dst);
-  } else {
-    _graphics->drawSprite("elements", src, dst);
-  }
+  _graphics->drawSprite(t.file, src, dst);
 }
 
 }  // namespace bure

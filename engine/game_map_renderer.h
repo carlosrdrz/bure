@@ -11,7 +11,7 @@ class game_map_renderer : public renderer {
   void render(int layer);
 
  private:
-  void renderTile(int tile, int x, int y, int layer);
+  void renderTile(tile t, int x, int y, int width, int height);
 };
 
 }  // namespace bure

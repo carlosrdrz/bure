@@ -1,24 +1,57 @@
 #pragma once
 
-#include <fstream>
-#include <iostream>
-#include <list>
+#include <vector>
 #include <string>
+#include <unordered_map>
 
 namespace bure {
 
+struct layer {
+  int id;
+  std::string name;
+  int* data;
+  bool visible;
+};
+
+struct tileset {
+  int id;
+  std::string name;
+  std::string file;
+  int firstGid;
+  int gridWidth;
+  int gridHeight;
+};
+
+struct tile {
+  std::string file;
+  int srcX;
+  int srcY;
+};
+
 class game_map {
  public:
-  int width, height;
-
-  int *mapa;
-  int *elementos;
-  bool *pisable;
-
-  explicit game_map(std::string basePath, std::string archivo);
+  game_map(std::string basePath, std::string file);
   ~game_map();
 
-  bool comprobarTilePisable(int x, int y);
+  void setScale(int scale);
+
+  int getScale();
+  int getWidth();
+  int getHeight();
+  int getTileWidth();
+  int getTileHeight();
+
+  layer getLayer(int layerId);
+  tile getTileData(int tileGid);
+
+ private:
+  int _scale = 1;
+  int _width, _height;
+  int _tileWidth, _tileHeight;
+
+  std::vector<layer> _layers;
+  std::vector<tileset> _tilesets;
+  std::unordered_map<int, tile> _tiles;
 };
 
 }  // namespace bure

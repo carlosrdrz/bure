@@ -30,7 +30,7 @@ sprite_component animation_component::tickAndGetSprite() {
   return s;
 }
 
-int sprite_component::getScale() { return _scale; }
+int animation_component::getScale() { return _scale; }
 
 }  // namespace components
 }  // namespace bure

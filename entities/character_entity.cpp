@@ -60,10 +60,10 @@ void character_entity::setStateAnimation(character_state cs) {
   this->removeComponentByType<animation_component>();
 
   auto animation = this->addComponent<animation_component>();
-  animation->setScale(2);
+  // animation->setScale(2);
 
   for (auto& r : _animations_rects[this->getState()]) {
-    animation->addSprite("personajes", r, 32, 32);
+    animation->addSprite("personajes.png", r, 32, 32);
   }
 
   animation->setAnimationTicks(5);

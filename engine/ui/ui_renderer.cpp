@@ -51,14 +51,14 @@ void ui_renderer::renderContainer(const bure::ui::container& c) {
 
   for (int y = 0; y < c.getWidth(); y++) {
     dst.x++;
-    _graphics->drawSprite("gui", src, dst);
+    _graphics->drawSprite("gui.png", src, dst);
   }
 
   dst.y += c.getHeight();
   dst.x = c.getAbsoluteX() - 1;
   for (int y = 0; y < c.getWidth(); y++) {
      dst.x++;
-     _graphics->drawSprite("gui", src, dst);
+     _graphics->drawSprite("gui.png", src, dst);
   }
 
   src.x = 130;
@@ -72,14 +72,14 @@ void ui_renderer::renderContainer(const bure::ui::container& c) {
 
   for (int y = 0; y < c.getHeight(); y++) {
     dst.y++;
-    _graphics->drawSprite("gui", src, dst);
+    _graphics->drawSprite("gui.png", src, dst);
   }
 
   dst.x += c.getWidth() - 4;
   dst.y = c.getAbsoluteY();
   for (int y = 0; y < c.getHeight(); y++) {
     dst.y++;
-    _graphics->drawSprite("gui", src, dst);
+    _graphics->drawSprite("gui.png", src, dst);
   }
 
   src.width = 26;
@@ -91,20 +91,20 @@ void ui_renderer::renderContainer(const bure::ui::container& c) {
   src.y = 0;
   dst.x = c.getAbsoluteX() + c.getWidth() - 15;
   dst.y = c.getAbsoluteY() - 12;
-  _graphics->drawSprite("gui", src, dst);
+  _graphics->drawSprite("gui.png", src, dst);
 
   src.x += 26;
   dst.x -= c.getWidth() - 4;
-  _graphics->drawSprite("gui", src, dst);
+  _graphics->drawSprite("gui.png", src, dst);
 
   src.x += 26;
   dst.y += c.getHeight();
   dst.x = c.getAbsoluteX() + c.getWidth() - 15;
-  _graphics->drawSprite("gui", src, dst);
+  _graphics->drawSprite("gui.png", src, dst);
 
   src.x += 26;
   dst.x -= c.getWidth() - 4;
-  _graphics->drawSprite("gui", src, dst);
+  _graphics->drawSprite("gui.png", src, dst);
 }
 
 void ui_renderer::renderLabel(const bure::ui::label& l) {

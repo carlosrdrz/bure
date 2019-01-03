@@ -8,7 +8,7 @@ void background_entity::init() {
   auto spriteComponent = this->addComponent<sprite_component>();
   auto positionComponent = this->addComponent<position_component>();
   positionComponent->setCoords(0, 0);
-  spriteComponent->setSpriteID("background");
+  spriteComponent->setSpriteID("background.png");
   spriteComponent->setSrcRect({ 0, 0, 1024, 768 });
   spriteComponent->setSize(1024, 768);
 }

@@ -110,7 +110,7 @@ cached_sprite graphics::getCachedSprite(sprite_id id) {
   }
 
   // TODO(carlosrdrz): we are not removing this memory here
-  auto sprite = IMG_Load((basePath + "resources/" + id + ".png").c_str());
+  auto sprite = IMG_Load((basePath + "resources/sprites/" + id).c_str());
   if (!sprite) {
     logger::error("IMG_Load: %s", IMG_GetError());
     // TODO(carlosrdrz): deal with this error here. maybe just crash?

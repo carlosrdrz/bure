@@ -1,78 +1,120 @@
 #include "game_map.h"
-#include <libxml++/libxml++.h>
 #include "utils/logger.h"
+
+#include <libxml++/libxml++.h>
+#include <fstream>
+#include <iostream>
 
 namespace bure {
 
-game_map::game_map(std::string basePath, std::string archivo) {
-  mapa = nullptr;
-  elementos = nullptr;
-  pisable = nullptr;
-
+game_map::game_map(std::string basePath, std::string file) {
   xmlpp::DomParser parser;
-  parser.parse_file(basePath + "/resources/maps/" + archivo);
+  parser.parse_file(basePath + "/resources/maps/" + file);
 
-  if (!parser) logger::error("could not load map %s", archivo.c_str());
+  if (!parser) logger::error("could not load map %s", file.c_str());
 
   // Get the root element
   const auto rootNode = parser.get_document()->get_root_node();
   const auto widthAttr = rootNode->get_attribute_value("width");
   const auto heightAttr = rootNode->get_attribute_value("height");
+  const auto tileWidthAttr = rootNode->get_attribute_value("tilewidth");
+  const auto tileHeightAttr = rootNode->get_attribute_value("tileheight");
 
-  width = atoi(widthAttr.c_str());
-  height = atoi(heightAttr.c_str());
+  _width = std::stoi(widthAttr);
+  _height = std::stoi(heightAttr);
+  _tileWidth = std::stoi(tileWidthAttr);
+  _tileHeight = std::stoi(tileHeightAttr);
 
-  mapa = new int[height * width];
-  elementos = new int[height * width];
-  pisable = new bool[height * width];
+  // Get tilesets
+  int tilesetId = 0;
+  auto tilesetNodes = rootNode->get_children("tileset");
+  for (const auto& tilesetNode : tilesetNodes) {
+    tileset ts;
 
-  auto layerNode = rootNode->get_first_child("layer");
-  auto dataNode = layerNode->get_first_child("data");
+    auto node = static_cast<xmlpp::Element*>(tilesetNode);
+    ts.name = node->get_attribute_value("name");
+    ts.firstGid = std::stoi(node->get_attribute_value("firstgid"));
 
-  int num = 0;
-  for (const auto& child : dataNode->get_children("tile")) {
-    auto node = static_cast<xmlpp::Element*>(child);
-    std::string value = node->get_attribute_value("gid");
-    mapa[num++] = atoi(value.c_str());
+    auto imageChild = tilesetNode->get_first_child("image");
+    auto imageNode = static_cast<xmlpp::Element*>(imageChild);
+    ts.file = imageNode->get_attribute_value("source");
+
+    auto gridChild = tilesetNode->get_first_child("grid");
+    auto gridNode = static_cast<xmlpp::Element*>(gridChild);
+    ts.gridWidth = std::stoi(gridNode->get_attribute_value("width"));
+    ts.gridHeight = std::stoi(gridNode->get_attribute_value("height"));
+
+    ts.id = tilesetId++;
+    _tilesets.push_back(ts);
   }
 
-  do {
-    layerNode = layerNode->get_next_sibling();
-  } while (layerNode->get_name() != "layer");
+  // Get layers
+  auto layerNodes = rootNode->get_children("layer");
+  for (const auto& layerNode : layerNodes) {
+    layer l;
 
-  dataNode = layerNode->get_first_child("data");
+    auto node = static_cast<xmlpp::Element*>(layerNode);
+    auto data = layerNode->get_first_child("data");
+    l.id = std::stoi(node->get_attribute_value("id"));
+    l.visible = !(node->get_attribute_value("visible") == "0");
+    l.name = node->get_attribute_value("name");
+    l.data = new int[_height * _width];
 
-  num = 0;
-  for (const auto& child : dataNode->get_children("tile")) {
-    auto node = static_cast<xmlpp::Element*>(child);
-    std::string value = node->get_attribute_value("gid");
-    // TODO(carlosrdrz): this is bad. get the value from the tmx file or
-    // figure out another way of doing this
-    elementos[num++] = atoi(value.c_str()) - 98;
-  }
+    int num = 0;
+    for (const auto& child : data->get_children("tile")) {
+      auto tileNode = static_cast<xmlpp::Element*>(child);
+      auto value = tileNode->get_attribute_value("gid");
+      if (value.empty()) l.data[num++] = 0  ;
+      else l.data[num++] = std::stoi(value);
+    }
 
-  do {
-    layerNode = layerNode->get_next_sibling();
-  } while (layerNode->get_name() != "layer");
-
-  dataNode = layerNode->get_first_child("data");
-
-  num = 0;
-  for (const auto& child : dataNode->get_children("tile")) {
-    auto node = static_cast<xmlpp::Element*>(child);
-    std::string value = node->get_attribute_value("gid");
-    pisable[num++] = (atoi(value.c_str()) == 0);
+    _layers.push_back(l);
   }
 }
 
 game_map::~game_map() {
-  delete[] mapa;
-  delete[] elementos;
-  delete[] pisable;
+  for (auto& layer : _layers) {
+    delete layer.data;
+  }
 }
 
-bool game_map::comprobarTilePisable(int x, int y) {
-  return pisable[x + (y * width)];
+void game_map::setScale(int scale) { _scale = scale; }
+int game_map::getScale() { return _scale; }
+
+int game_map::getWidth() { return _width; }
+int game_map::getHeight() { return _height; }
+int game_map::getTileWidth() { return _tileWidth * _scale; }
+int game_map::getTileHeight() { return _tileHeight * _scale; }
+
+layer game_map::getLayer(int layerId) {
+  return _layers.at(layerId);
+}
+
+tile game_map::getTileData(int tileGid) {
+  if (_tiles.count(tileGid) > 0) return _tiles[tileGid];
+
+  tile t;
+  tileset ts;
+  for (auto tst : _tilesets) {
+    if (tileGid >= tst.firstGid) {
+      ts = tst;
+    }
+  }
+
+  t.file = ts.file;
+  t.srcX = 0;
+  t.srcY = 0;
+
+  auto tileTsId = tileGid - ts.firstGid + 1;
+  while (tileTsId > ts.gridWidth) {
+    tileTsId -= ts.gridWidth;
+    t.srcY += _tileHeight;
+  }
+
+  t.srcX = (tileTsId - 1) * _tileWidth;
+
+  _tiles[tileGid] = t;
+  return t;
 }
 
 }  // namespace bure
