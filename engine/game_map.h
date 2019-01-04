@@ -26,6 +26,8 @@ struct tile {
   std::string file;
   int srcX;
   int srcY;
+  int srcWidth;
+  int srcHeight;
 };
 
 class game_map {

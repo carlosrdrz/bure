@@ -39,8 +39,8 @@ void game_map_renderer::renderTile(tile t, int x, int y, int width, int height) 
 
   src.x = t.srcX;
   src.y = t.srcY;
-  src.width = width;
-  src.height = height;
+  src.width = t.srcWidth;
+  src.height = t.srcHeight;
 
   dst.x = x;
   dst.y = y;

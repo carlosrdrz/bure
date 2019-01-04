@@ -104,6 +104,8 @@ tile game_map::getTileData(int tileGid) {
   t.file = ts.file;
   t.srcX = 0;
   t.srcY = 0;
+  t.srcWidth = _tileWidth;
+  t.srcHeight = _tileHeight;
 
   auto tileTsId = tileGid - ts.firstGid + 1;
   while (tileTsId > ts.gridWidth) {

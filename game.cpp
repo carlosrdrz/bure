@@ -35,6 +35,7 @@ void game::startGame(int unused) {
 
   bure::engine::get().clearEntities();
   bure::engine::get().setMap("campo.tmx");
+  bure::engine::get().getMap()->setScale(2);
 
   // add game character
   auto characterEntity = std::make_unique<character_entity>();

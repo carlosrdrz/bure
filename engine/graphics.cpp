@@ -17,7 +17,7 @@ graphics::graphics(std::string basePath) :
     logger::error(SDL_GetError());
   }
 
-  // Init video at 1024x768 or scaled
+  // Init video at 1280 x 720 or scaled
   scale = config::instance.getFloatValueOf("scale", 1.0);
   auto resX = 1280 * scale;
   auto resY = 720 * scale;
