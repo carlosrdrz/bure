@@ -17,7 +17,8 @@ int main(int argc, char* argv[]) {
 
   // Init config file
   bure::config::instance.readFile(resourcesPath);
-  bure::engine::get().init(resourcesPath);
+  // Init engine at 1280x720 resolution
+  bure::engine::get().init(resourcesPath, 1280, 720);
 
   // Init main game object
   auto gameInstance = std::make_unique<game>();

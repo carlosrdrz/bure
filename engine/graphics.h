@@ -42,7 +42,7 @@ struct cached_sprite {
 
 class graphics {
  public:
-  explicit graphics(std::string basePath);
+  explicit graphics(std::string basePath, int width, int height);
   ~graphics();
 
   void drawSprite(sprite_id spriteId, rect s, rect d);

@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <memory>
-#include <unordered_map>
 
 #include "ui/ui_manager.h"
 #include "entities/entity.h"
@@ -12,28 +11,34 @@
 
 namespace bure {
 
+struct camera {
+  int x;
+  int y;
+  int width;
+  int height;
+};
+
 class engine {
  public:
-  void addSystem(std::unique_ptr<systems::system> s);
-  void addEntity(std::unique_ptr<entities::entity> e);
+  void init(std::string resourcesPath, int width, int height);
 
-  void clearEntities();
+  void addEntity(std::unique_ptr<entities::entity> e);
   void removeEntity(entities::entity *e);
+  void clearEntities();
+
+  void addSystem(std::unique_ptr<systems::system> s);
 
   std::vector<std::reference_wrapper<entities::entity>> getEntities();
 
   void setMap(std::string mapName);
   game_map* getMap();
 
-  void init(std::string resourcesPath);
   void update();
 
   ui::ui_manager* getUIManager();
 
-  // TODO(carlosrdrz): remove these
-  // these are global position methods for debugging
-  int globalX = 22;
-  int globalY = 23;
+  void setCamera(camera c);
+  camera getCamera();
 
   static engine& get() {
     if (_instance == nullptr) {
@@ -42,9 +47,11 @@ class engine {
 
     return *_instance;
   }
+
  private:
   static engine* _instance;
   std::string _resourcesPath;
+  camera _camera;
 
   std::vector<std::unique_ptr<bure::systems::system>> _systems;
   std::vector<std::unique_ptr<bure::entities::entity>> _entities;

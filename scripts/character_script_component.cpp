@@ -13,26 +13,30 @@ void character_script_component::onInit() {
 }
 
 void character_script_component::onKeyDown(SDL_Event e) {
+  auto camera = bure::engine::get().getCamera();
+
   switch (e.key.keysym.scancode) {
     case SDL_SCANCODE_A:
-      bure::engine::get().globalX--;
+      camera.x -= 16;
       _character->setState(character_state::walking_left);
       break;
     case SDL_SCANCODE_D:
-      bure::engine::get().globalX++;
+      camera.x += 16;
       _character->setState(character_state::walking_right);
       break;
     case SDL_SCANCODE_W:
-      bure::engine::get().globalY--;
+      camera.y -= 16;
       _character->setState(character_state::walking_up);
       break;
     case SDL_SCANCODE_S:
-      bure::engine::get().globalY++;
+      camera.y += 16;
       _character->setState(character_state::walking_down);
       break;
     default:
       break;
   }
+
+  bure::engine::get().setCamera(camera);
 }
 
 void character_script_component::onKeyUp(SDL_Event e) {

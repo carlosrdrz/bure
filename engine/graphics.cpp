@@ -8,7 +8,7 @@
 
 namespace bure {
 // todo: fix basepath
-graphics::graphics(std::string basePath) :
+graphics::graphics(std::string basePath, int width, int height) :
   basePath(basePath) {
   atexit(SDL_Quit);
 
@@ -17,10 +17,10 @@ graphics::graphics(std::string basePath) :
     logger::error(SDL_GetError());
   }
 
-  // Init video at 1280 x 720 or scaled
+  // Init video
   scale = config::instance.getFloatValueOf("scale", 1.0);
-  auto resX = 1280 * scale;
-  auto resY = 720 * scale;
+  auto resX = width * scale;
+  auto resY = height * scale;
 
   Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI & SDL_WINDOW_OPENGL;
   if (config::instance.getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_FULLSCREEN;
