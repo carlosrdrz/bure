@@ -66,5 +66,5 @@ void character_entity::setStateAnimation(character_state cs) {
     animation->addSprite("personajes.png", r, 32, 32);
   }
 
-  animation->setAnimationTicks(5);
+  animation->setAnimationTicks(10);
 }

@@ -37,6 +37,12 @@ void game::startGame(int unused) {
   bure::engine::get().setMap("campo.tmx");
   bure::engine::get().getMap()->setScale(2);
 
+  // set camera position
+  auto camera = bure::engine::get().getCamera();
+  camera.x = 57 * 32;
+  camera.y = 26 * 32;
+  bure::engine::get().setCamera(camera);
+
   // add game character
   auto characterEntity = std::make_unique<character_entity>();
   bure::engine::get().addEntity(std::move(characterEntity));
