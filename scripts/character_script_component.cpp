@@ -1,3 +1,4 @@
+#include "components/position_component.h"
 #include "character_script_component.h"
 #include "engine.h"
 
@@ -14,29 +15,65 @@ void character_script_component::onInit() {
 
 void character_script_component::onKeyDown(SDL_Event e) {
   auto camera = bure::engine::get().getCamera();
+  character_state dest_state = _character->getState();
+  auto position =
+      _character->getComponentByType<bure::components::position_component>();
+  auto map = bure::engine::get().getMap();
+  auto layer = map->getLayer(2);
+
+  // Get four points for the sprite
+
+  int pointsX[] = {
+    camera.x + position->getX(),
+    camera.x + position->getX() + 32 * map->getScale(),
+  };
+
+  int pointsY[] = {
+    camera.y + position->getY(),
+    camera.y + position->getY() + 32 * map->getScale(),
+  };
 
   switch (e.key.keysym.scancode) {
     case SDL_SCANCODE_A:
-      camera.x -= 16;
-      _character->setState(character_state::walking_left);
+      dest_state = character_state::walking_left;
+      pointsX[0] -= _character_px_movement;
+      pointsX[1] -= _character_px_movement;
       break;
     case SDL_SCANCODE_D:
-      camera.x += 16;
-      _character->setState(character_state::walking_right);
+      dest_state = character_state::walking_right;
+      pointsX[0] += _character_px_movement;
+      pointsX[1] += _character_px_movement;
       break;
     case SDL_SCANCODE_W:
-      camera.y -= 16;
-      _character->setState(character_state::walking_up);
+      dest_state = character_state::walking_up;
+      pointsY[0] -= _character_px_movement;
+      pointsY[1] -= _character_px_movement;
       break;
     case SDL_SCANCODE_S:
-      camera.y += 16;
-      _character->setState(character_state::walking_down);
+      dest_state = character_state::walking_down;
+      pointsY[0] += _character_px_movement;
+      pointsY[1] += _character_px_movement;
       break;
     default:
       break;
   }
 
-  bure::engine::get().setCamera(camera);
+  for (auto x : pointsX) {
+    for (auto y : pointsY) {
+      int destTileX = x / map->getTileWidth();
+      int destTileY = y / map->getTileHeight();
+
+      auto tile = layer.data[destTileX + (destTileY * map->getWidth())];
+      if (tile != 0) return;
+    }
+  }
+
+  _character->setState(dest_state);
+  bure::engine::get().setCamera({
+    pointsX[0] - position->getX(),
+    pointsY[0] - position->getY(),
+    camera.width, camera.height
+  });
 }
 
 void character_script_component::onKeyUp(SDL_Event e) {

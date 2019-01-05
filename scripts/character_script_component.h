@@ -12,6 +12,7 @@ class character_script_component : public bure::components::script_component {
 
  private:
   character_entity* _character;
+  int _character_px_movement = 16;
 
   void onKeyDown(SDL_Event e);
   void onKeyUp(SDL_Event e);
