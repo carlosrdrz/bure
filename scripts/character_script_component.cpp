@@ -3,25 +3,31 @@
 #include "engine.h"
 
 void character_script_component::onInit() {
-  bure::event_manager::get().addEventCallback(
-      SDL_KEYDOWN, std::bind(&character_script_component::onKeyDown, this,
-                             std::placeholders::_1));
-  bure::event_manager::get().addEventCallback(
-      SDL_KEYUP, std::bind(&character_script_component::onKeyUp, this,
-                             std::placeholders::_1));
-
   _character = dynamic_cast<character_entity*>(&_entity);
 }
 
-void character_script_component::onKeyDown(SDL_Event e) {
-  auto camera = bure::engine::get().getCamera();
-  character_state dest_state = _character->getState();
+void character_script_component::onTick() {
+  const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
+  if (keystates[SDL_SCANCODE_A]) {
+    onKeyDown(SDL_SCANCODE_A);
+  } else if (keystates[SDL_SCANCODE_D]) {
+    onKeyDown(SDL_SCANCODE_D);
+  } else if (keystates[SDL_SCANCODE_W]) {
+    onKeyDown(SDL_SCANCODE_W);
+  } else if (keystates[SDL_SCANCODE_S]) {
+    onKeyDown(SDL_SCANCODE_S);
+  } else {
+    onKeyUp();
+  }
+}
+
+void character_script_component::onKeyDown(SDL_Scancode key) {
   auto position =
       _character->getComponentByType<bure::components::position_component>();
+  auto camera = bure::engine::get().getCamera();
   auto map = bure::engine::get().getMap();
   auto layer = map->getLayer(2);
-
-  // Get four points for the sprite
 
   int pointsX[] = {
     camera.x + position->getX(),
@@ -33,24 +39,24 @@ void character_script_component::onKeyDown(SDL_Event e) {
     camera.y + position->getY() + 32 * map->getScale(),
   };
 
-  switch (e.key.keysym.scancode) {
+  switch (key) {
     case SDL_SCANCODE_A:
-      dest_state = character_state::walking_left;
+      _character->setState(character_state::walking_left);
       pointsX[0] -= _character_px_movement;
       pointsX[1] -= _character_px_movement;
       break;
     case SDL_SCANCODE_D:
-      dest_state = character_state::walking_right;
+      _character->setState(character_state::walking_right);
       pointsX[0] += _character_px_movement;
       pointsX[1] += _character_px_movement;
       break;
     case SDL_SCANCODE_W:
-      dest_state = character_state::walking_up;
+      _character->setState(character_state::walking_up);
       pointsY[0] -= _character_px_movement;
       pointsY[1] -= _character_px_movement;
       break;
     case SDL_SCANCODE_S:
-      dest_state = character_state::walking_down;
+      _character->setState(character_state::walking_down);
       pointsY[0] += _character_px_movement;
       pointsY[1] += _character_px_movement;
       break;
@@ -68,7 +74,6 @@ void character_script_component::onKeyDown(SDL_Event e) {
     }
   }
 
-  _character->setState(dest_state);
   bure::engine::get().setCamera({
     pointsX[0] - position->getX(),
     pointsY[0] - position->getY(),
@@ -76,22 +81,18 @@ void character_script_component::onKeyDown(SDL_Event e) {
   });
 }
 
-void character_script_component::onKeyUp(SDL_Event e) {
-  switch (e.key.keysym.scancode) {
-    case SDL_SCANCODE_A:
-      if (_character->getState() != character_state::walking_left) return;
+void character_script_component::onKeyUp() {
+  switch (_character->getState()) {
+    case character_state::walking_left:
       _character->setState(character_state::standing_left);
       break;
-    case SDL_SCANCODE_D:
-      if (_character->getState() != character_state::walking_right) return;
+    case character_state::walking_right:
       _character->setState(character_state::standing_right);
       break;
-    case SDL_SCANCODE_W:
-      if (_character->getState() != character_state::walking_up) return;
+    case character_state::walking_up:
       _character->setState(character_state::standing_up);
       break;
-    case SDL_SCANCODE_S:
-      if (_character->getState() != character_state::walking_down) return;
+    case character_state::walking_down:
       _character->setState(character_state::standing_down);
       break;
     default:

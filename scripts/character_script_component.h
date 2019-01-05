@@ -9,11 +9,12 @@ class character_script_component : public bure::components::script_component {
 
  public:
   void onInit() override;
+  void onTick() override;
 
  private:
   character_entity* _character;
-  int _character_px_movement = 16;
+  int _character_px_movement = 2;
 
-  void onKeyDown(SDL_Event e);
-  void onKeyUp(SDL_Event e);
+  void onKeyDown(SDL_Scancode key);
+  void onKeyUp();
 };

@@ -34,6 +34,7 @@ add_library(bure-ui
 add_library(bure-engine
   engine/systems/system.cpp
   engine/systems/drawing_system.cpp
+  engine/systems/scripts_system.cpp
   engine/entities/entity.cpp
   engine/components/position_component.cpp
   engine/components/sprite_component.cpp

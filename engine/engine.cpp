@@ -3,6 +3,7 @@
 #include "game_map_renderer.h"
 #include "graphics.h"
 #include "systems/drawing_system.h"
+#include "systems/scripts_system.h"
 #include "ui/ui_renderer.h"
 
 namespace bure {
@@ -30,6 +31,10 @@ void engine::init(std::string resourcesPath, int width, int height) {
   drawingSystem->addRenderer(std::move(entityRenderer));
   drawingSystem->addRenderer(std::move(gameMapRenderer));
   this->addSystem(std::move(drawingSystem));
+
+  // initialize scripting system
+  auto scriptsSystem = std::make_unique<bure::systems::scripts_system>();
+  this->addSystem(std::move(scriptsSystem));
 }
 
 void engine::addSystem(std::unique_ptr<systems::system> s) {
