@@ -16,6 +16,7 @@ void ui_manager::removeContainer(int in) {
 
   for (it = _containers.begin(); it != _containers.end(); ++it) {
     if ((*it)->index == in) {
+      (*it)->deinit();
       _containers.erase(it);
       break;
     }
@@ -30,6 +31,7 @@ void ui_manager::removeContainer(container* p) {
 
     for (it = _containers.begin(); it != _containers.end(); ++it) {
       if ((*it).get() == p) {
+        (*it)->deinit();
         _containers.erase(it);
         break;
       }

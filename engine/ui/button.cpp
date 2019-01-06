@@ -12,10 +12,17 @@ button::button() : press{0}, parameter{0} {
 button::button(std::string t) : title(t) { button(); }
 
 void button::init() {
-  bure::event_manager::get().addEventCallback(
+  _down_handler = bure::event_manager::get().addEventCallback(
     SDL_MOUSEBUTTONDOWN, std::bind(&button::onClickDown, this, _1));
-  bure::event_manager::get().addEventCallback(
+  _up_handler = bure::event_manager::get().addEventCallback(
     SDL_MOUSEBUTTONUP, std::bind(&button::onClickUp, this, _1));
+}
+
+void button::deinit() {
+  bure::event_manager::get().removeEventCallback(
+    SDL_MOUSEBUTTONDOWN, _down_handler);
+  bure::event_manager::get().removeEventCallback(
+    SDL_MOUSEBUTTONUP, _up_handler);
 }
 
 void button::onClickDown(SDL_Event e) {

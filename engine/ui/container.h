@@ -22,11 +22,15 @@ class container : public widget {
  public:
   container(int x, int y, int w, int h);
 
+  void deinit() override;
+
   void add(std::unique_ptr<widget> w);
 
-  widget_type getType() const { return widget_type::container; }
+  widget_type getType() const override { return widget_type::container; }
   std::vector<std::reference_wrapper<widget>> getChildrenByType(
       widget_type type);
+
+  void removeAll();
 
  private:
   std::vector<container_child> _children;

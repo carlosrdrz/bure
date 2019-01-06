@@ -12,6 +12,12 @@ container::container(int x, int y, int w, int h) {
   this->height = h;
 }
 
+void container::deinit() {
+  for (auto& cc : _children) {
+    cc.child->deinit();
+  }
+}
+
 void container::add(std::unique_ptr<widget> w) {
   w->setParent(this);
   w->init();

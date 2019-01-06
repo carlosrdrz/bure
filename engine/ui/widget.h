@@ -22,9 +22,10 @@ class widget {
   // TODO(carlosrdrz): This probably should not be a public member
   int index;
 
-  // Called when the widget is added to a container
+  // Called when the widget is added or removed to/from a container
   // Do initialization stuff here like adding event handlers
   virtual void init() {}
+  virtual void deinit() {}
 
   int getRelativeX() const;
   int getRelativeY() const;
