@@ -31,12 +31,12 @@ void character_script_component::onKeyDown(SDL_Scancode key) {
 
   int pointsX[] = {
     camera.x + position->getX(),
-    camera.x + position->getX() + 32 * map->getScale(),
+    camera.x + position->getX() + 31 * map->getScale(),
   };
 
   int pointsY[] = {
     camera.y + position->getY(),
-    camera.y + position->getY() + 32 * map->getScale(),
+    camera.y + position->getY() + 31 * map->getScale(),
   };
 
   switch (key) {
