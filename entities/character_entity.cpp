@@ -1,4 +1,5 @@
 #include "character_entity.h"
+#include "engine.h"
 #include "components/position_component.h"
 #include "components/sprite_component.h"
 #include "components/animation_component.h"
@@ -8,13 +9,27 @@ using namespace bure::components;
 
 void character_entity::init() {
   this->setLayer(1);
-  this->addComponent<character_script_component>();
 
+  auto map = bure::engine::get().getMap();
+  auto screen_pos = map->mapToScreen({ 66, 37 });
   auto position = this->addComponent<position_component>();
-  position->setCoords(576, 312);
+  position->setCoords(screen_pos.x, screen_pos.y);
+
+  auto script = this->addComponent<character_script_component>();
+  script->updateCamera();
 
   initStateAnimations();
   setStateAnimation(_state);
+}
+
+void character_entity::setState(character_state cs) {
+  if (cs == _state) return;
+  _state = cs;
+  setStateAnimation(cs);
+}
+
+character_state character_entity::getState() {
+  return _state;
 }
 
 void character_entity::initStateAnimations() {

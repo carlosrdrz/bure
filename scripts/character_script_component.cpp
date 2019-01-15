@@ -25,18 +25,17 @@ void character_script_component::onTick() {
 void character_script_component::onKeyDown(SDL_Scancode key) {
   auto position =
       _character->getComponentByType<bure::components::position_component>();
-  auto camera = bure::engine::get().getCamera();
   auto map = bure::engine::get().getMap();
   auto layer = map->getLayer(2);
 
   int pointsX[] = {
-    camera.x + position->getX(),
-    camera.x + position->getX() + 31 * map->getScale(),
+    position->getX(),
+    position->getX() + 31 * map->getScale(),
   };
 
   int pointsY[] = {
-    camera.y + position->getY(),
-    camera.y + position->getY() + 31 * map->getScale(),
+    position->getY(),
+    position->getY() + 31 * map->getScale(),
   };
 
   switch (key) {
@@ -74,11 +73,9 @@ void character_script_component::onKeyDown(SDL_Scancode key) {
     }
   }
 
-  bure::engine::get().setCamera({
-    pointsX[0] - position->getX(),
-    pointsY[0] - position->getY(),
-    camera.width, camera.height
-  });
+  position->setCoords(pointsX[0], pointsY[0]);
+
+  updateCamera();
 }
 
 void character_script_component::onKeyUp() {
@@ -98,4 +95,17 @@ void character_script_component::onKeyUp() {
     default:
       break;
   }
+}
+
+void character_script_component::updateCamera() {
+  auto position =
+      _character->getComponentByType<bure::components::position_component>();
+  auto camera = bure::engine::get().getCamera();
+  auto map = bure::engine::get().getMap();
+
+  bure::engine::get().setCamera({
+    position->getX() + map->getTileWidth() * map->getScale() / 2 - camera.width / 2,
+    position->getY() + map->getTileHeight() * map->getScale() / 2 - camera.height / 2,
+    camera.width, camera.height
+  });
 }

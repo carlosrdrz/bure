@@ -22,19 +22,11 @@ class character_entity : public entity {
  public:
   void init() override;
 
-  void setState(character_state cs) {
-    if (cs == _state) return;
+  void setState(character_state cs);
+  character_state getState();
 
-    _state = cs;
-    setStateAnimation(cs);
-  }
-
-  character_state getState() const {
-    return _state;
-  }
-
- private:
-  void initStateAnimations();
+ protected:
+  virtual void initStateAnimations();
   void setStateAnimation(character_state cs);
 
   character_state _state = character_state::standing_down;

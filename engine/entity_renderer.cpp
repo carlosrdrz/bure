@@ -30,8 +30,15 @@ void entity_renderer::render(int layer) {
 }
 
 void entity_renderer::renderSprite(position_component& p, sprite_component& s) {
-  bure::rect dst = {p.getX(), p.getY(), s.getWidth() * s.getScale(),
-                    s.getHeight() * s.getScale()};
+  auto camera = bure::engine::get().getCamera();
+
+  bure::rect dst = {
+    p.getX() - camera.x,
+    p.getY() - camera.y,
+    s.getWidth() * s.getScale(),
+    s.getHeight() * s.getScale()
+  };
+
   _graphics->drawSprite(s.getSpriteID(), s.getSrcRect(), dst);
 }
 

@@ -55,6 +55,7 @@ add_executable(client
   game.cpp
   scripts/character_script_component.cpp
   entities/character_entity.cpp
+  entities/enemy_entity.cpp
   entities/background_entity.cpp)
 
 target_link_libraries(client bure-engine bure-ui)

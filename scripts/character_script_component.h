@@ -11,6 +11,8 @@ class character_script_component : public bure::components::script_component {
   void onInit() override;
   void onTick() override;
 
+  void updateCamera();
+
  private:
   character_entity* _character;
   int _character_px_movement = 2;

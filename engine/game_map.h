@@ -30,6 +30,16 @@ struct tile {
   int srcHeight;
 };
 
+struct map_coords {
+  int x;
+  int y;
+};
+
+struct screen_coords {
+  int x;
+  int y;
+};
+
 class game_map {
  public:
   game_map(std::string basePath, std::string file);
@@ -42,6 +52,9 @@ class game_map {
   int getHeight();
   int getTileWidth();
   int getTileHeight();
+
+  screen_coords mapToScreen(map_coords m);
+  map_coords screenToMap(screen_coords m);
 
   layer getLayer(int layerId);
   tile getTileData(int tileGid);
