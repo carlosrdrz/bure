@@ -26,5 +26,5 @@ class character_script_component : public script_component {
   void keepMoving();
 
   void onKeyDown(SDL_Scancode key);
-  void onKeyUp();
+  void stopMoving();
 };

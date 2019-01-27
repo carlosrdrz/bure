@@ -47,7 +47,7 @@ void character_script_component::onKeyDown(SDL_Scancode key) {
   }
 }
 
-void character_script_component::onKeyUp() {
+void character_script_component::stopMoving() {
   switch (_character->getState()) {
     case character_state::walking_left:
       _character->setState(character_state::standing_left);
@@ -101,7 +101,7 @@ void character_script_component::processKeys() {
   } else if (keystates[SDL_SCANCODE_S]) {
     onKeyDown(SDL_SCANCODE_S);
   } else {
-    onKeyUp();
+    stopMoving();
   }
 }
 
@@ -140,7 +140,7 @@ void character_script_component::keepMoving() {
     auto solid = _character->getComponentByType<solid_component>();
     solid->setCoords(_currentPosition.x, _currentPosition.y);
     _nextPosition = {-1, -1};
-    onKeyUp();
+    stopMoving();
   }
 
   updateCamera();
