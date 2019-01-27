@@ -39,6 +39,7 @@ add_library(bure-engine
   engine/components/position_component.cpp
   engine/components/sprite_component.cpp
   engine/components/animation_component.cpp
+  engine/components/solid_component.cpp
   engine/engine.cpp
   engine/utils/config.cpp
   engine/utils/logger.cpp

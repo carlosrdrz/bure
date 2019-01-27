@@ -25,6 +25,9 @@ class character_entity : public entity {
   void setState(character_state cs);
   character_state getState();
 
+  bool isWalking();
+  bool isStanding();
+
  protected:
   virtual void initStateAnimations();
   void setStateAnimation(character_state cs);

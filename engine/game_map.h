@@ -59,6 +59,9 @@ class game_map {
   layer getLayer(int layerId);
   tile getTileData(int tileGid);
 
+  bool canWalk(map_coords mc);
+  bool anyEntityIn(map_coords mc);
+
  private:
   int _scale = 1;
   int _width, _height;

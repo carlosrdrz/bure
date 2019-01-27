@@ -3,6 +3,7 @@
 #include "components/position_component.h"
 #include "components/sprite_component.h"
 #include "components/animation_component.h"
+#include "components/solid_component.h"
 #include "../scripts/character_script_component.h"
 
 using namespace bure::components;
@@ -10,12 +11,11 @@ using namespace bure::components;
 void character_entity::init() {
   this->setLayer(1);
 
-  auto map = bure::engine::get().getMap();
-  auto screen_pos = map->mapToScreen({ 66, 37 });
-  auto position = this->addComponent<position_component>();
-  position->setCoords(screen_pos.x, screen_pos.y);
-
+  bure::map_coords mc = { 66, 37 };
+  this->addComponent<solid_component>();
+  this->addComponent<position_component>();
   auto script = this->addComponent<character_script_component>();
+  script->setPosition(mc);
   script->updateCamera();
 
   initStateAnimations();
@@ -30,6 +30,19 @@ void character_entity::setState(character_state cs) {
 
 character_state character_entity::getState() {
   return _state;
+}
+
+bool character_entity::isWalking() {
+  return !isStanding();
+}
+
+bool character_entity::isStanding() {
+  auto state = getState();
+
+  return state == character_state::standing_up ||
+    state == character_state::standing_down ||
+    state == character_state::standing_left ||
+    state == character_state::standing_right;
 }
 
 void character_entity::initStateAnimations() {
@@ -71,6 +84,8 @@ void character_entity::initStateAnimations() {
   _animations_rects.emplace(character_state::standing_right, standingRightRects);
 }
 
+// TODO(carlosrdrz): We don't want to recreate all animations everytime here.
+// It would be better if we could save them somewhere and reuse.
 void character_entity::setStateAnimation(character_state cs) {
   this->removeComponentByType<animation_component>();
 

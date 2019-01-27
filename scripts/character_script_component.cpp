@@ -1,5 +1,6 @@
-#include "components/position_component.h"
 #include "character_script_component.h"
+#include "components/position_component.h"
+#include "components/solid_component.h"
 #include "engine.h"
 
 void character_script_component::onInit() {
@@ -7,75 +8,43 @@ void character_script_component::onInit() {
 }
 
 void character_script_component::onTick() {
-  const Uint8* keystates = SDL_GetKeyboardState(NULL);
+  keepMoving();
 
-  if (keystates[SDL_SCANCODE_A]) {
-    onKeyDown(SDL_SCANCODE_A);
-  } else if (keystates[SDL_SCANCODE_D]) {
-    onKeyDown(SDL_SCANCODE_D);
-  } else if (keystates[SDL_SCANCODE_W]) {
-    onKeyDown(SDL_SCANCODE_W);
-  } else if (keystates[SDL_SCANCODE_S]) {
-    onKeyDown(SDL_SCANCODE_S);
-  } else {
-    onKeyUp();
+  if (_character->isStanding()) {
+    processKeys();
   }
 }
 
 void character_script_component::onKeyDown(SDL_Scancode key) {
-  auto position =
-      _character->getComponentByType<bure::components::position_component>();
   auto map = bure::engine::get().getMap();
-  auto layer = map->getLayer(2);
-
-  int pointsX[] = {
-    position->getX(),
-    position->getX() + 31 * map->getScale(),
-  };
-
-  int pointsY[] = {
-    position->getY(),
-    position->getY() + 31 * map->getScale(),
-  };
+  character_state nextState = _character->getState();
+  bure::map_coords nextPosition = { -1, -1 };
 
   switch (key) {
     case SDL_SCANCODE_A:
-      _character->setState(character_state::walking_left);
-      pointsX[0] -= _character_px_movement;
-      pointsX[1] -= _character_px_movement;
+      nextState = character_state::walking_left;
+      nextPosition = {_currentPosition.x - 1, _currentPosition.y};
       break;
     case SDL_SCANCODE_D:
-      _character->setState(character_state::walking_right);
-      pointsX[0] += _character_px_movement;
-      pointsX[1] += _character_px_movement;
+      nextState = character_state::walking_right;
+      nextPosition = {_currentPosition.x + 1, _currentPosition.y};
       break;
     case SDL_SCANCODE_W:
-      _character->setState(character_state::walking_up);
-      pointsY[0] -= _character_px_movement;
-      pointsY[1] -= _character_px_movement;
+      nextState = character_state::walking_up;
+      nextPosition = {_currentPosition.x, _currentPosition.y - 1};
       break;
     case SDL_SCANCODE_S:
-      _character->setState(character_state::walking_down);
-      pointsY[0] += _character_px_movement;
-      pointsY[1] += _character_px_movement;
+      nextState = character_state::walking_down;
+      nextPosition = {_currentPosition.x, _currentPosition.y + 1};
       break;
     default:
       break;
   }
 
-  for (auto x : pointsX) {
-    for (auto y : pointsY) {
-      int destTileX = x / map->getTileWidth();
-      int destTileY = y / map->getTileHeight();
-
-      auto tile = layer.data[destTileX + (destTileY * map->getWidth())];
-      if (tile != 0) return;
-    }
+  if (map->canWalk(nextPosition)) {
+    _character->setState(nextState);
+    _nextPosition = nextPosition;
   }
-
-  position->setCoords(pointsX[0], pointsY[0]);
-
-  updateCamera();
 }
 
 void character_script_component::onKeyUp() {
@@ -98,14 +67,81 @@ void character_script_component::onKeyUp() {
 }
 
 void character_script_component::updateCamera() {
-  auto position =
-      _character->getComponentByType<bure::components::position_component>();
+  auto position = _character->getComponentByType<position_component>();
   auto camera = bure::engine::get().getCamera();
   auto map = bure::engine::get().getMap();
 
-  bure::engine::get().setCamera({
-    position->getX() + map->getTileWidth() * map->getScale() / 2 - camera.width / 2,
-    position->getY() + map->getTileHeight() * map->getScale() / 2 - camera.height / 2,
-    camera.width, camera.height
-  });
+  bure::engine::get().setCamera(
+      {position->getX() + map->getTileWidth() * map->getScale() / 2 -
+           camera.width / 2,
+       position->getY() + map->getTileHeight() * map->getScale() / 2 -
+           camera.height / 2,
+       camera.width, camera.height});
+}
+
+void character_script_component::setPosition(bure::map_coords pos) {
+  auto map = bure::engine::get().getMap();
+  auto screen_pos = map->mapToScreen(pos);
+  auto position = _character->getComponentByType<position_component>();
+  auto solid = _character->getComponentByType<solid_component>();
+  position->setCoords(screen_pos.x, screen_pos.y);
+  _currentPosition = pos;
+  solid->setCoords(_currentPosition.x, _currentPosition.y);
+}
+
+void character_script_component::processKeys() {
+  const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
+  if (keystates[SDL_SCANCODE_A]) {
+    onKeyDown(SDL_SCANCODE_A);
+  } else if (keystates[SDL_SCANCODE_D]) {
+    onKeyDown(SDL_SCANCODE_D);
+  } else if (keystates[SDL_SCANCODE_W]) {
+    onKeyDown(SDL_SCANCODE_W);
+  } else if (keystates[SDL_SCANCODE_S]) {
+    onKeyDown(SDL_SCANCODE_S);
+  } else {
+    onKeyUp();
+  }
+}
+
+void character_script_component::keepMoving() {
+  auto position = _character->getComponentByType<position_component>();
+  auto map = bure::engine::get().getMap();
+  auto layer = map->getLayer(2);
+  auto nextPos = bure::screen_coords({position->getX(), position->getY()});
+  bool isFinished = false;
+
+  switch (_character->getState()) {
+    case character_state::walking_left:
+      nextPos.x -= _character_px_movement;
+      isFinished = nextPos.x % map->getTileWidth() == 0;
+      break;
+    case character_state::walking_right:
+      nextPos.x += _character_px_movement;
+      isFinished = nextPos.x % map->getTileWidth() == 0;
+      break;
+    case character_state::walking_up:
+      nextPos.y -= _character_px_movement;
+      isFinished = nextPos.y % map->getTileHeight() == 0;
+      break;
+    case character_state::walking_down:
+      nextPos.y += _character_px_movement;
+      isFinished = nextPos.y % map->getTileHeight() == 0;
+      break;
+    default:
+      break;
+  }
+
+  position->setCoords(nextPos.x, nextPos.y);
+
+  if (isFinished) {
+    _currentPosition = _nextPosition;
+    auto solid = _character->getComponentByType<solid_component>();
+    solid->setCoords(_currentPosition.x, _currentPosition.y);
+    _nextPosition = {-1, -1};
+    onKeyUp();
+  }
+
+  updateCamera();
 }

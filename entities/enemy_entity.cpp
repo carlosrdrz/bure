@@ -3,6 +3,7 @@
 #include "components/position_component.h"
 #include "components/sprite_component.h"
 #include "components/animation_component.h"
+#include "components/solid_component.h"
 
 using namespace bure::components;
 
@@ -10,9 +11,12 @@ void enemy_entity::init() {
   this->setLayer(1);
 
   auto map = bure::engine::get().getMap();
-  auto screen_pos = map->mapToScreen({ 67, 42 });
+  auto map_pos = bure::map_coords({ 67, 42});
+  auto screen_pos = map->mapToScreen(map_pos);
   auto position = this->addComponent<position_component>();
   position->setCoords(screen_pos.x, screen_pos.y);
+  auto solid = this->addComponent<solid_component>();
+  solid->setCoords(map_pos.x, map_pos.y);
 
   initStateAnimations();
   setStateAnimation(_state);

@@ -1,5 +1,7 @@
+#include "engine.h"
 #include "game_map.h"
 #include "utils/logger.h"
+#include "components/solid_component.h"
 
 #include <libxml++/libxml++.h>
 #include <fstream>
@@ -131,6 +133,28 @@ map_coords game_map::screenToMap(screen_coords s) {
     s.x / getTileWidth(),
     s.y / getTileHeight()
   };
+}
+
+bool game_map::canWalk(map_coords mc) {
+  auto layer = getLayer(2);
+  auto tile = layer.data[mc.x + (mc.y * getWidth())];
+  return tile == 0 && !anyEntityIn(mc);
+}
+
+bool game_map::anyEntityIn(map_coords mc) {
+  auto entities = engine::get().getEntities();
+
+  for (auto& entity : entities) {
+    auto& e = entity.get();
+    auto solid = e.getComponentByType<components::solid_component>();
+    if (solid == nullptr) continue;
+
+    if (solid->getX() == mc.x && solid->getY() == mc.y) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 }  // namespace bure
