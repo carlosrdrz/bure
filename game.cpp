@@ -2,8 +2,9 @@
 #include "engine.h"
 #include "utils/logger.h"
 #include "entities/enemy_entity.h"
-#include "entities/character_entity.h"
+#include "entities/player_entity.h"
 #include "entities/background_entity.h"
+#include "systems/movement_system.h"
 
 game::game()
     : finished(false) {}
@@ -38,9 +39,13 @@ void game::startGame(int unused) {
   bure::engine::get().setMap("campo.tmx");
   bure::engine::get().getMap()->setScale(2);
 
+  // add movement system
+  auto movementSystem = std::make_unique<movement_system>();
+  bure::engine::get().addSystem(std::move(movementSystem));
+
   // add game character
-  auto characterEntity = std::make_unique<character_entity>();
-  bure::engine::get().addEntity(std::move(characterEntity));
+  auto playerEntity = std::make_unique<player_entity>();
+  bure::engine::get().addEntity(std::move(playerEntity));
   auto enemyEntity = std::make_unique<enemy_entity>();
   bure::engine::get().addEntity(std::move(enemyEntity));
 }

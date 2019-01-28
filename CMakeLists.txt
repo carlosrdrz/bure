@@ -54,9 +54,10 @@ add_library(bure-engine
 add_executable(client
   main.cpp
   game.cpp
-  scripts/character_script_component.cpp
-  scripts/enemy_script_component.cpp
+  components/movement_component.cpp
+  systems/movement_system.cpp
   entities/character_entity.cpp
+  entities/player_entity.cpp
   entities/enemy_entity.cpp
   entities/background_entity.cpp)
 

@@ -21,6 +21,7 @@ class entity {
   virtual ~entity() = default;
 
   virtual void init() {}
+  virtual void update() {}
   void destroy();
 
   entity* getParent() const;

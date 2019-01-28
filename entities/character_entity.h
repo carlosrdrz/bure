@@ -5,7 +5,7 @@
 
 using namespace bure::entities;
 
-enum class character_state {
+enum class animation_id {
   walking_up,
   walking_down,
   walking_right,
@@ -16,22 +16,31 @@ enum class character_state {
   standing_left
 };
 
+enum class direction { up, down, left, right, standing };
+
 class character_entity : public entity {
- using entity::entity;
+  using entity::entity;
 
  public:
   void init() override;
-
-  void setState(character_state cs);
-  character_state getState();
+  void update() override;
 
   bool isWalking();
   bool isStanding();
 
- protected:
-  virtual void initStateAnimations();
-  void setStateAnimation(character_state cs);
+  void setPosition(bure::map_coords mc);
+  void setVelocity(int v);
 
-  character_state _state = character_state::standing_down;
-  std::map<character_state, std::vector<bure::rect>> _animations_rects;
+ protected:
+  virtual void initAnimations();
+  void setAnimation(animation_id cs);
+  bool animationWalking();
+  bool animationStanding();
+  void stopWalkingAnimation();
+
+  void moveTo(direction d);
+  void randomlyMove();
+
+  animation_id _animationId = animation_id::standing_down;
+  std::map<animation_id, std::vector<bure::rect>> _animations_rects;
 };
