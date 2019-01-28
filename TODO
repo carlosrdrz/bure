@@ -4,7 +4,14 @@
 - maybe should use enum for sprites IDs instead of strings
 - maybe should move declarations of types like rect to their own files
 - layer management is very poor. need to improve it.
-- maybe add all dependencies to the repo instead of expecting people to install them on their package managers
+- add all dependencies to the repo instead of expecting people to install them on their package managers
 - extract sprite management from engine
 - entity builder
 - script components onTick method
+- move scripts into just entities methods
+- ui needs to be easier to modify
+- scale UI images instead of using for loops drawing
+- ui need to have a scale parameter
+- consider adding some scripting engine to modify stuff like UI, some entity-specific properties, dialogues, etc
+- it makes no sense that bure::game_map knows which tiles are walkable based on the layers
+- animations, coords, ui... everything that is a number or property can go either in a XML or a JS file
