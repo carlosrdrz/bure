@@ -35,7 +35,7 @@ struct map_coords {
   int y;
 };
 
-struct screen_coords {
+struct world_coords {
   int x;
   int y;
 };
@@ -53,8 +53,8 @@ class game_map {
   int getTileWidth();
   int getTileHeight();
 
-  screen_coords mapToScreen(map_coords m);
-  map_coords screenToMap(screen_coords m);
+  world_coords mapToScreen(map_coords m);
+  map_coords screenToMap(world_coords m);
 
   layer getLayer(int layerId);
   tile getTileData(int tileGid);

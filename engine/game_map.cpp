@@ -121,14 +121,14 @@ tile game_map::getTileData(int tileGid) {
   return t;
 }
 
-screen_coords game_map::mapToScreen(map_coords m) {
+world_coords game_map::mapToScreen(map_coords m) {
   return {
     m.x * getTileWidth(),
     m.y * getTileHeight()
   };
 }
 
-map_coords game_map::screenToMap(screen_coords s) {
+map_coords game_map::screenToMap(world_coords s) {
   return {
     s.x / getTileWidth(),
     s.y / getTileHeight()

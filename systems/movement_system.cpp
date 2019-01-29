@@ -19,7 +19,7 @@ void movement_system::moveEntity(entity &e, position_component &p,
                                  movement_component &m, solid_component &s) {
   auto map = bure::engine::get().getMap();
   auto layer = map->getLayer(2);
-  auto nextPos = bure::screen_coords({p.getX(), p.getY()});
+  auto nextPos = bure::world_coords({p.getX(), p.getY()});
   bool isFinished = false;
   bure::map_coords nextPosition = m.getPosition();
 
