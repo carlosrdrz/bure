@@ -24,13 +24,14 @@ void player_entity::update() {
 }
 
 void player_entity::updateCamera() {
-  auto position = getComponentByType<position_component>();
+  auto pc = getComponentByType<position_component>();
+  auto position = pc->getPosition();
   auto camera = bure::engine::get().getCamera();
   auto map = bure::engine::get().getMap();
   bure::engine::get().setCamera(
-      {position->getX() + map->getTileWidth() * map->getScale() / 2 -
+      {position.x + map->getTileWidth() * map->getScale() / 2 -
            camera.width / 2,
-       position->getY() + map->getTileHeight() * map->getScale() / 2 -
+       position.y + map->getTileHeight() * map->getScale() / 2 -
            camera.height / 2,
        camera.width, camera.height});
 }

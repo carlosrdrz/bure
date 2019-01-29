@@ -1,44 +1,12 @@
 #pragma once
 
-#include <vector>
+#include "types.h"
+
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace bure {
-
-struct layer {
-  int id;
-  std::string name;
-  int* data;
-  bool visible;
-};
-
-struct tileset {
-  int id;
-  std::string name;
-  std::string file;
-  int firstGid;
-  int gridWidth;
-  int gridHeight;
-};
-
-struct tile {
-  std::string file;
-  int srcX;
-  int srcY;
-  int srcWidth;
-  int srcHeight;
-};
-
-struct map_coords {
-  int x;
-  int y;
-};
-
-struct world_coords {
-  int x;
-  int y;
-};
 
 class game_map {
  public:
@@ -53,8 +21,8 @@ class game_map {
   int getTileWidth();
   int getTileHeight();
 
-  world_coords mapToScreen(map_coords m);
-  map_coords screenToMap(world_coords m);
+  world_coords mapToWorld(map_coords m);
+  map_coords worldToMap(world_coords m);
 
   layer getLayer(int layerId);
   tile getTileData(int tileGid);

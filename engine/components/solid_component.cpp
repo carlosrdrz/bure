@@ -3,18 +3,9 @@
 namespace bure {
 namespace components {
 
-void solid_component::setCoords(int x, int y) {
-  _x = x;
-  _y = y;
-}
+void solid_component::setPosition(bure::map_coords wc) { _position = wc; }
 
-int solid_component::getX() {
-  return _x;
-}
-
-int solid_component::getY() {
-  return _y;
-}
+bure::map_coords solid_component::getPosition() { return _position; }
 
 }  // namespace components
 }  // namespace bure

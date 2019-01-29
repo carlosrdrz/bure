@@ -121,14 +121,14 @@ tile game_map::getTileData(int tileGid) {
   return t;
 }
 
-world_coords game_map::mapToScreen(map_coords m) {
+world_coords game_map::mapToWorld(map_coords m) {
   return {
     m.x * getTileWidth(),
     m.y * getTileHeight()
   };
 }
 
-map_coords game_map::screenToMap(world_coords s) {
+map_coords game_map::worldToMap(world_coords s) {
   return {
     s.x / getTileWidth(),
     s.y / getTileHeight()
@@ -148,10 +148,7 @@ bool game_map::anyEntityIn(map_coords mc) {
     auto& e = entity.get();
     auto solid = e.getComponentByType<components::solid_component>();
     if (solid == nullptr) continue;
-
-    if (solid->getX() == mc.x && solid->getY() == mc.y) {
-      return true;
-    }
+    return (solid->getPosition() == mc);
   }
 
   return false;

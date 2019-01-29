@@ -1,21 +1,20 @@
 #pragma once
 
 #include "component.h"
+#include "types.h"
 
 namespace bure {
 namespace components {
 
 class solid_component : public component {
- using component::component;
+  using component::component;
 
  public:
-  void setCoords(int x, int y);
-  int getX();
-  int getY();
+  void setPosition(bure::map_coords wc);
+  bure::map_coords getPosition();
 
  private:
-   int _x;
-   int _y;
+  bure::map_coords _position = bure::undefined_map_coords;
 };
 
 }  // namespace components

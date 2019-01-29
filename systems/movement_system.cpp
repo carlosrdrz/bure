@@ -19,7 +19,7 @@ void movement_system::moveEntity(entity &e, position_component &p,
                                  movement_component &m, solid_component &s) {
   auto map = bure::engine::get().getMap();
   auto layer = map->getLayer(2);
-  auto nextPos = bure::world_coords({p.getX(), p.getY()});
+  auto nextPos = bure::world_coords(p.getPosition());
   bool isFinished = false;
   bure::map_coords nextPosition = m.getPosition();
 
@@ -48,7 +48,7 @@ void movement_system::moveEntity(entity &e, position_component &p,
       break;
   }
 
-  p.setCoords(nextPos.x, nextPos.y);
+  p.setPosition(nextPos);
 
   if (isFinished) {
     setPosition(e, p, m, s, nextPosition);
@@ -79,8 +79,8 @@ void movement_system::setPosition(entity &e, position_component &p,
                                   movement_component &m, solid_component &s,
                                   bure::map_coords pos) {
   auto map = bure::engine::get().getMap();
-  auto screen_pos = map->mapToScreen(pos);
-  p.setCoords(screen_pos.x, screen_pos.y);
+  auto wc = map->mapToWorld(pos);
+  p.setPosition(wc);
   m.setPosition(pos);
-  s.setCoords(pos.x, pos.y);
+  s.setPosition(pos);
 }

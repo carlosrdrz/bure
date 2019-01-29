@@ -15,4 +15,3 @@
 - consider adding some scripting engine to modify stuff like UI, some entity-specific properties, dialogues, etc
 - it makes no sense that bure::game_map knows which tiles are walkable based on the layers
 - animations, coords, ui... everything that is a number or property can go either in a XML or a JS file
-- pass map_coords or screen_coords everywhere instead of passing independent ints

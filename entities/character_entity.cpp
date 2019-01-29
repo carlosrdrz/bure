@@ -16,9 +16,9 @@ void character_entity::init() {
   bure::map_coords mc = {0, 0};
   auto map = bure::engine::get().getMap();
   this->addComponent<solid_component>();
-  auto screen_pos = map->mapToScreen(mc);
+  auto world_pos = map->mapToWorld(mc);
   auto pos = this->addComponent<position_component>();
-  pos->setCoords(screen_pos.x, screen_pos.y);
+  pos->setPosition(world_pos);
   auto m = this->addComponent<movement_component>();
   m->setState(movement_state::standing_down);
   m->setVelocity(2);
@@ -36,14 +36,14 @@ void character_entity::update() {
 
 void character_entity::setPosition(bure::map_coords mc) {
   auto map = bure::engine::get().getMap();
-  auto screen_pos = map->mapToScreen(mc);
+  auto wc = map->mapToWorld(mc);
 
   auto pos = getComponentByType<position_component>();
-  pos->setCoords(screen_pos.x, screen_pos.y);
+  pos->setPosition(wc);
   auto m = getComponentByType<movement_component>();
   m->setPosition(mc);
   auto s = getComponentByType<solid_component>();
-  s->setCoords(mc.x, mc.y);
+  s->setPosition(mc);
 }
 
 void character_entity::setVelocity(int v) {

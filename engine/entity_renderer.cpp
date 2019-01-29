@@ -31,10 +31,11 @@ void entity_renderer::render(int layer) {
 
 void entity_renderer::renderSprite(position_component& p, sprite_component& s) {
   auto camera = bure::engine::get().getCamera();
+  auto position = p.getPosition();
 
   bure::rect dst = {
-    p.getX() - camera.x,
-    p.getY() - camera.y,
+    position.x - camera.x,
+    position.y - camera.y,
     s.getWidth() * s.getScale(),
     s.getHeight() * s.getScale()
   };

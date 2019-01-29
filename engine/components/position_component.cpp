@@ -3,29 +3,32 @@
 namespace bure {
 namespace components {
 
-void position_component::setCoords(int x, int y) {
-  _x = x;
-  _y = y;
+void position_component::setPosition(bure::world_coords wc) {
+  _position = wc;
 }
 
-int position_component::getX() {
-  if (_entity.getParent() == nullptr) {
-    return _x;
+bure::world_coords position_component::getPosition() {
+  return getAbsolutePosition();
+}
+
+bure::world_coords position_component::getAbsolutePosition() {
+  auto pos = getParentPos();
+  pos.x += _position.x;
+  pos.y += _position.y;
+  return pos;
+}
+
+bure::world_coords position_component::getRelativePosition() {
+  return _position;
+}
+
+bure::world_coords position_component::getParentPos() {
+  if (_entity.getParent() != nullptr) {
+    auto p = *_entity.getParent()->getComponentByType<position_component>();
+    return p.getPosition();
   } else {
-    return getParentPos().getX() + _x;
+    return bure::source_world_coords;
   }
-}
-
-int position_component::getY() {
-  if (_entity.getParent() == nullptr) {
-    return _y;
-  } else {
-    return getParentPos().getY() + _y;
-  }
-}
-
-position_component& position_component::getParentPos() {
-  return *_entity.getParent()->getComponentByType<position_component>();
 }
 
 }  // namespace components

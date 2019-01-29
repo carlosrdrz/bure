@@ -1,29 +1,23 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
-#include "ui/ui_manager.h"
 #include "entities/entity.h"
 #include "event_manager.h"
-#include "systems/system.h"
 #include "game_map.h"
+#include "systems/system.h"
+#include "types.h"
+#include "ui/ui_manager.h"
 
 namespace bure {
-
-struct camera {
-  int x;
-  int y;
-  int width;
-  int height;
-};
 
 class engine {
  public:
   void init(std::string resourcesPath, int width, int height);
 
   void addEntity(std::unique_ptr<entities::entity> e);
-  void removeEntity(entities::entity *e);
+  void removeEntity(entities::entity* e);
   void clearEntities();
 
   void addSystem(std::unique_ptr<systems::system> s);
