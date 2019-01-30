@@ -19,11 +19,13 @@ void game::startMenu() {
 
   // add button to start game
   auto ui = bure::engine::get().getUIManager();
-  auto c = std::make_unique<bure::ui::container>(362, 309, 130, 60);
+  ui->setScale(2);
+
+  auto c = std::make_unique<bure::ui::container>(510, 300, 260, 120);
   c->setLayer(1);
 
   auto b = std::make_unique<bure::ui::button>("START GAME");
-  b->set(20, 20, 90, 20);
+  b->set(40, 40, 180, 40);
   b->function = std::bind(&game::startGame, this, std::placeholders::_1);
 
   c->add(std::move(b));

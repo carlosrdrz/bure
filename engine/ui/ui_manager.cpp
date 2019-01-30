@@ -81,5 +81,9 @@ std::vector<std::reference_wrapper<container>> ui_manager::getContainers() {
   return conts;
 }
 
+void ui_manager::setScale(int s) { _scale = s; }
+
+int ui_manager::getScale() { return _scale; }
+
 }  // namespace ui
 }  // namespace bure

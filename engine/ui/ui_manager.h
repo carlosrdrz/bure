@@ -23,8 +23,12 @@ class ui_manager {
   container* getContainer(int cont);
   std::vector<std::reference_wrapper<container>> getContainers();
 
+  void setScale(int s);
+  int getScale();
+
  private:
   std::vector<std::unique_ptr<container>> _containers;
+  int _scale = 1;
 
   void updateIndex();
 };

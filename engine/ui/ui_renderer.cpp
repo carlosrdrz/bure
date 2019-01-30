@@ -40,76 +40,63 @@ void ui_renderer::render(int layer) {
 void ui_renderer::renderContainer(const bure::ui::container& c) {
   bure::rect src = {104, 0, 1, 26};
   bure::rect dst = {c.getAbsoluteX(), c.getAbsoluteY(), c.getWidth(),
-                  c.getHeight()};
+                    c.getHeight()};
 
   _graphics->drawRect(dst, _bgColor);
 
-  dst.y -= 12;
-  dst.x--;
-  dst.width = 1;
-  dst.height = 26;
+  dst.y -= 12 * _uiManager->getScale();
+  dst.x -= 1;
+  dst.width = c.getWidth();
+  dst.height = 26 * _uiManager->getScale();
 
-  for (int y = 0; y < c.getWidth(); y++) {
-    dst.x++;
-    _graphics->drawSprite("gui.png", src, dst);
-  }
+  _graphics->drawSprite("gui.png", src, dst);
 
   dst.y += c.getHeight();
-  dst.x = c.getAbsoluteX() - 1;
-  for (int y = 0; y < c.getWidth(); y++) {
-     dst.x++;
-     _graphics->drawSprite("gui.png", src, dst);
-  }
+  dst.x = (c.getAbsoluteX() - 1);
+  _graphics->drawSprite("gui.png", src, dst);
 
   src.x = 130;
   src.width = 26;
   src.height = 1;
 
-  dst.x = c.getAbsoluteX() - 11;
+  dst.x = (c.getAbsoluteX() - 11 * _uiManager->getScale());
   dst.y = c.getAbsoluteY();
-  dst.height = 1;
-  dst.width = 26;
+  dst.height = c.getHeight();
+  dst.width = 26 * _uiManager->getScale();
+  _graphics->drawSprite("gui.png", src, dst);
 
-  for (int y = 0; y < c.getHeight(); y++) {
-    dst.y++;
-    _graphics->drawSprite("gui.png", src, dst);
-  }
-
-  dst.x += c.getWidth() - 4;
+  dst.x += (c.getWidth() - 4 * _uiManager->getScale());
   dst.y = c.getAbsoluteY();
-  for (int y = 0; y < c.getHeight(); y++) {
-    dst.y++;
-    _graphics->drawSprite("gui.png", src, dst);
-  }
+  _graphics->drawSprite("gui.png", src, dst);
 
   src.width = 26;
   src.height = 26;
-  dst.width = 26;
-  dst.height = 26;
+  dst.width = 26 * _uiManager->getScale();
+  dst.height = 26 * _uiManager->getScale();
 
   src.x = 0;
   src.y = 0;
-  dst.x = c.getAbsoluteX() + c.getWidth() - 15;
-  dst.y = c.getAbsoluteY() - 12;
+  dst.x = (c.getAbsoluteX() + c.getWidth() - 15 * _uiManager->getScale());
+  dst.y = (c.getAbsoluteY() - 12 * _uiManager->getScale());
   _graphics->drawSprite("gui.png", src, dst);
 
   src.x += 26;
-  dst.x -= c.getWidth() - 4;
+  dst.x -= (c.getWidth() - 4 * _uiManager->getScale());
   _graphics->drawSprite("gui.png", src, dst);
 
   src.x += 26;
   dst.y += c.getHeight();
-  dst.x = c.getAbsoluteX() + c.getWidth() - 15;
+  dst.x = (c.getAbsoluteX() + c.getWidth() - 15 * _uiManager->getScale());
   _graphics->drawSprite("gui.png", src, dst);
 
   src.x += 26;
-  dst.x -= c.getWidth() - 4;
+  dst.x -= (c.getWidth() - 4 * _uiManager->getScale());
   _graphics->drawSprite("gui.png", src, dst);
 }
 
 void ui_renderer::renderLabel(const bure::ui::label& l) {
   _graphics->drawText(l.getText(), l.getAbsoluteX(), l.getAbsoluteY(),
-                      l.getSize(), _fontColor);
+                      l.getSize() * _uiManager->getScale(), _fontColor);
 }
 
 void ui_renderer::renderButton(const bure::ui::button& b) {
@@ -129,23 +116,24 @@ void ui_renderer::renderButton(const bure::ui::button& b) {
   else
     color = {0, 0, 0, SDL_ALPHA_OPAQUE};
 
-  r.height = 1;
+  r.height = _uiManager->getScale();
   _graphics->drawRect(r, color);
 
-  r.y = b.getAbsoluteY() + b.getHeight();
+  r.y = (b.getAbsoluteY() + b.getHeight());
   _graphics->drawRect(r, color);
 
   r.y = b.getAbsoluteY();
-  r.width = 1;
-  r.height = b.getHeight() + 1;
+  r.width = _uiManager->getScale();
+  r.height = (b.getHeight() + 1);
   _graphics->drawRect(r, color);
 
-  r.x = b.getAbsoluteX() + b.getWidth();
+  r.x = (b.getAbsoluteX() + b.getWidth());
   _graphics->drawRect(r, color);
 
-  int x = b.getAbsoluteX() + (b.getWidth() / 2);
-  int y = b.getAbsoluteY() + (b.getHeight() / 2);
-  _graphics->drawTextCentered(b.getTitle(), x, y, 8, _fontColor);
+  int x = (b.getAbsoluteX() + (b.getWidth() / 2));
+  int y = (b.getAbsoluteY() + (b.getHeight() / 2));
+  _graphics->drawTextCentered(b.getTitle(), x, y, 8 * _uiManager->getScale(),
+                              _fontColor);
 }
 
 }  // namespace ui
