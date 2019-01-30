@@ -15,7 +15,7 @@ struct world_coords {
   int x;
   int y;
 
-  bool operator==(const world_coords& rhs) {
+  bool operator==(const world_coords& rhs) const {
     return (this->x == rhs.x && this->y == rhs.y);
   }
 };
@@ -27,7 +27,7 @@ struct map_coords {
   int x;
   int y;
 
-  bool operator==(const map_coords& rhs) {
+  bool operator==(const map_coords& rhs) const {
     return (this->x == rhs.x && this->y == rhs.y);
   }
 };
@@ -60,3 +60,25 @@ struct tile {
 };
 
 }  // namespace bure
+
+namespace std {
+template <>
+struct hash<bure::map_coords> {
+  std::size_t operator()(const bure::map_coords& k) const {
+    std::size_t h1 = k.x;
+    std::size_t h2 = k.y;
+
+    return ((h1 ^ (h2 << 1)) >> 1);
+  }
+};
+
+template <>
+struct hash<bure::world_coords> {
+  std::size_t operator()(const bure::world_coords& k) const {
+    std::size_t h1 = k.x;
+    std::size_t h2 = k.y;
+
+    return ((h1 ^ (h2 << 1)) >> 1);
+  }
+};
+}  // namespace std

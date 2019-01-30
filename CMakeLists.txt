@@ -43,6 +43,7 @@ add_library(bure-engine
   engine/engine.cpp
   engine/utils/config.cpp
   engine/utils/logger.cpp
+  engine/utils/pathfinding.cpp
   engine/graphics.cpp
   engine/game_map.cpp
   engine/event_manager.cpp
