@@ -1,5 +1,9 @@
 #include "enemy_entity.h"
+#include "../components/movement_component.h"
 #include "engine.h"
+#include "utils/pathfinding.h"
+
+#include <iostream>
 
 void enemy_entity::init() {
   character_entity::init();
@@ -8,11 +12,20 @@ void enemy_entity::init() {
   setVelocity(1);
 }
 
+void enemy_entity::follow(character_entity *c) { _character = c; }
+
 void enemy_entity::update() {
   character_entity::update();
 
-  if (isStanding()) {
-    randomlyMove();
+  if (isStanding() && _character != nullptr) {
+    auto dst_mc = _character->getComponentByType<movement_component>();
+    auto src_mc = getComponentByType<movement_component>();
+    auto dst_pos = dst_mc->getPosition();
+    auto src_pos = src_mc->getPosition();
+    auto path = bure::pathfinding::a_star(src_pos, dst_pos);
+    auto next_pos = path.at(path.size() - 2);
+    auto direction = getDirectionFromCoords(src_pos, next_pos);
+    moveTo(direction);
   }
 }
 
@@ -53,4 +66,19 @@ void enemy_entity::initAnimations() {
   _animations_rects.emplace(animation_id::standing_down, standingDownRects);
   _animations_rects.emplace(animation_id::standing_left, standingLeftRects);
   _animations_rects.emplace(animation_id::standing_right, standingRightRects);
+}
+
+direction enemy_entity::getDirectionFromCoords(bure::map_coords origin,
+                                               bure::map_coords dst) {
+  if (dst == bure::map_coords{origin.x + 1, origin.y}) {
+    return direction::right;
+  } else if (dst == bure::map_coords{origin.x - 1, origin.y}) {
+    return direction::left;
+  } else if (dst == bure::map_coords{origin.x, origin.y - 1}) {
+    return direction::up;
+  } else if (dst == bure::map_coords{origin.x, origin.y + 1}) {
+    return direction::down;
+  } else {
+    return direction::standing;
+  }
 }

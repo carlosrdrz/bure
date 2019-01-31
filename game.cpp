@@ -45,9 +45,14 @@ void game::startGame(int unused) {
   auto movementSystem = std::make_unique<movement_system>();
   bure::engine::get().addSystem(std::move(movementSystem));
 
-  // add game character
+  // add player character
   auto playerEntity = std::make_unique<player_entity>();
-  bure::engine::get().addEntity(std::move(playerEntity));
+
+  // add enemy and make it follow player around
   auto enemyEntity = std::make_unique<enemy_entity>();
+  enemyEntity->follow(playerEntity.get());
+
+  bure::engine::get().addEntity(std::move(playerEntity));
   bure::engine::get().addEntity(std::move(enemyEntity));
+
 }
