@@ -5,7 +5,6 @@
 
 #include <libxml++/libxml++.h>
 #include <fstream>
-#include <iostream>
 
 namespace bure {
 

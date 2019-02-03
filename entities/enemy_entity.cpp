@@ -3,8 +3,6 @@
 #include "engine.h"
 #include "utils/pathfinding.h"
 
-#include <iostream>
-
 void enemy_entity::init() {
   character_entity::init();
 
@@ -23,9 +21,12 @@ void enemy_entity::update() {
     auto dst_pos = dst_mc->getPosition();
     auto src_pos = src_mc->getPosition();
     auto path = bure::pathfinding::a_star(src_pos, dst_pos);
-    auto next_pos = path.at(path.size() - 2);
-    auto direction = getDirectionFromCoords(src_pos, next_pos);
-    moveTo(direction);
+
+    if (!path.empty()) {
+      auto next_pos = path.front();
+      auto direction = getDirectionFromCoords(src_pos, next_pos);
+      moveTo(direction);
+    }
   }
 }
 

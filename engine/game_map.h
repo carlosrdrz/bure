@@ -27,6 +27,9 @@ class game_map {
   layer getLayer(int layerId);
   tile getTileData(int tileGid);
 
+  // These dont really make sense here
+  // or maybe they do but cant be coupled with how to actually
+  // check if a tile is walkable
   bool canWalk(map_coords mc);
   bool anyEntityIn(map_coords mc);
 

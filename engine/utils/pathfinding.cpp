@@ -1,4 +1,5 @@
 #include "pathfinding.h"
+#include "engine.h"
 
 #include <cmath>
 #include <limits>
@@ -25,34 +26,28 @@ std::vector<map_coords> pathfinding::a_star(map_coords start,
     }
 
     auto currentOpenSet = openSet.find(current);
-    if (currentOpenSet != openSet.end()) openSet.erase(currentOpenSet);
+    openSet.erase(currentOpenSet);
     closedSet.emplace(current);
 
-    for (const auto& neighbor : neighbours(current)) {
+    for (const auto& neighbor : neighbours(current, destination)) {
       if (closedSet.find(neighbor) != closedSet.end()) continue;
-
-      if (gScore.find(current) == gScore.end()) {
-        gScore[current] = std::numeric_limits<int>::infinity();
-      }
-
-      if (gScore.find(neighbor) == gScore.end()) {
-        gScore[neighbor] = std::numeric_limits<int>::infinity();
-      }
 
       auto tentative_gScore = gScore[current] + 1;
 
       if (openSet.find(neighbor) == openSet.end()) {
         openSet.emplace(neighbor);
+        gScore[neighbor] = tentative_gScore;
+        fScore[neighbor] =
+            gScore[neighbor] + heuristic_cost_estimate(neighbor, destination);
       } else if (tentative_gScore >= gScore[neighbor]) {
         continue;
       }
 
       cameFrom[neighbor] = current;
-      gScore[neighbor] = tentative_gScore;
-      fScore[neighbor] =
-          gScore[neighbor] + heuristic_cost_estimate(neighbor, destination);
     }
   }
+
+  return std::vector<map_coords>();
 }
 
 std::vector<map_coords> pathfinding::a_star_reconstruct(
@@ -63,6 +58,9 @@ std::vector<map_coords> pathfinding::a_star_reconstruct(
     current = cameFrom[current];
     totalPath.emplace_back(current);
   }
+
+  std::reverse(totalPath.begin(), totalPath.end());
+  totalPath.erase(totalPath.begin());
 
   return totalPath;
 }
@@ -92,14 +90,24 @@ map_coords pathfinding::lowest_fscore(
   return min;
 }
 
-std::unordered_set<map_coords> pathfinding::neighbours(map_coords node) {
+std::unordered_set<map_coords> pathfinding::neighbours(map_coords node,
+                                                       map_coords dst) {
+  std::unordered_set<map_coords> options;
   std::unordered_set<map_coords> result;
 
+  auto map = bure::engine::get().getMap();
+
   // TODO(carlosrdrs): check map limits here
-  result.emplace(map_coords{node.x, node.y - 1});
-  result.emplace(map_coords{node.x - 1, node.y});
-  result.emplace(map_coords{node.x + 1, node.y});
-  result.emplace(map_coords{node.x, node.y + 1});
+  options.emplace(map_coords{node.x, node.y - 1});
+  options.emplace(map_coords{node.x - 1, node.y});
+  options.emplace(map_coords{node.x + 1, node.y});
+  options.emplace(map_coords{node.x, node.y + 1});
+
+  for (auto& option : options) {
+    if (option == dst || (map->canWalk(option) && !map->anyEntityIn(option))) {
+      result.emplace(option);
+    }
+  }
 
   return result;
 }

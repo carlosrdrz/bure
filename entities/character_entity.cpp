@@ -69,7 +69,7 @@ void character_entity::moveTo(direction d) {
   movement_state nextState = m->getState();
   bure::map_coords currentPosition = m->getPosition();
   bure::map_coords nextPosition = currentPosition;
-  animation_id nextAnimation;
+  animation_id nextAnimation = _animationId;
 
   switch (d) {
     case direction::left:

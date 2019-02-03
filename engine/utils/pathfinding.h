@@ -21,7 +21,8 @@ class pathfinding {
   static int heuristic_cost_estimate(map_coords start, map_coords destination);
   static map_coords lowest_fscore(std::unordered_map<map_coords, int>& fScore,
                                   std::unordered_set<map_coords>& set);
-  static std::unordered_set<map_coords> neighbours(map_coords node);
+  static std::unordered_set<map_coords> neighbours(map_coords node,
+                                                   map_coords dst);
 };
 
 }  // namespace bure
