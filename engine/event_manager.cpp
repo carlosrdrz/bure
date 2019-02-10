@@ -38,7 +38,6 @@ void event_manager::pollEvent() {
 cb_handler event_manager::addEventCallback(
     SDL_EventType event_type, std::function<void(SDL_Event e)> fun) {
   auto handler = _eventCallbacks.size();
-  logger::debug("adding callback for event %d", event_type);
   _eventCallbacks.push_back(cb_struct{handler, fun, event_type});
   return handler;
 }
