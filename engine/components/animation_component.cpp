@@ -19,11 +19,20 @@ void animation_component::setAnimationTicks(int t) { _animationTicks = t; }
 
 void animation_component::setScale(int scale) { _scale = scale; }
 
+void animation_component::setLooping(bool l) { _loop = l; }
+
 sprite_component animation_component::tickAndGetSprite() {
   auto s = _sprites.at(_currentSprite);
 
   if (++_currentTicks > _animationTicks) {
-    _currentSprite = ++_currentSprite % _sprites.size();
+    if ((_currentSprite + 1) % _sprites.size() == 0) {
+      if (_loop) {
+        _currentSprite = 0;
+      }
+    } else {
+      _currentSprite++;
+    }
+
     _currentTicks = 0;
   }
 

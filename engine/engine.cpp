@@ -5,6 +5,7 @@
 #include "systems/drawing_system.h"
 #include "../hud_renderer.h"
 #include "ui/ui_renderer.h"
+#include "components/map_position_component.h"
 
 namespace bure {
 
@@ -104,5 +105,22 @@ void engine::setCamera(bure::camera c) {
 camera engine::getCamera() {
   return _camera;
 }
+
+entities::entity* engine::entityIn(map_coords mc) {
+  auto entities = engine::get().getEntities();
+
+  for (auto& entity : entities) {
+    auto& e = entity.get();
+    auto mp = e.getComponentByType<components::map_position_component>();
+    if (mp == nullptr) continue;
+
+    if (mp->getPosition() == mc) {
+      return &e;
+    };
+  }
+
+  return nullptr;
+}
+
 
 }  // namespace bure

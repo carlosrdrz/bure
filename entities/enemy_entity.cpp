@@ -31,14 +31,6 @@ void enemy_entity::update() {
       moveTo(direction);
     }
   }
-
-  auto stats = getComponentByType<stats_component>();
-  if (_lifeTick++ % 20 == 0) {
-    _lifeTick = 0;
-    auto hp = stats->getHP() - 1;
-    if (hp < 0) hp = stats->getMaxHP();
-    stats->setHP(hp);
-  }
 }
 
 void enemy_entity::initAnimations() {

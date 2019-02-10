@@ -1,5 +1,9 @@
 #include "player_entity.h"
+#include "fire_entity.h"
 #include "components/position_component.h"
+#include "components/map_position_component.h"
+#include "../components/stats_component.h"
+#include "../entities/enemy_entity.h"
 #include "engine.h"
 
 using namespace bure::components;
@@ -14,6 +18,7 @@ void player_entity::init() {
 void player_entity::update() {
   character_entity::update();
 
+  castSkills();
   updateCamera();
 
   if (isStanding()) {
@@ -47,5 +52,39 @@ void player_entity::processKeys() {
     moveTo(bure::direction::up);
   } else if (keystates[SDL_SCANCODE_S]) {
     moveTo(bure::direction::down);
+  }
+}
+
+void player_entity::castSkills() {
+  const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
+  if (_skillCooldownCounter == 0) {
+    if (keystates[SDL_SCANCODE_Q]) {
+      auto f = std::make_unique<fire_entity>();
+      auto p = getComponentByType<map_position_component>();
+      auto currentPos = p->getPosition();
+      auto firePos = bure::map_coords({ currentPos.x + 1, currentPos.y });
+      f->setPosition(firePos);
+      bure::engine::get().addEntity(std::move(f));
+      _skillCooldownCounter = _skillCooldown;
+
+      auto e = bure::engine::get().entityIn(firePos);
+      if (e != nullptr) {
+        auto stats = e->getComponentByType<stats_component>();
+        if (stats != nullptr) {
+          auto hp = stats->getHP();
+          if (hp - 25 < 0) {
+            bure::engine::get().removeEntity(e);
+            auto e = std::make_unique<enemy_entity>();
+            e->follow(this);
+            bure::engine::get().addEntity(std::move(e));
+          } else {
+            stats->setHP(hp - 25);
+          }
+        }
+      }
+    }
+  } else {
+    _skillCooldownCounter--;
   }
 }

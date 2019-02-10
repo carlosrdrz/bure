@@ -14,7 +14,6 @@ class enemy_entity : public character_entity {
 
  private:
   character_entity* _character = nullptr;
-  int _lifeTick = 0;
 
   bure::direction getDirectionFromCoords(bure::map_coords origin,
                                          bure::map_coords dst);

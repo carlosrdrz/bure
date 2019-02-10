@@ -35,6 +35,8 @@ class engine {
   void setCamera(camera c);
   camera getCamera();
 
+  entities::entity* entityIn(map_coords mc);
+
   static engine& get() {
     if (_instance == nullptr) {
       _instance = new engine();

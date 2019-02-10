@@ -14,12 +14,14 @@ class animation_component : public component {
   void addSprite(sprite_id spriteId, rect src, int width, int height);
   void setAnimationTicks(int t);
   void setScale(int scale);
+  void setLooping(bool l);
 
   sprite_component tickAndGetSprite();
   int getScale();
 
  private:
   std::vector<sprite_component> _sprites;
+  bool _loop = true;
   int _currentSprite = 0;
   int _animationTicks = 10;
   int _currentTicks = 0;

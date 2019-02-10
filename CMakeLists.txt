@@ -60,6 +60,7 @@ add_executable(client
   components/movement_component.cpp
   components/stats_component.cpp
   systems/movement_system.cpp
+  entities/fire_entity.cpp
   entities/character_entity.cpp
   entities/player_entity.cpp
   entities/enemy_entity.cpp
