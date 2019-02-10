@@ -1,5 +1,6 @@
 #include "enemy_entity.h"
 #include "components/map_position_component.h"
+#include "../components/stats_component.h"
 #include "engine.h"
 #include "utils/pathfinding.h"
 
@@ -29,6 +30,14 @@ void enemy_entity::update() {
       auto direction = getDirectionFromCoords(src_pos, next_pos);
       moveTo(direction);
     }
+  }
+
+  auto stats = getComponentByType<stats_component>();
+  if (_lifeTick++ % 20 == 0) {
+    _lifeTick = 0;
+    auto hp = stats->getHP() - 1;
+    if (hp < 0) hp = stats->getMaxHP();
+    stats->setHP(hp);
   }
 }
 

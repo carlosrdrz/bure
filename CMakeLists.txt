@@ -56,7 +56,9 @@ add_library(bure-engine
 add_executable(client
   main.cpp
   game.cpp
+  hud_renderer.cpp
   components/movement_component.cpp
+  components/stats_component.cpp
   systems/movement_system.cpp
   entities/character_entity.cpp
   entities/player_entity.cpp

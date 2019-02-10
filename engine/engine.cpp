@@ -3,6 +3,7 @@
 #include "game_map_renderer.h"
 #include "graphics.h"
 #include "systems/drawing_system.h"
+#include "../hud_renderer.h"
 #include "ui/ui_renderer.h"
 
 namespace bure {
@@ -29,6 +30,10 @@ void engine::init(std::string resourcesPath, int width, int height) {
   drawingSystem->addRenderer(std::move(uiRenderer));
   drawingSystem->addRenderer(std::move(entityRenderer));
   drawingSystem->addRenderer(std::move(gameMapRenderer));
+  // move this
+  // how do we let ppl add their own renderers
+  auto hudRenderer = std::make_unique<hud_renderer>();
+  drawingSystem->addRenderer(std::move(hudRenderer));
   this->addSystem(std::move(drawingSystem));
 }
 

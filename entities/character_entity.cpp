@@ -1,5 +1,6 @@
 #include "character_entity.h"
 #include "../components/movement_component.h"
+#include "../components/stats_component.h"
 #include "components/animation_component.h"
 #include "components/position_component.h"
 #include "components/solid_component.h"
@@ -25,6 +26,9 @@ void character_entity::init() {
   m->setVelocity(2);
   auto mp = this->addComponent<map_position_component>();
   mp->setPosition(mc);
+  auto stats = this->addComponent<stats_component>();
+  stats->setMaxHP(100);
+  stats->setHP(100);
 
   initAnimations();
   setAnimation(animation_id::standing_down);
