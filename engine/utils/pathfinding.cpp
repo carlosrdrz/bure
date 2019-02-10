@@ -8,7 +8,8 @@ namespace bure {
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 std::vector<map_coords> pathfinding::a_star(map_coords start,
-                                            map_coords destination) {
+                                            map_coords destination,
+                                            neighbors_fun nf) {
   std::unordered_set<map_coords> closedSet = {};
   std::unordered_set<map_coords> openSet = {start};
   std::unordered_map<map_coords, map_coords> cameFrom;
@@ -29,7 +30,7 @@ std::vector<map_coords> pathfinding::a_star(map_coords start,
     openSet.erase(currentOpenSet);
     closedSet.emplace(current);
 
-    for (const auto& neighbor : neighbours(current, destination)) {
+    for (const auto& neighbor : nf(current, destination)) {
       if (closedSet.find(neighbor) != closedSet.end()) continue;
 
       auto tentative_gScore = gScore[current] + 1;
@@ -88,28 +89,6 @@ map_coords pathfinding::lowest_fscore(
   }
 
   return min;
-}
-
-std::unordered_set<map_coords> pathfinding::neighbours(map_coords node,
-                                                       map_coords dst) {
-  std::unordered_set<map_coords> options;
-  std::unordered_set<map_coords> result;
-
-  auto map = bure::engine::get().getMap();
-
-  // TODO(carlosrdrs): check map limits here
-  options.emplace(map_coords{node.x, node.y - 1});
-  options.emplace(map_coords{node.x - 1, node.y});
-  options.emplace(map_coords{node.x + 1, node.y});
-  options.emplace(map_coords{node.x, node.y + 1});
-
-  for (auto& option : options) {
-    if (option == dst || (map->canWalk(option) && !map->anyEntityIn(option))) {
-      result.emplace(option);
-    }
-  }
-
-  return result;
 }
 
 }  // namespace bure

@@ -23,15 +23,10 @@ class game_map {
 
   world_coords mapToWorld(map_coords m);
   map_coords worldToMap(world_coords m);
+  bool isWithinLimits(map_coords m);
 
   layer getLayer(int layerId);
   tile getTileData(int tileGid);
-
-  // These dont really make sense here
-  // or maybe they do but cant be coupled with how to actually
-  // check if a tile is walkable
-  bool canWalk(map_coords mc);
-  bool anyEntityIn(map_coords mc);
 
  private:
   int _scale = 1;

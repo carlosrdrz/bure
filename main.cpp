@@ -1,6 +1,6 @@
 #include <memory>
 
-#include "game.h"
+#include "test_game.h"
 #include "engine.h"
 #include "event_manager.h"
 
@@ -17,21 +17,14 @@ int main(int argc, char* argv[]) {
 
   // Init config file
   bure::config::instance.readFile(resourcesPath);
-  // Init engine at 1280x720 resolution
-  bure::engine::get().init(resourcesPath, 1280, 720);
 
   // Init main game object
-  auto gameInstance = std::make_unique<game>();
-  gameInstance->startMenu();
-
-  // Register close callback
-  bure::event_manager::get().addEventCallback(
-    SDL_QUIT, [gamePointer = gameInstance.get()](SDL_Event e) {
-      gamePointer->finishGame();
-    });
+  // Init engine at 1280x720 resolution
+  auto game = std::make_unique<test_game>();
+  bure::engine::get().init(std::move(game), resourcesPath, 1280, 720);
 
   // Main game loop
-  while (!gameInstance->finished) {
+  while (!bure::engine::get().getGame()->isFinished()) {
     bure::event_manager::get().pollEvent();
     bure::engine::get().update();
     SDL_Delay(10);

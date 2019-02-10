@@ -1,11 +1,12 @@
 #include "character_entity.h"
 #include "../components/movement_component.h"
 #include "../components/stats_component.h"
+#include "../test_game.h"
 #include "components/animation_component.h"
+#include "components/map_position_component.h"
 #include "components/position_component.h"
 #include "components/solid_component.h"
 #include "components/sprite_component.h"
-#include "components/map_position_component.h"
 #include "engine.h"
 
 #include <random>
@@ -74,7 +75,7 @@ bool character_entity::isStanding() {
 }
 
 void character_entity::moveTo(bure::direction d) {
-  auto map = bure::engine::get().getMap();
+  auto game = dynamic_cast<test_game*>(bure::engine::get().getGame());
   auto m = getComponentByType<movement_component>();
   auto mp = getComponentByType<map_position_component>();
   bure::map_coords nextPosition = mp->getPosition();
@@ -101,7 +102,7 @@ void character_entity::moveTo(bure::direction d) {
       break;
   }
 
-  if (map->canWalk(nextPosition)) {
+  if (game->canWalk(nextPosition)) {
     m->setDirection(d);
     setMapPosition(nextPosition);
     setAnimation(nextAnimation);

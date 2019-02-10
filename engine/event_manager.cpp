@@ -44,8 +44,13 @@ cb_handler event_manager::addEventCallback(
 }
 
 void event_manager::removeEventCallback(SDL_EventType et, cb_handler ch) {
-  for (auto it = _eventCallbacks.begin(); it != _eventCallbacks.end(); it++) {
-    if ((*it).handler == ch) _eventCallbacks.erase(it);
+  auto it = _eventCallbacks.begin();
+  while (it != _eventCallbacks.end()) {
+    if ((*it).handler == ch) {
+      it = _eventCallbacks.erase(it);
+    } else {
+      ++it;
+    }
   }
 }
 

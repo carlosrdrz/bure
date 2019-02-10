@@ -1,10 +1,11 @@
 #include "player_entity.h"
-#include "fire_entity.h"
-#include "components/position_component.h"
-#include "components/map_position_component.h"
 #include "../components/stats_component.h"
 #include "../entities/enemy_entity.h"
+#include "components/map_position_component.h"
+#include "components/position_component.h"
 #include "engine.h"
+#include "fire_entity.h"
+#include "../test_game.h"
 
 using namespace bure::components;
 
@@ -63,23 +64,24 @@ void player_entity::castSkills() {
       auto f = std::make_unique<fire_entity>();
       auto p = getComponentByType<map_position_component>();
       auto currentPos = p->getPosition();
-      auto firePos = bure::map_coords({ currentPos.x + 1, currentPos.y });
+      auto firePos = bure::map_coords({currentPos.x + 1, currentPos.y});
       f->setPosition(firePos);
       bure::engine::get().addEntity(std::move(f));
       _skillCooldownCounter = _skillCooldown;
 
-      auto e = bure::engine::get().entityIn(firePos);
+      auto game = dynamic_cast<test_game*>(bure::engine::get().getGame());
+      auto e = game->entityIn(firePos);
       if (e != nullptr) {
         auto stats = e->getComponentByType<stats_component>();
         if (stats != nullptr) {
           auto hp = stats->getHP();
-          if (hp - 25 < 0) {
+          if (hp - 13 < 0) {
             bure::engine::get().removeEntity(e);
             auto e = std::make_unique<enemy_entity>();
             e->follow(this);
             bure::engine::get().addEntity(std::move(e));
           } else {
-            stats->setHP(hp - 25);
+            stats->setHP(hp - 13);
           }
         }
       }

@@ -51,11 +51,12 @@ add_library(bure-engine
   engine/renderer.cpp
   engine/entity_renderer.cpp
   engine/game_map_renderer.cpp
+  engine/game.cpp
   backward.cpp)
 
 add_executable(client
   main.cpp
-  game.cpp
+  test_game.cpp
   hud_renderer.cpp
   components/movement_component.cpp
   components/stats_component.cpp

@@ -1,11 +1,12 @@
 #pragma once
 
 #include <memory>
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 #include "entities/entity.h"
 #include "event_manager.h"
+#include "game.h"
 #include "game_map.h"
 #include "systems/system.h"
 #include "types.h"
@@ -15,15 +16,15 @@ namespace bure {
 
 class engine {
  public:
-  void init(std::string resourcesPath, int width, int height);
+  void init(std::unique_ptr<game> g, std::string resourcesPath, int width,
+            int height);
 
   void addEntity(std::unique_ptr<entities::entity> e);
   void removeEntity(entities::entity* e);
   void clearEntities();
+  std::vector<std::reference_wrapper<entities::entity>> getEntities();
 
   void addSystem(std::unique_ptr<systems::system> s);
-
-  std::vector<std::reference_wrapper<entities::entity>> getEntities();
 
   void setMap(std::string mapName);
   game_map* getMap();
@@ -31,11 +32,10 @@ class engine {
   void update();
 
   ui::ui_manager* getUIManager();
+  game* getGame();
 
   void setCamera(camera c);
   camera getCamera();
-
-  entities::entity* entityIn(map_coords mc);
 
   static engine& get() {
     if (_instance == nullptr) {
@@ -56,6 +56,7 @@ class engine {
 
   std::shared_ptr<bure::ui::ui_manager> _uiManager;
   std::unique_ptr<bure::game_map> _currentMap;
+  std::unique_ptr<bure::game> _game;
 };
 
 }  // namespace bure

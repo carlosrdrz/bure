@@ -1,6 +1,7 @@
 #include "enemy_entity.h"
-#include "components/map_position_component.h"
 #include "../components/stats_component.h"
+#include "../test_game.h"
+#include "components/map_position_component.h"
 #include "engine.h"
 #include "utils/pathfinding.h"
 
@@ -13,7 +14,7 @@ void enemy_entity::init() {
   setVelocity(1);
 }
 
-void enemy_entity::follow(character_entity *c) { _character = c; }
+void enemy_entity::follow(character_entity* c) { _character = c; }
 
 void enemy_entity::update() {
   character_entity::update();
@@ -23,7 +24,30 @@ void enemy_entity::update() {
     auto src_mc = getComponentByType<map_position_component>();
     auto dst_pos = dst_mc->getPosition();
     auto src_pos = src_mc->getPosition();
-    auto path = bure::pathfinding::a_star(src_pos, dst_pos);
+
+    auto path = bure::pathfinding::a_star(
+        src_pos, dst_pos, [this](bure::map_coords node, bure::map_coords dst) {
+          std::unordered_set<bure::map_coords> options;
+          std::unordered_set<bure::map_coords> result;
+
+          auto game = dynamic_cast<test_game*>(bure::engine::get().getGame());
+          auto map = bure::engine::get().getMap();
+
+          options.emplace(bure::map_coords{node.x, node.y - 1});
+          options.emplace(bure::map_coords{node.x - 1, node.y});
+          options.emplace(bure::map_coords{node.x + 1, node.y});
+          options.emplace(bure::map_coords{node.x, node.y + 1});
+
+          for (auto& option : options) {
+            if (map->isWithinLimits(option) &&
+                (option == dst ||
+                 (game->canWalk(option) && !game->anyEntityIn(option)))) {
+              result.emplace(option);
+            }
+          }
+
+          return result;
+        });
 
     if (!path.empty()) {
       auto next_pos = path.front();

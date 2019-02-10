@@ -9,10 +9,15 @@
 
 namespace bure {
 
+typedef std::function<std::unordered_set<map_coords>(map_coords pos,
+                                                     map_coords dst)>
+    neighbors_fun;
+
 class pathfinding {
  public:
   static std::vector<map_coords> a_star(map_coords start,
-                                        map_coords destination);
+                                        map_coords destination,
+                                        neighbors_fun nf);
 
  private:
   static std::vector<map_coords> a_star_reconstruct(

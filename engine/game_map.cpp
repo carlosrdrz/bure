@@ -134,26 +134,9 @@ map_coords game_map::worldToMap(world_coords s) {
   };
 }
 
-bool game_map::canWalk(map_coords mc) {
-  auto layer = getLayer(2);
-  auto tile = layer.data[mc.x + (mc.y * getWidth())];
-  return tile == 0 && !anyEntityIn(mc);
+bool game_map::isWithinLimits(map_coords m) {
+  return m.x >= 0 && m.x < getWidth() && m.y >= 0 && m.y < getHeight();
 }
 
-bool game_map::anyEntityIn(map_coords mc) {
-  auto entities = engine::get().getEntities();
-
-  for (auto& entity : entities) {
-    auto& e = entity.get();
-    auto solid = e.getComponentByType<components::solid_component>();
-    if (solid == nullptr) continue;
-
-    if (solid->getPosition() == mc) {
-      return true;
-    };
-  }
-
-  return false;
-}
 
 }  // namespace bure

@@ -1,24 +1,26 @@
 #include "engine.h"
+#include "../hud_renderer.h"
+#include "components/map_position_component.h"
 #include "entity_renderer.h"
 #include "game_map_renderer.h"
 #include "graphics.h"
 #include "systems/drawing_system.h"
-#include "../hud_renderer.h"
 #include "ui/ui_renderer.h"
-#include "components/map_position_component.h"
 
 namespace bure {
 
 engine* engine::_instance;
 
-void engine::init(std::string resourcesPath, int width, int height) {
+void engine::init(std::unique_ptr<game> g, std::string resourcesPath, int width,
+                  int height) {
+  _game = std::move(g);
   _resourcesPath = resourcesPath;
 
   // initialize ui manager
   _uiManager = std::make_shared<bure::ui::ui_manager>();
 
   // initialize camera and graphics
-  _camera = { 0, 0, width, height};
+  _camera = {0, 0, width, height};
   auto graphicsInstance =
       std::make_unique<bure::graphics>(resourcesPath, width, height);
 
@@ -36,6 +38,13 @@ void engine::init(std::string resourcesPath, int width, int height) {
   auto hudRenderer = std::make_unique<hud_renderer>();
   drawingSystem->addRenderer(std::move(hudRenderer));
   this->addSystem(std::move(drawingSystem));
+
+  // Register close callback
+  bure::event_manager::get().addEventCallback(
+      SDL_QUIT, [this](SDL_Event e) { _game->finish(); });
+
+  // Start game
+  _game->init();
 }
 
 void engine::addSystem(std::unique_ptr<systems::system> s) {
@@ -53,9 +62,7 @@ void engine::clearEntities() {
   _entities.clear();
 }
 
-void engine::removeEntity(entities::entity* e) {
-  _entitiesToRemove.emplace(e);
-}
+void engine::removeEntity(entities::entity* e) { _entitiesToRemove.emplace(e); }
 
 void engine::update() {
   for (auto&& s : _systems) {
@@ -82,6 +89,8 @@ void engine::update() {
 
 ui::ui_manager* engine::getUIManager() { return _uiManager.get(); }
 
+game* engine::getGame() { return _game.get(); }
+
 std::vector<std::reference_wrapper<entities::entity>> engine::getEntities() {
   std::vector<std::reference_wrapper<entities::entity>> vector;
   for (auto&& entity : _entities) {
@@ -98,29 +107,8 @@ void engine::setMap(std::string mapName) {
 
 game_map* engine::getMap() { return _currentMap.get(); }
 
-void engine::setCamera(bure::camera c) {
-  _camera = c;
-}
+void engine::setCamera(bure::camera c) { _camera = c; }
 
-camera engine::getCamera() {
-  return _camera;
-}
-
-entities::entity* engine::entityIn(map_coords mc) {
-  auto entities = engine::get().getEntities();
-
-  for (auto& entity : entities) {
-    auto& e = entity.get();
-    auto mp = e.getComponentByType<components::map_position_component>();
-    if (mp == nullptr) continue;
-
-    if (mp->getPosition() == mc) {
-      return &e;
-    };
-  }
-
-  return nullptr;
-}
-
+camera engine::getCamera() { return _camera; }
 
 }  // namespace bure
