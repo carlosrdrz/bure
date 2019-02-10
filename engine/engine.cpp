@@ -48,12 +48,7 @@ void engine::clearEntities() {
 }
 
 void engine::removeEntity(entities::entity* e) {
-  for (auto i = _entities.begin(); i != _entities.end(); i++) {
-    if ((*i).get() == e) {
-      _entities.erase(i);
-      return;
-    }
-  }
+  _entitiesToRemove.emplace(e);
 }
 
 void engine::update() {
@@ -62,8 +57,21 @@ void engine::update() {
   }
 
   for (auto&& e : getEntities()) {
-    e.get().update();
+    if (_entitiesToRemove.find(&e.get()) == _entitiesToRemove.end()) {
+      e.get().update();
+    }
   }
+
+  for (auto& e : _entitiesToRemove) {
+    for (auto i = _entities.begin(); i != _entities.end(); i++) {
+      if ((*i).get() == e) {
+        _entities.erase(i);
+        return;
+      }
+    }
+  }
+
+  _entitiesToRemove.clear();
 }
 
 ui::ui_manager* engine::getUIManager() { return _uiManager.get(); }
@@ -71,7 +79,9 @@ ui::ui_manager* engine::getUIManager() { return _uiManager.get(); }
 std::vector<std::reference_wrapper<entities::entity>> engine::getEntities() {
   std::vector<std::reference_wrapper<entities::entity>> vector;
   for (auto&& entity : _entities) {
-    vector.push_back(std::ref(*entity));
+    if (_entitiesToRemove.find(entity.get()) == _entitiesToRemove.end()) {
+      vector.push_back(std::ref(*entity));
+    }
   }
   return vector;
 }

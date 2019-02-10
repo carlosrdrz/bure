@@ -147,7 +147,10 @@ bool game_map::anyEntityIn(map_coords mc) {
     auto& e = entity.get();
     auto solid = e.getComponentByType<components::solid_component>();
     if (solid == nullptr) continue;
-    return (solid->getPosition() == mc);
+
+    if (solid->getPosition() == mc) {
+      return true;
+    };
   }
 
   return false;

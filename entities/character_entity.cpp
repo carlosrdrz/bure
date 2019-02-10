@@ -4,6 +4,7 @@
 #include "components/position_component.h"
 #include "components/solid_component.h"
 #include "components/sprite_component.h"
+#include "components/map_position_component.h"
 #include "engine.h"
 
 #include <random>
@@ -20,9 +21,10 @@ void character_entity::init() {
   auto pos = this->addComponent<position_component>();
   pos->setPosition(world_pos);
   auto m = this->addComponent<movement_component>();
-  m->setState(movement_state::standing_down);
+  m->setDirection(bure::direction::none);
   m->setVelocity(2);
-  m->setPosition(mc);
+  auto mp = this->addComponent<map_position_component>();
+  mp->setPosition(mc);
 
   initAnimations();
   setAnimation(animation_id::standing_down);
@@ -31,6 +33,11 @@ void character_entity::init() {
 void character_entity::update() {
   if (isStanding() && animationWalking()) {
     stopWalkingAnimation();
+
+    if (_shadowEntity != nullptr) {
+      bure::engine::get().removeEntity(_shadowEntity);
+      _shadowEntity = nullptr;
+    }
   }
 }
 
@@ -38,9 +45,13 @@ void character_entity::setPosition(bure::map_coords mc) {
   auto map = bure::engine::get().getMap();
   auto wc = map->mapToWorld(mc);
 
+  setMapPosition(mc);
   auto pos = getComponentByType<position_component>();
   pos->setPosition(wc);
-  auto m = getComponentByType<movement_component>();
+}
+
+void character_entity::setMapPosition(bure::map_coords mc) {
+  auto m = getComponentByType<map_position_component>();
   m->setPosition(mc);
   auto s = getComponentByType<solid_component>();
   s->setPosition(mc);
@@ -55,40 +66,30 @@ bool character_entity::isWalking() { return !isStanding(); }
 
 bool character_entity::isStanding() {
   auto m = getComponentByType<movement_component>();
-  auto state = m->getState();
-
-  return state == movement_state::standing_up ||
-         state == movement_state::standing_down ||
-         state == movement_state::standing_left ||
-         state == movement_state::standing_right;
+  return m->getDirection() == bure::direction::none;
 }
 
-void character_entity::moveTo(direction d) {
+void character_entity::moveTo(bure::direction d) {
   auto map = bure::engine::get().getMap();
   auto m = getComponentByType<movement_component>();
-  movement_state nextState = m->getState();
-  bure::map_coords currentPosition = m->getPosition();
-  bure::map_coords nextPosition = currentPosition;
+  auto mp = getComponentByType<map_position_component>();
+  bure::map_coords nextPosition = mp->getPosition();
   animation_id nextAnimation = _animationId;
 
   switch (d) {
-    case direction::left:
-      nextState = movement_state::walking_left;
+    case bure::direction::left:
       nextAnimation = animation_id::walking_left;
       nextPosition.x -= 1;
       break;
-    case direction::right:
-      nextState = movement_state::walking_right;
+    case bure::direction::right:
       nextAnimation = animation_id::walking_right;
       nextPosition.x += 1;
       break;
-    case direction::up:
-      nextState = movement_state::walking_up;
+    case bure::direction::up:
       nextAnimation = animation_id::walking_up;
       nextPosition.y -= 1;
       break;
-    case direction::down:
-      nextState = movement_state::walking_down;
+    case bure::direction::down:
       nextAnimation = animation_id::walking_down;
       nextPosition.y += 1;
       break;
@@ -97,7 +98,8 @@ void character_entity::moveTo(direction d) {
   }
 
   if (map->canWalk(nextPosition)) {
-    m->setState(nextState);
+    m->setDirection(d);
+    setMapPosition(nextPosition);
     setAnimation(nextAnimation);
   }
 }
@@ -110,16 +112,16 @@ void character_entity::randomlyMove() {
 
   switch (randomNumber) {
     case 0:
-      moveTo(direction::left);
+      moveTo(bure::direction::left);
       break;
     case 1:
-      moveTo(direction::right);
+      moveTo(bure::direction::right);
       break;
     case 2:
-      moveTo(direction::up);
+      moveTo(bure::direction::up);
       break;
     case 3:
-      moveTo(direction::down);
+      moveTo(bure::direction::down);
       break;
     default:
       break;

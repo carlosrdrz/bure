@@ -14,9 +14,5 @@ class movement_system : public bure::systems::system {
   void update() override;
 
  private:
-  void moveEntity(entity &e, position_component &p, movement_component &m,
-                  solid_component &s);
-  void setPosition(entity &e, position_component &p, movement_component &m,
-                   solid_component &s, bure::map_coords pos);
-  void stopMoving(movement_component &m);
+  void moveEntity(entity &e, position_component &p, movement_component &m);
 };

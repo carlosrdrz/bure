@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <unordered_set>
 
 #include "entities/entity.h"
 #include "event_manager.h"
@@ -49,6 +50,7 @@ class engine {
 
   std::vector<std::unique_ptr<bure::systems::system>> _systems;
   std::vector<std::unique_ptr<bure::entities::entity>> _entities;
+  std::unordered_set<bure::entities::entity*> _entitiesToRemove;
 
   std::shared_ptr<bure::ui::ui_manager> _uiManager;
   std::unique_ptr<bure::game_map> _currentMap;

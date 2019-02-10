@@ -40,12 +40,12 @@ void player_entity::processKeys() {
   const Uint8* keystates = SDL_GetKeyboardState(NULL);
 
   if (keystates[SDL_SCANCODE_A]) {
-    moveTo(direction::left);
+    moveTo(bure::direction::left);
   } else if (keystates[SDL_SCANCODE_D]) {
-    moveTo(direction::right);
+    moveTo(bure::direction::right);
   } else if (keystates[SDL_SCANCODE_W]) {
-    moveTo(direction::up);
+    moveTo(bure::direction::up);
   } else if (keystates[SDL_SCANCODE_S]) {
-    moveTo(direction::down);
+    moveTo(bure::direction::down);
   }
 }

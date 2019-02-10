@@ -35,6 +35,8 @@ struct map_coords {
 extern map_coords undefined_map_coords;
 extern map_coords source_map_coords;
 
+enum class direction { up, down, left, right, none };
+
 struct layer {
   int id;
   std::string name;

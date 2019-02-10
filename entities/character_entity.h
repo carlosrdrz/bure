@@ -16,8 +16,6 @@ enum class animation_id {
   standing_left
 };
 
-enum class direction { up, down, left, right, standing };
-
 class character_entity : public entity {
   using entity::entity;
 
@@ -29,6 +27,7 @@ class character_entity : public entity {
   bool isStanding();
 
   void setPosition(bure::map_coords mc);
+  void setMapPosition(bure::map_coords mc);
   void setVelocity(int v);
 
  protected:
@@ -38,9 +37,12 @@ class character_entity : public entity {
   bool animationStanding();
   void stopWalkingAnimation();
 
-  void moveTo(direction d);
+  void moveTo(bure::direction d);
   void randomlyMove();
 
   animation_id _animationId = animation_id::standing_down;
   std::map<animation_id, std::vector<bure::rect>> _animations_rects;
+
+ private:
+  entity* _shadowEntity = nullptr;
 };

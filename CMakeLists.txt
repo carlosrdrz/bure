@@ -35,6 +35,7 @@ add_library(bure-engine
   engine/systems/system.cpp
   engine/systems/drawing_system.cpp
   engine/entities/entity.cpp
+  engine/components/map_position_component.cpp
   engine/components/position_component.cpp
   engine/components/sprite_component.cpp
   engine/components/animation_component.cpp
