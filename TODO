@@ -10,3 +10,6 @@
 - consider adding some scripting engine to modify stuff like UI, some entity-specific properties, dialogues, etc
 - it makes no sense that bure::game_map knows which tiles are walkable based on the layers
 - animations, coords, ui... everything that is a number or property can go either in a XML or a JS file
+- must remove fire entities when they finish
+- move methods to engine or game, but they don't make sense in game_map
+- expose some api to add new renderers
