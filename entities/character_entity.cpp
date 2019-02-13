@@ -81,6 +81,8 @@ void character_entity::moveTo(bure::direction d) {
   bure::map_coords nextPosition = mp->getPosition();
   animation_id nextAnimation = _animationId;
 
+  setDirection(d);
+
   switch (d) {
     case bure::direction::left:
       nextAnimation = animation_id::walking_left;
@@ -209,6 +211,31 @@ void character_entity::stopWalkingAnimation() {
       setAnimation(animation_id::standing_left);
       break;
     case animation_id::walking_right:
+      setAnimation(animation_id::standing_right);
+      break;
+    default:
+      break;
+  }
+}
+
+bure::direction character_entity::getDirection() {
+  return _facingDirection;
+}
+
+void character_entity::setDirection(bure::direction d) {
+  _facingDirection = d;
+
+  switch (d) {
+    case bure::direction::up:
+      setAnimation(animation_id::standing_up);
+      break;
+    case bure::direction::down:
+      setAnimation(animation_id::standing_down);
+      break;
+    case bure::direction::left:
+      setAnimation(animation_id::standing_left);
+      break;
+    case bure::direction::right:
       setAnimation(animation_id::standing_right);
       break;
     default:

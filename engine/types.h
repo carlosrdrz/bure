@@ -11,6 +11,8 @@ struct camera {
   int height;
 };
 
+enum class direction { up, down, left, right, none };
+
 struct world_coords {
   int x;
   int y;
@@ -30,12 +32,25 @@ struct map_coords {
   bool operator==(const map_coords& rhs) const {
     return (this->x == rhs.x && this->y == rhs.y);
   }
+
+  map_coords operator+(const direction& d) const {
+    switch (d) {
+      case direction::up:
+        return { this->x, this->y - 1 };
+      case direction::down:
+        return { this->x, this->y + 1 };
+      case direction::left:
+        return { this->x - 1, this->y };
+      case direction::right:
+        return { this->x + 1, this->y };
+      default:
+        return *this;
+    }
+  }
 };
 
 extern map_coords undefined_map_coords;
 extern map_coords source_map_coords;
-
-enum class direction { up, down, left, right, none };
 
 struct layer {
   int id;

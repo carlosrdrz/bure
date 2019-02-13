@@ -40,9 +40,13 @@ class character_entity : public entity {
   void moveTo(bure::direction d);
   void randomlyMove();
 
+  bure::direction getDirection();
+  void setDirection(bure::direction d);
+
   animation_id _animationId = animation_id::standing_down;
   std::map<animation_id, std::vector<bure::rect>> _animations_rects;
 
  private:
   entity* _shadowEntity = nullptr;
+  bure::direction _facingDirection = bure::direction::down;
 };

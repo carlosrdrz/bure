@@ -46,13 +46,29 @@ void player_entity::processKeys() {
   const Uint8* keystates = SDL_GetKeyboardState(NULL);
 
   if (keystates[SDL_SCANCODE_A]) {
-    moveTo(bure::direction::left);
+    if (keystates[SDL_SCANCODE_LCTRL]) {
+      setDirection(bure::direction::left);
+    } else {
+      moveTo(bure::direction::left);
+    }
   } else if (keystates[SDL_SCANCODE_D]) {
-    moveTo(bure::direction::right);
+    if (keystates[SDL_SCANCODE_LCTRL]) {
+      setDirection(bure::direction::right);
+    } else {
+      moveTo(bure::direction::right);
+    }
   } else if (keystates[SDL_SCANCODE_W]) {
-    moveTo(bure::direction::up);
+    if (keystates[SDL_SCANCODE_LCTRL]) {
+      setDirection(bure::direction::up);
+    } else {
+      moveTo(bure::direction::up);
+    }
   } else if (keystates[SDL_SCANCODE_S]) {
-    moveTo(bure::direction::down);
+    if (keystates[SDL_SCANCODE_LCTRL]) {
+      setDirection(bure::direction::down);
+    } else {
+      moveTo(bure::direction::down);
+    }
   }
 }
 
@@ -63,8 +79,7 @@ void player_entity::castSkills() {
     if (keystates[SDL_SCANCODE_Q]) {
       auto f = std::make_unique<fire_entity>();
       auto p = getComponentByType<map_position_component>();
-      auto currentPos = p->getPosition();
-      auto firePos = bure::map_coords({currentPos.x + 1, currentPos.y});
+      auto firePos = p->getPosition() + getDirection();
       f->setPosition(firePos);
       bure::engine::get().addEntity(std::move(f));
       _skillCooldownCounter = _skillCooldown;
