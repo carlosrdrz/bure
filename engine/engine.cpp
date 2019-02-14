@@ -101,8 +101,8 @@ std::vector<std::reference_wrapper<entities::entity>> engine::getEntities() {
   return vector;
 }
 
-void engine::setMap(std::string mapName) {
-  _currentMap = std::make_unique<bure::game_map>("./", mapName);
+void engine::setMap(std::unique_ptr<game_map> gm) {
+  _currentMap = std::move(gm);
 }
 
 game_map* engine::getMap() { return _currentMap.get(); }

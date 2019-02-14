@@ -1,11 +1,12 @@
 #include "test_game.h"
+#include "components/map_position_component.h"
 #include "engine.h"
 #include "entities/background_entity.h"
 #include "entities/enemy_entity.h"
 #include "entities/player_entity.h"
 #include "systems/movement_system.h"
-#include "components/map_position_component.h"
 #include "utils/logger.h"
+#include "utils/tiled_map_reader.h"
 
 void test_game::init() {
   auto backgroundEntity = std::make_unique<background_entity>();
@@ -31,9 +32,12 @@ void test_game::startGame(int unused) {
   auto ui = bure::engine::get().getUIManager();
   ui->removeContainer(0);
 
+  // read map
+  auto map = tiled_map_reader::read("./resources/maps/campo.tmx");
+  map->setScale(2);
+
   bure::engine::get().clearEntities();
-  bure::engine::get().setMap("campo.tmx");
-  bure::engine::get().getMap()->setScale(2);
+  bure::engine::get().setMap(std::move(map));
 
   // add movement system
   auto movementSystem = std::make_unique<movement_system>();

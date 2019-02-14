@@ -26,7 +26,7 @@ class engine {
 
   void addSystem(std::unique_ptr<systems::system> s);
 
-  void setMap(std::string mapName);
+  void setMap(std::unique_ptr<game_map> gm);
   game_map* getMap();
 
   void update();

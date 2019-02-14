@@ -45,6 +45,7 @@ add_library(bure-engine
   engine/utils/config.cpp
   engine/utils/logger.cpp
   engine/utils/pathfinding.cpp
+  engine/utils/tiled_map_reader.cpp
   engine/graphics.cpp
   engine/game_map.cpp
   engine/event_manager.cpp

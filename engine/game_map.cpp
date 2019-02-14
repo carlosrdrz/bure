@@ -3,75 +3,7 @@
 #include "utils/logger.h"
 #include "components/solid_component.h"
 
-#include <libxml++/libxml++.h>
-#include <fstream>
-
 namespace bure {
-
-game_map::game_map(std::string basePath, std::string file) {
-  xmlpp::DomParser parser;
-  parser.parse_file(basePath + "/resources/maps/" + file);
-
-  if (!parser) logger::error("could not load map %s", file.c_str());
-
-  // Get the root element
-  const auto rootNode = parser.get_document()->get_root_node();
-  const auto widthAttr = rootNode->get_attribute_value("width");
-  const auto heightAttr = rootNode->get_attribute_value("height");
-  const auto tileWidthAttr = rootNode->get_attribute_value("tilewidth");
-  const auto tileHeightAttr = rootNode->get_attribute_value("tileheight");
-
-  _width = std::stoi(widthAttr);
-  _height = std::stoi(heightAttr);
-  _tileWidth = std::stoi(tileWidthAttr);
-  _tileHeight = std::stoi(tileHeightAttr);
-
-  // Get tilesets
-  int tilesetId = 0;
-  auto tilesetNodes = rootNode->get_children("tileset");
-  for (const auto& tilesetNode : tilesetNodes) {
-    tileset ts;
-
-    auto node = static_cast<xmlpp::Element*>(tilesetNode);
-    ts.name = node->get_attribute_value("name");
-    ts.firstGid = std::stoi(node->get_attribute_value("firstgid"));
-
-    auto imageChild = tilesetNode->get_first_child("image");
-    auto imageNode = static_cast<xmlpp::Element*>(imageChild);
-    ts.file = imageNode->get_attribute_value("source");
-
-    auto gridChild = tilesetNode->get_first_child("grid");
-    auto gridNode = static_cast<xmlpp::Element*>(gridChild);
-    ts.gridWidth = std::stoi(gridNode->get_attribute_value("width"));
-    ts.gridHeight = std::stoi(gridNode->get_attribute_value("height"));
-
-    ts.id = tilesetId++;
-    _tilesets.push_back(ts);
-  }
-
-  // Get layers
-  auto layerNodes = rootNode->get_children("layer");
-  for (const auto& layerNode : layerNodes) {
-    layer l;
-
-    auto node = static_cast<xmlpp::Element*>(layerNode);
-    auto data = layerNode->get_first_child("data");
-    l.id = std::stoi(node->get_attribute_value("id"));
-    l.visible = !(node->get_attribute_value("visible") == "0");
-    l.name = node->get_attribute_value("name");
-    l.data = new int[_height * _width];
-
-    int num = 0;
-    for (const auto& child : data->get_children("tile")) {
-      auto tileNode = static_cast<xmlpp::Element*>(child);
-      auto value = tileNode->get_attribute_value("gid");
-      if (value.empty()) l.data[num++] = 0  ;
-      else l.data[num++] = std::stoi(value);
-    }
-
-    _layers.push_back(l);
-  }
-}
 
 game_map::~game_map() {
   for (auto& layer : _layers) {
@@ -138,5 +70,12 @@ bool game_map::isWithinLimits(map_coords m) {
   return m.x >= 0 && m.x < getWidth() && m.y >= 0 && m.y < getHeight();
 }
 
+void game_map::addLayer(layer l) {
+    _layers.push_back(l);
+}
+
+void game_map::addTileset(tileset t) {
+  _tilesets.push_back(t);
+}
 
 }  // namespace bure

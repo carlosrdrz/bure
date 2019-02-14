@@ -10,7 +10,8 @@ namespace bure {
 
 class game_map {
  public:
-  game_map(std::string basePath, std::string file);
+  game_map(int w, int h, int tw, int th)
+      : _width(w), _height(h), _tileWidth(tw), _tileHeight(th) {}
   ~game_map();
 
   void setScale(int scale);
@@ -26,6 +27,9 @@ class game_map {
   bool isWithinLimits(map_coords m);
 
   layer getLayer(int layerId);
+  void addLayer(layer l);
+  void addTileset(tileset t);
+
   tile getTileData(int tileGid);
 
  private:
