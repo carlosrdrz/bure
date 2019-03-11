@@ -68,6 +68,7 @@ class graphics {
   TTF_Font *font;
   int fontSize;
   float scale;
+  int correction = 720;
 
   std::map<cache_id, cached_sprite> _cached_sprites;
   std::map<cache_id, cached_text> _cached_texts;
