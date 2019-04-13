@@ -60,13 +60,11 @@ void graphics::setRenderColor(color c) {
 
 void graphics::drawFullTexture(SDL_Texture *txt, rect r) {
   SDL_Rect dst = rectToSDLRect(r);
-  dst.y += correction;
   SDL_RenderCopy(renderer, txt, nullptr, &dst);
 }
 
 void graphics::drawRect(rect r, color c) {
   SDL_Rect dst = rectToSDLRect(r);
-  dst.y += correction;
   setRenderColor(c);
   SDL_RenderFillRect(renderer, &dst);
 }
@@ -74,7 +72,6 @@ void graphics::drawRect(rect r, color c) {
 void graphics::drawSprite(sprite_id spriteId, rect s, rect d) {
   SDL_Rect src = rectToSDLRect(s);
   SDL_Rect dst = rectToSDLRect(d);
-  dst.y += correction;
   auto cachedSprite = getCachedSprite(spriteId);
   SDL_RenderCopy(renderer, cachedSprite.texture, &src, &dst);
 }
