@@ -1,8 +1,11 @@
 #include "pathfinding.h"
 #include "engine.h"
+#include "logger.h"
 
 #include <cmath>
 #include <limits>
+
+#define MAX_ITERATIONS 1000
 
 namespace bure {
 
@@ -19,7 +22,14 @@ std::vector<map_coords> pathfinding::a_star(map_coords start,
   gScore[start] = 0;
   fScore[start] = heuristic_cost_estimate(start, destination);
 
+  auto iter = 0;
+
   while (!openSet.empty()) {
+    if (iter++ > MAX_ITERATIONS) {
+      bure::logger::error("max iterations reached in a_star()");
+      exit(1);
+    }
+
     auto current = lowest_fscore(fScore, openSet);
 
     if (current == destination) {

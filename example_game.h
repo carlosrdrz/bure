@@ -4,7 +4,7 @@
 #include "entities/entity.h"
 #include "types.h"
 
-class test_game : public bure::game {
+class example_game : public bure::game {
  public:
   void init() override;
 

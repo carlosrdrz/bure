@@ -1,6 +1,6 @@
 #include <memory>
 
-#include "test_game.h"
+#include "example_game.h"
 #include "engine.h"
 #include "event_manager.h"
 
@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 
   // Init main game object
   // Init engine at 1280x720 resolution
-  auto game = std::make_unique<test_game>();
+  auto game = std::make_unique<example_game>();
   bure::engine::get().init(std::move(game), resourcesPath, 1280, 720);
 
   // Main game loop

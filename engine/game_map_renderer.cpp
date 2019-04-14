@@ -8,6 +8,7 @@ namespace bure {
 void game_map_renderer::render(int layer) {
   auto map = bure::engine::get().getMap();
   if (map == nullptr) return;
+  if (layer != 0) return;
 
   auto camera = bure::engine::get().getCamera();
   int first_y = camera.y / map->getTileHeight();
@@ -19,7 +20,18 @@ void game_map_renderer::render(int layer) {
   auto mapLayer = map->getLayer(layer);
 
   for (int y = first_y; y <= last_y; y++) {
+    if (y < 0 || y >= map->getHeight()) {
+      abs_x = (camera.x % map->getTileWidth()) * -1;
+      abs_y += map->getTileHeight();
+      continue;
+    }
+
     for (int x = first_x; x <= last_x; x++) {
+      if (x < 0 || x >= map->getWidth()) {
+        abs_x += map->getTileWidth();
+        continue;
+      }
+
       auto tileGid = mapLayer.data[(x + (y * map->getWidth()))];
 
       if (tileGid != 0 && mapLayer.visible) {

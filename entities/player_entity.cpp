@@ -5,15 +5,25 @@
 #include "components/position_component.h"
 #include "engine.h"
 #include "fire_entity.h"
-#include "../test_game.h"
+#include "../example_game.h"
+#include "../utils/map_generator.h"
 
 using namespace bure::components;
 
 void player_entity::init() {
   character_entity::init();
 
-  setPosition({66, 37});
-  setVelocity(2);
+  // TODO: WHY IN MAP_GENERATOR
+  auto game = dynamic_cast<example_game*>(bure::engine::get().getGame());
+  int x, y;
+
+  do {
+    x = map_generator::random(0, 60);
+    y = map_generator::random(0, 60);
+  } while (!game->canWalk({ x, y }));
+
+  setPosition({x, y});
+  setVelocity(8);
 }
 
 void player_entity::update() {
@@ -84,7 +94,7 @@ void player_entity::castSkills() {
       bure::engine::get().addEntity(std::move(f));
       _skillCooldownCounter = _skillCooldown;
 
-      auto game = dynamic_cast<test_game*>(bure::engine::get().getGame());
+      auto game = dynamic_cast<example_game*>(bure::engine::get().getGame());
       auto e = game->entityIn(firePos);
       if (e != nullptr) {
         auto stats = e->getComponentByType<stats_component>();

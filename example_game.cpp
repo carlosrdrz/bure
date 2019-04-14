@@ -1,4 +1,4 @@
-#include "test_game.h"
+#include "example_game.h"
 #include "components/map_position_component.h"
 #include "engine.h"
 #include "entities/background_entity.h"
@@ -7,8 +7,9 @@
 #include "systems/movement_system.h"
 #include "utils/logger.h"
 #include "utils/tiled_map_reader.h"
+#include "utils/map_generator.h"
 
-void test_game::init() {
+void example_game::init() {
   auto backgroundEntity = std::make_unique<background_entity>();
   bure::engine::get().addEntity(std::move(backgroundEntity));
 
@@ -21,19 +22,19 @@ void test_game::init() {
 
   auto b = std::make_unique<bure::ui::button>("START GAME");
   b->set(40, 40, 180, 40);
-  b->function = std::bind(&test_game::startGame, this, std::placeholders::_1);
+  b->function = std::bind(&example_game::startGame, this, std::placeholders::_1);
 
   c->add(std::move(b));
   ui->addContainer(std::move(c));
 }
 
-void test_game::startGame(int unused) {
+void example_game::startGame(int unused) {
   // starts the actual game
   auto ui = bure::engine::get().getUIManager();
   ui->removeContainer(0);
 
   // read map
-  auto map = tiled_map_reader::read("./resources/maps/campo.tmx");
+  auto map = map_generator::generate(48, 48, 3);
   map->setScale(2);
 
   bure::engine::get().clearEntities();
@@ -47,21 +48,21 @@ void test_game::startGame(int unused) {
   auto playerEntity = std::make_unique<player_entity>();
 
   // add enemy and make it follow player around
-  auto enemyEntity = std::make_unique<enemy_entity>();
-  enemyEntity->follow(playerEntity.get());
+  // auto enemyEntity = std::make_unique<enemy_entity>();
+  // enemyEntity->follow(playerEntity.get());
 
   bure::engine::get().addEntity(std::move(playerEntity));
-  bure::engine::get().addEntity(std::move(enemyEntity));
+  // bure::engine::get().addEntity(std::move(enemyEntity));
 }
 
-bool test_game::canWalk(bure::map_coords mc) {
+bool example_game::canWalk(bure::map_coords mc) {
   auto map = bure::engine::get().getMap();
-  auto layer = map->getLayer(2);
+  auto layer = map->getLayer(1);
   auto tile = layer.data[mc.x + (mc.y * map->getWidth())];
-  return tile == 0 && !anyEntityIn(mc);
+  return tile != 0 && !anyEntityIn(mc);
 }
 
-bool test_game::anyEntityIn(bure::map_coords mc) {
+bool example_game::anyEntityIn(bure::map_coords mc) {
   auto entities = bure::engine::get().getEntities();
 
   for (auto& entity : entities) {
@@ -78,7 +79,7 @@ bool test_game::anyEntityIn(bure::map_coords mc) {
   return false;
 }
 
-bure::entities::entity* test_game::entityIn(bure::map_coords mc) {
+bure::entities::entity* example_game::entityIn(bure::map_coords mc) {
   auto entities = bure::engine::get().getEntities();
 
   for (auto& entity : entities) {

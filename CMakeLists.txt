@@ -6,6 +6,8 @@ set(CMAKE_CXX_FLAGS "-g -Wall")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_subdirectory(./engine/test/lib/googletest-1.8.0/googletest)
+
 include(FindPackageHandleStandardArgs)
 
 find_package(SDL2 REQUIRED)
@@ -19,6 +21,8 @@ include_directories(${SDL2_INCLUDE_DIRS}
         ${SDL2_IMAGE_INCLUDE_DIRS}
         ${SDL2_TTF_INCLUDE_DIRS}
         ${LibXMLPP_INCLUDE_DIRS}
+        ${gtest_SOURCE_DIR}/include
+        ${gtest_SOURCE_DIR}
         engine)
 
 add_library(bure-ui
@@ -55,22 +59,30 @@ add_library(bure-engine
   engine/game.cpp
   backward.cpp)
 
-add_executable(client
-  main.cpp
-  test_game.cpp
+add_library(client-lib
+  example_game.cpp
   hud_renderer.cpp
   components/movement_component.cpp
   components/stats_component.cpp
   systems/movement_system.cpp
+  utils/map_generator.cpp
   entities/fire_entity.cpp
   entities/character_entity.cpp
   entities/player_entity.cpp
   entities/enemy_entity.cpp
   entities/background_entity.cpp)
 
-target_link_libraries(client bure-engine bure-ui)
+add_executable(client
+  main.cpp)
+
+add_executable(client-test
+  test/map_generator_test.cpp)
+
+target_link_libraries(client client-lib bure-engine bure-ui)
 target_link_libraries(client
         ${SDL2_LIBRARIES}
         ${SDL2_IMAGE_LIBRARIES}
         ${SDL2TTF_LIBRARY}
         ${LibXMLPP_LIBRARIES})
+
+target_link_libraries(client-test client-lib bure-engine gtest gtest_main)
