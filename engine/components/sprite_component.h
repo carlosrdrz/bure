@@ -17,17 +17,17 @@ class sprite_component : public component {
   void setSpriteID(sprite_id spriteId);
   void setSrcRect(rect src);
   void setSize(int width, int height);
-  void setScale(int scale);
+  void setScale(float scale);
 
   int getWidth();
   int getHeight();
   sprite_id getSpriteID();
   rect getSrcRect();
-  int getScale();
+  float getScale();
 
  private:
   int _width, _height;
-  int _scale = 1;
+  float _scale = 1.0;
   sprite_id _spriteId;
   rect _src;
 };

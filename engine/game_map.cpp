@@ -11,8 +11,8 @@ game_map::~game_map() {
   }
 }
 
-void game_map::setScale(int scale) { _scale = scale; }
-int game_map::getScale() { return _scale; }
+void game_map::setScale(float scale) { _scale = scale; }
+float game_map::getScale() { return _scale; }
 
 int game_map::getWidth() { return _width; }
 int game_map::getHeight() { return _height; }

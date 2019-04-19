@@ -6,7 +6,6 @@
 #include "components/map_position_component.h"
 #include "components/position_component.h"
 #include "components/solid_component.h"
-#include "components/sprite_component.h"
 #include "engine.h"
 
 #include <random>
@@ -24,7 +23,7 @@ void character_entity::init() {
   pos->setPosition(world_pos);
   auto m = this->addComponent<movement_component>();
   m->setDirection(bure::direction::none);
-  m->setVelocity(2);
+  m->setVelocity(1);
   auto mp = this->addComponent<map_position_component>();
   mp->setPosition(mc);
   auto stats = this->addComponent<stats_component>();
@@ -44,6 +43,12 @@ void character_entity::update() {
       _shadowEntity = nullptr;
     }
   }
+
+  auto map = bure::engine::get().getMap();
+  auto pc = getComponentByType<position_component>();
+  auto position = pc->getPosition();
+  auto mapPosition = map->worldToMap(position);
+  setMapPosition(mapPosition);
 }
 
 void character_entity::setPosition(bure::map_coords mc) {
@@ -178,10 +183,18 @@ void character_entity::initAnimations() {
 // It would be better if we could save them somewhere and reuse.
 void character_entity::setAnimation(animation_id animationId) {
   _animationId = animationId;
+
+  auto anim = this->getComponentByType<animation_component>();
+
+  auto prevAnimationScale = 2.0;
+  if (anim != nullptr) {
+    prevAnimationScale = anim->getScale();
+  }
+
   this->removeComponentByType<animation_component>();
 
   auto animation = this->addComponent<animation_component>();
-  animation->setScale(2);
+  animation->setScale(prevAnimationScale);
 
   for (auto& r : _animations_rects[animationId]) {
     animation->addSprite("personajes.png", r, 32, 32);

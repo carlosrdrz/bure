@@ -9,11 +9,11 @@ class player_entity : public character_entity {
   void init() override;
   void update() override;
 
+   void updateCamera();
  private:
    int _skillCooldown = 50;
    int _skillCooldownCounter = 0;
 
-   void updateCamera();
    void processKeys();
    void castSkills();
 };

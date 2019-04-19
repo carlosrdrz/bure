@@ -47,7 +47,10 @@ graphics::~graphics() {
   SDL_DestroyWindow(window);
 }
 
-void graphics::clean() { SDL_RenderClear(renderer); }
+void graphics::clean() {
+  setRenderColor({ 0, 0, 0, 255 });
+  SDL_RenderClear(renderer);
+}
 
 SDL_Rect graphics::rectToSDLRect(rect r) {
   SDL_Rect rect = {r.x, r.y, r.width, r.height};

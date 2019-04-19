@@ -35,8 +35,8 @@ void engine::init(std::unique_ptr<game> g, std::string resourcesPath, int width,
   drawingSystem->addRenderer(std::move(gameMapRenderer));
   // move this
   // how do we let ppl add their own renderers
-  auto hudRenderer = std::make_unique<hud_renderer>();
-  drawingSystem->addRenderer(std::move(hudRenderer));
+  // auto hudRenderer = std::make_unique<hud_renderer>();
+  // drawingSystem->addRenderer(std::move(hudRenderer));
   this->addSystem(std::move(drawingSystem));
 
   // Register close callback

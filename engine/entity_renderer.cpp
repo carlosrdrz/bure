@@ -36,8 +36,8 @@ void entity_renderer::renderSprite(position_component& p, sprite_component& s) {
   bure::rect dst = {
     position.x - camera.x,
     position.y - camera.y,
-    s.getWidth() * s.getScale(),
-    s.getHeight() * s.getScale()
+    static_cast<int>(s.getWidth() * s.getScale()),
+    static_cast<int>(s.getHeight() * s.getScale())
   };
 
   _graphics->drawSprite(s.getSpriteID(), s.getSrcRect(), dst);

@@ -1,5 +1,6 @@
 #include "example_game.h"
 #include "components/map_position_component.h"
+#include "components/animation_component.h"
 #include "engine.h"
 #include "entities/background_entity.h"
 #include "entities/enemy_entity.h"
@@ -35,7 +36,7 @@ void example_game::startGame(int unused) {
 
   // read map
   auto map = map_generator::generate(48, 48, 3);
-  map->setScale(2);
+  map->setScale(2.0);
 
   bure::engine::get().clearEntities();
   bure::engine::get().setMap(std::move(map));
@@ -46,16 +47,52 @@ void example_game::startGame(int unused) {
 
   // add player character
   auto playerEntity = std::make_unique<player_entity>();
+  player_entity *p = playerEntity.get();
 
   // add enemy and make it follow player around
   // auto enemyEntity = std::make_unique<enemy_entity>();
   // enemyEntity->follow(playerEntity.get());
+
+  bure::event_manager::get().addEventCallback(SDL_KEYDOWN, [p](SDL_Event e) {
+    auto m = bure::engine::get().getMap();
+
+    if (e.key.keysym.scancode == SDL_SCANCODE_4) {
+      auto n = map_generator::generate(48, 48, 3);
+      n->setScale(m->getScale());
+      bure::engine::get().setMap(std::move(n));
+      p->updateCamera();
+    }
+
+    if (e.key.keysym.scancode == SDL_SCANCODE_5) {
+      m->setScale(m->getScale() * 2);
+      auto sc = p->getComponentByType<bure::components::animation_component>();
+      sc->setScale(sc->getScale() * 2);
+      auto mp = p->getComponentByType<bure::components::map_position_component>();
+      auto pc = p->getComponentByType<bure::components::position_component>();
+      pc->setPosition(m->mapToWorld(mp->getPosition()));
+      p->updateCamera();
+    }
+
+    if (e.key.keysym.scancode == SDL_SCANCODE_6) {
+      if (m->getScale() >= 0.5) {
+        m->setScale(m->getScale() / 2);
+        auto sc = p->getComponentByType<bure::components::animation_component>();
+        sc->setScale(sc->getScale() / 2);
+        auto mp = p->getComponentByType<bure::components::map_position_component>();
+        auto pc = p->getComponentByType<bure::components::position_component>();
+        pc->setPosition(m->mapToWorld(mp->getPosition()));
+        p->updateCamera();
+      }
+    }
+  });
 
   bure::engine::get().addEntity(std::move(playerEntity));
   // bure::engine::get().addEntity(std::move(enemyEntity));
 }
 
 bool example_game::canWalk(bure::map_coords mc) {
+  return true;
+
   auto map = bure::engine::get().getMap();
   auto layer = map->getLayer(1);
   auto tile = layer.data[mc.x + (mc.y * map->getWidth())];

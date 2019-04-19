@@ -14,9 +14,9 @@ class game_map {
       : _width(w), _height(h), _tileWidth(tw), _tileHeight(th) {}
   ~game_map();
 
-  void setScale(int scale);
+  void setScale(float scale);
 
-  int getScale();
+  float getScale();
   int getWidth();
   int getHeight();
   int getTileWidth();
@@ -33,7 +33,7 @@ class game_map {
   tile getTileData(int tileGid);
 
  private:
-  int _scale = 1;
+  float _scale = 1.0;
   int _width, _height;
   int _tileWidth, _tileHeight;
 

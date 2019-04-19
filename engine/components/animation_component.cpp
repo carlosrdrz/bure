@@ -17,7 +17,13 @@ void animation_component::addSprite(sprite_id spriteId, rect src, int width,
 
 void animation_component::setAnimationTicks(int t) { _animationTicks = t; }
 
-void animation_component::setScale(int scale) { _scale = scale; }
+void animation_component::setScale(float scale) {
+  _scale = scale;
+
+  for (auto& sprite : _sprites) {
+    sprite.setScale(scale);
+  }
+}
 
 void animation_component::setLooping(bool l) { _loop = l; }
 
@@ -39,7 +45,7 @@ sprite_component animation_component::tickAndGetSprite() {
   return s;
 }
 
-int animation_component::getScale() { return _scale; }
+float animation_component::getScale() { return _scale; }
 
 }  // namespace components
 }  // namespace bure

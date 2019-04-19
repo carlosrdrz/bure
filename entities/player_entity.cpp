@@ -44,12 +44,12 @@ void player_entity::updateCamera() {
   auto position = pc->getPosition();
   auto camera = bure::engine::get().getCamera();
   auto map = bure::engine::get().getMap();
+
   bure::engine::get().setCamera(
-      {position.x + map->getTileWidth() * map->getScale() / 2 -
-           camera.width / 2,
-       position.y + map->getTileHeight() * map->getScale() / 2 -
-           camera.height / 2,
-       camera.width, camera.height});
+      {position.x + map->getTileWidth() / 2 - camera.width / 2,
+       position.y + map->getTileHeight() / 2 - camera.height / 2,
+       camera.width,
+       camera.height});
 }
 
 void player_entity::processKeys() {

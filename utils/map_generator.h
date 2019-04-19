@@ -26,6 +26,29 @@ struct node {
   int fromLeaf;
 };
 
+struct cube {
+  int tl, t, tr, l, c, r, bl, b, br;
+
+  bool operator==(const struct cube& rhs) const {
+    return (
+      this->tl == rhs.tl &&
+      this->t == rhs.t &&
+      this->tr == rhs.tr &&
+      this->l == rhs.l &&
+      this->c == rhs.c &&
+      this->r == rhs.r &&
+      this->bl == rhs.bl &&
+      this->b == rhs.b &&
+      this->br == rhs.br
+    );
+  }
+};
+
+struct cube_tile {
+  struct cube tileCube;
+  int tileId;
+};
+
 class map_generator {
  public:
   static int random(int min, int max);
@@ -43,4 +66,6 @@ class map_generator {
                         int width);
   static void drawRooms(std::vector<section> &rooms, int *layerData,
                         int *pisableData, int width);
+  static void drawTiles(int *pisable, int *dst, int width, int height);
+  static int getTile(int *pisable, int x, int y, int width, int height);
 };
