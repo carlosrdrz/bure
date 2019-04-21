@@ -320,7 +320,6 @@ void map_generator::drawTiles(int *pisable, int *dst, int width, int height) {
   cubeTiles.push_back({{0, 0, 1, 0, 0, 1, 0, 0, 1}, TILE_FIELD_LEFT_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 0, 0, 0, 0, 0}, TILE_FIELD_BOTTOM_ID});
   cubeTiles.push_back({{0, 0, 0, 0, 0, 0, 1, 1, 1}, TILE_FIELD_TOP_ID});
-  // cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 0, 0, 0}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 0, 0, 0}, TILE_INNER_TOP_ID});
   cubeTiles.push_back({{0, 1, 0, 0, 1, 0, 0, 1, 0}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{0, 0, 1, 0, 0, 0, 0, 1, 1}, TILE_FIELD_TOP_ID});
@@ -331,13 +330,13 @@ void map_generator::drawTiles(int *pisable, int *dst, int width, int height) {
   cubeTiles.push_back({{1, 1, 0, 0, 0, 0, 1, 0, 0}, TILE_OUTSIDE_CORNER_TOP_LEFT});
   cubeTiles.push_back({{0, 0, 0, 0, 0, 1, 1, 0, 1}, TILE_BORDERS_VAR3});
   cubeTiles.push_back({{0, 0, 0, 1, 0, 0, 1, 0, 1}, TILE_BORDERS_VAR4});
+  cubeTiles.push_back({{0, 0, 1, 0, 0, 0, 1, 1, 0}, TILE_FIELD_TOP_ID});
+  cubeTiles.push_back({{0, 1, 1, 0, 0, 0, 1, 0, 0}, TILE_OUTSIDE_CORNER_TOP_LEFT});
 
   // 4 Tiles
   cubeTiles.push_back({{0, 0, 0, 0, 1, 1, 0, 1, 1}, TILE_INNER_TOP_LEFT_ID});
   cubeTiles.push_back({{0, 0, 0, 1, 1, 0, 1, 1, 0}, TILE_INNER_TOP_RIGHT_ID});
-  // cubeTiles.push_back({{0, 1, 1, 0, 1, 1, 0, 0, 0}, TILE_INNER_BOTTOM_LEFT_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 1, 0, 0, 0}, TILE_INNER_LEFT_ID});
-  // cubeTiles.push_back({{1, 1, 0, 1, 1, 0, 0, 0, 0}, TILE_INNER_BOTTOM_RIGHT_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 0, 0, 0, 0}, TILE_INNER_RIGHT_ID});
   cubeTiles.push_back({{1, 0, 1, 1, 0, 1, 0, 0, 0}, TILE_FIELD_BOTH_HORIZONTAL_ID});
   cubeTiles.push_back({{0, 0, 0, 1, 0, 1, 1, 0, 1}, TILE_FIELD_BOTH_HORIZONTAL_ID});
@@ -349,29 +348,19 @@ void map_generator::drawTiles(int *pisable, int *dst, int width, int height) {
   cubeTiles.push_back({{0, 0, 0, 0, 0, 1, 1, 1, 1}, TILE_OUTSIDE_CORNER_BOTTOM_RIGHT});
   cubeTiles.push_back({{0, 0, 0, 1, 0, 0, 1, 1, 1}, TILE_OUTSIDE_CORNER_BOTTOM_LEFT});
   cubeTiles.push_back({{1, 1, 1, 0, 0, 0, 1, 0, 0}, TILE_OUTSIDE_CORNER_TOP_LEFT});
-  // cubeTiles.push_back({{0, 1, 0, 1, 1, 1, 0, 0, 0}, TILE_DOUBLE_CORNER_TOP_VAR1});
   cubeTiles.push_back({{0, 1, 0, 1, 1, 1, 0, 0, 0}, TILE_DOUBLE_CORNER_TOP});
-  // cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 0, 1, 0}, TILE_DOUBLE_CORNER_BOTTOM_VAR1});
   cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 0, 1, 0}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{0, 1, 0, 1, 1, 0, 0, 1, 0}, TILE_DOUBLE_CORNER_LEFT_VAR1});
   cubeTiles.push_back({{0, 1, 0, 1, 1, 0, 0, 1, 0}, TILE_INNER_CORNER_TOP_LEFT_VAR3_ID});
-  // cubeTiles.push_back({{0, 1, 0, 0, 1, 1, 0, 1, 0}, TILE_DOUBLE_CORNER_RIGHT_VAR1});
   cubeTiles.push_back({{0, 1, 0, 0, 1, 1, 0, 1, 0}, TILE_INNER_CORNER_TOP_RIGHT_VAR3_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 0, 0, 0, 0, 1}, TILE_OUTSIDE_CORNER_TOP_RIGHT});
   cubeTiles.push_back({{0, 0, 1, 0, 0, 1, 0, 1, 1}, TILE_FIELD_TOP_ID});
-  // cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 0, 0, 1}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 0, 0, 1}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 1, 0, 0}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 1, 0, 0}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 0, 0, 0}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 0, 0, 0}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 0, 0, 0}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 0, 0, 0}, TILE_INNER_TOP_ID});
   cubeTiles.push_back({{0, 1, 0, 0, 1, 0, 1, 1, 0}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{0, 1, 0, 0, 1, 0, 0, 1, 1}, TILE_DOUBLE_INNER_VERTICAL});
-  // cubeTiles.push_back({{1, 1, 0, 0, 1, 0, 0, 1, 0}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{1, 1, 0, 0, 1, 0, 0, 1, 0}, TILE_INNER_CORNER_BOTTOM_LEFT_VAR3_ID});
-  // cubeTiles.push_back({{0, 1, 1, 0, 1, 0, 0, 1, 0}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 0, 0, 1, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_VAR3_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 0, 0, 0, 1, 1}, TILE_FIELD_TOP_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 0, 1, 0, 0, 1}, TILE_OUTSIDE_CORNER_TOP_RIGHT});
@@ -381,19 +370,16 @@ void map_generator::drawTiles(int *pisable, int *dst, int width, int height) {
   cubeTiles.push_back({{1, 0, 0, 1, 0, 0, 1, 0, 1}, TILE_BORDERS_VAR4});
   cubeTiles.push_back({{1, 1, 0, 1, 0, 0, 1, 0, 0}, TILE_OUTSIDE_CORNER_TOP_LEFT});
   cubeTiles.push_back({{0, 1, 1, 0, 0, 1, 0, 0, 1}, TILE_OUTSIDE_CORNER_TOP_RIGHT});
+  cubeTiles.push_back({{0, 0, 1, 1, 0, 1, 1, 0, 0}, TILE_FIELD_BOTH_HORIZONTAL_ID});
 
   // 5 Tiles
   cubeTiles.push_back({{0, 0, 0, 0, 1, 1, 1, 1, 1}, TILE_INNER_TOP_LEFT_ID});
   cubeTiles.push_back({{0, 0, 0, 1, 1, 0, 1, 1, 1}, TILE_INNER_TOP_RIGHT_ID});
   cubeTiles.push_back({{1, 0, 0, 1, 1, 0, 1, 1, 0}, TILE_INNER_TOP_RIGHT_ID});
-  // cubeTiles.push_back({{1, 1, 0, 1, 1, 0, 1, 0, 0}, TILE_INNER_BOTTOM_RIGHT_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 0, 1, 0, 0}, TILE_INNER_RIGHT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 0, 0, 0, 0}, TILE_INNER_BOTTOM_RIGHT_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 0, 0, 0, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 0, 1, 1, 0, 0, 0}, TILE_INNER_BOTTOM_LEFT_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 1, 1, 0, 0, 0}, TILE_INNER_CORNER_BOTTOM_LEFT_ID});
   cubeTiles.push_back({{0, 0, 1, 0, 1, 1, 0, 1, 1}, TILE_INNER_TOP_LEFT_ID});
-  // cubeTiles.push_back({{0, 1, 1, 0, 1, 1, 0, 0, 1}, TILE_INNER_BOTTOM_LEFT_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 1, 0, 0, 1}, TILE_INNER_LEFT_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 0, 1, 0, 0, 1}, TILE_OUTSIDE_CORNER_TOP_RIGHT});
   cubeTiles.push_back({{1, 1, 1, 1, 0, 0, 1, 0, 0}, TILE_OUTSIDE_CORNER_TOP_LEFT});
@@ -404,11 +390,8 @@ void map_generator::drawTiles(int *pisable, int *dst, int width, int height) {
   cubeTiles.push_back({{1, 1, 0, 0, 0, 0, 1, 1, 1}, TILE_FIELD_TOP_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 0, 0, 1, 1, 0}, TILE_FIELD_TOP_ID});
   cubeTiles.push_back({{0, 1, 0, 0, 1, 0, 1, 1, 1}, TILE_DOUBLE_INNER_VERTICAL});
-  // cubeTiles.push_back({{1, 1, 1, 0, 1, 0, 0, 1, 0}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{1, 1, 1, 0, 1, 0, 0, 1, 0}, TILE_DOUBLE_CORNER_BOTTOM});
-  // cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 1, 0, 0}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 1, 0, 0}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 0, 0, 1}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 0, 0, 1}, TILE_INNER_TOP_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 0, 1, 1, 0}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 0, 0, 1, 1}, TILE_DOUBLE_INNER_VERTICAL});
@@ -420,59 +403,43 @@ void map_generator::drawTiles(int *pisable, int *dst, int width, int height) {
   cubeTiles.push_back({{0, 0, 1, 1, 0, 1, 1, 0, 1}, TILE_FIELD_BOTH_HORIZONTAL_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 0, 0, 1, 0}, TILE_INNER_CORNER_BOTTOM_LEFT_VAR3_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 0, 0, 1, 0}, TILE_INNER_RIGHT_ID});
-  // cubeTiles.push_back({{0, 1, 1, 0, 1, 1, 0, 1, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_VAR3_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 1, 0, 1, 0}, TILE_INNER_LEFT_ID});
   cubeTiles.push_back({{0, 1, 0, 1, 1, 0, 1, 1, 0}, TILE_INNER_CORNER_TOP_LEFT_VAR3_ID});
   cubeTiles.push_back({{0, 1, 0, 0, 1, 1, 0, 1, 1}, TILE_INNER_CORNER_TOP_RIGHT_VAR3_ID});
-  // cubeTiles.push_back({{0, 1, 1, 1, 1, 1, 0, 0, 0}, TILE_INNER_CORNER_TOP_LEFT_VAR2_ID});
   cubeTiles.push_back({{0, 1, 1, 1, 1, 1, 0, 0, 0}, TILE_INNER_CORNER_TOP_LEFT_ID});
-  // cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 0, 0, 0}, TILE_INNER_CORNER_TOP_RIGHT_VAR2_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 0, 0, 0}, TILE_INNER_CORNER_TOP_RIGHT_ID});
-  // cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 0, 1, 1}, TILE_INNER_CORNER_BOTTOM_LEFT_VAR2_ID});
   cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 0, 1, 1}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 1, 1, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_VAR2_ID});
   cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 1, 1, 0}, TILE_INNER_TOP_ID});
   cubeTiles.push_back({{0, 1, 0, 1, 1, 1, 0, 1, 0}, TILE_DOUBLE_CORNER_LEFT_VAR1});
   cubeTiles.push_back({{0, 1, 0, 0, 1, 1, 1, 1, 0}, TILE_DOUBLE_CORNER_RIGHT_VAR1});
   cubeTiles.push_back({{1, 1, 1, 0, 0, 0, 1, 0, 1}, TILE_BORDERS_DOBLE});
   cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 0, 0, 1}, TILE_INNER_TOP_ID});
-
+  cubeTiles.push_back({{1, 0, 1, 1, 0, 0, 1, 0, 1}, TILE_FIELD_BOTH_HORIZONTAL_ID});
+  cubeTiles.push_back({{1, 0, 1, 0, 0, 1, 1, 0, 1}, TILE_FIELD_BOTH_HORIZONTAL_ID});
 
   // 6 Tiles
   cubeTiles.push_back({{0, 0, 0, 1, 1, 1, 1, 1, 1}, TILE_INNER_TOP_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 1, 0, 1, 1}, TILE_INNER_LEFT_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 0, 1, 1, 0}, TILE_INNER_RIGHT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 0, 0, 0}, TILE_INNER_BOTTOM_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 0, 0, 0}, TILE_FIELD_ID});
   cubeTiles.push_back({{1, 0, 1, 1, 0, 1, 1, 0, 1}, TILE_FIELD_BOTH_HORIZONTAL_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 0, 0, 1, 1, 1}, TILE_FIELD_TOP_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 0, 0, 1, 1, 0}, TILE_FIELD_TOP_ID});
   cubeTiles.push_back({{1, 0, 1, 1, 1, 1, 0, 0, 1}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{1, 0, 1, 1, 1, 1, 1, 0, 0}, TILE_DOUBLE_INNER_HORIZONTAL});
-  // cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 1, 0, 1}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 1, 0, 1}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 1, 0, 1}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 1, 0, 1}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{1, 1, 1, 0, 1, 0, 1, 1, 0}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{1, 1, 1, 0, 1, 0, 1, 1, 0}, TILE_DOUBLE_CORNER_BOTTOM});
-  // cubeTiles.push_back({{1, 1, 0, 0, 1, 0, 1, 1, 1}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{1, 1, 0, 0, 1, 0, 1, 1, 1}, TILE_INNER_CORNER_BOTTOM_LEFT_VAR3_ID});
-  // cubeTiles.push_back({{1, 1, 1, 0, 1, 0, 0, 1, 1}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{1, 1, 1, 0, 1, 0, 0, 1, 1}, TILE_DOUBLE_CORNER_BOTTOM});
-  // cubeTiles.push_back({{0, 1, 1, 0, 1, 0, 1, 1, 1}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 0, 1, 1, 1}, TILE_INNER_CORNER_BOTTOM_RIGHT_VAR3_ID});
-  // cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 1, 1, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_VAR2_ID});
   cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 1, 1, 0}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 0, 1, 1}, TILE_INNER_CORNER_BOTTOM_LEFT_VAR2_ID});
   cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 0, 1, 1}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 1, 0, 0}, TILE_INNER_CORNER_TOP_RIGHT_VAR2_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 1, 0, 0}, TILE_INNER_CORNER_TOP_RIGHT_ID});
   cubeTiles.push_back({{0, 1, 1, 1, 1, 1, 0, 0, 1}, TILE_INNER_CORNER_TOP_LEFT_VAR2_ID});
   cubeTiles.push_back({{0, 1, 0, 1, 1, 0, 1, 1, 1}, TILE_INNER_CORNER_TOP_LEFT_VAR3_ID});
   cubeTiles.push_back({{0, 1, 0, 0, 1, 1, 1, 1, 1}, TILE_INNER_CORNER_TOP_RIGHT_VAR3_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 0, 0, 1, 0}, TILE_INNER_CORNER_BOTTOM_LEFT_VAR3_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 0, 0, 1, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 0, 1, 1, 0, 1, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_VAR3_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 1, 1, 0, 1, 0}, TILE_INNER_CORNER_BOTTOM_LEFT_ID});
   cubeTiles.push_back({{0, 1, 1, 1, 1, 1, 0, 1, 0}, TILE_DOUBLE_CORNER_LEFT_VAR2});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 0, 1, 0}, TILE_DOUBLE_CORNER_RIGHT_VAR2});
@@ -483,50 +450,37 @@ void map_generator::drawTiles(int *pisable, int *dst, int width, int height) {
   cubeTiles.push_back({{1, 1, 1, 1, 0, 1, 0, 0, 1}, TILE_FIELD_BOTH_HORIZONTAL_TOP_ID});
   cubeTiles.push_back({{1, 0, 1, 0, 0, 1, 1, 1, 1}, TILE_FIELD_TOP_ID});
   cubeTiles.push_back({{1, 0, 1, 1, 0, 0, 1, 1, 1}, TILE_FIELD_TOP_ID});
+  cubeTiles.push_back({{1, 0, 0, 1, 0, 1, 1, 1, 1}, TILE_FIELD_BOTH_HORIZONTAL_BOTTOM_ID});
 
   // 7 Tiles
   cubeTiles.push_back({{0, 0, 1, 1, 1, 1, 1, 1, 1}, TILE_INNER_TOP_ID});
   cubeTiles.push_back({{1, 0, 0, 1, 1, 1, 1, 1, 1}, TILE_INNER_TOP_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 1, 1, 1, 1, 1}, TILE_INNER_LEFT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 0, 1, 1, 0, 1, 1}, TILE_INNER_LEFT_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 1, 1, 0, 1, 1}, TILE_INNER_CORNER_BOTTOM_LEFT_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 0, 1, 1, 1}, TILE_INNER_RIGHT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 0, 1, 1, 0}, TILE_INNER_RIGHT_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 0, 1, 1, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_ID});
-  //cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 1, 0, 0}, TILE_INNER_BOTTOM_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 1, 0, 0}, TILE_FIELD_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 0, 0, 1}, TILE_INNER_BOTTOM_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 0, 0, 1}, TILE_FIELD_ID});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 0, 1, 1}, TILE_FIELD_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 0, 1, 1, 0, 1}, TILE_FIELD_BOTH_HORIZONTAL_TOP_ID});
   cubeTiles.push_back({{1, 0, 1, 1, 0, 1, 1, 1, 1}, TILE_FIELD_BOTH_HORIZONTAL_BOTTOM_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 0, 1, 1, 1, 1}, TILE_FIELD_TOP_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 0, 0, 1, 1, 1}, TILE_FIELD_TOP_ID});
-  // cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 1, 1, 0}, TILE_DOUBLE_CORNER_RIGHT});
   cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 1, 1, 0}, TILE_INNER_CORNER_TOP_RIGHT_ID});
-  // cubeTiles.push_back({{0, 1, 1, 1, 1, 1, 0, 1, 1}, TILE_DOUBLE_CORNER_LEFT});
   cubeTiles.push_back({{0, 1, 1, 1, 1, 1, 0, 1, 1}, TILE_INNER_CORNER_TOP_LEFT_ID});
   cubeTiles.push_back({{0, 1, 0, 1, 1, 1, 1, 1, 1}, TILE_DOUBLE_CORNER_TOP});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 0, 1, 0}, TILE_DOUBLE_CORNER_BOTTOM});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 0, 1, 0}, TILE_FIELD_ID});
-  // cubeTiles.push_back({{1, 1, 1, 0, 1, 0, 1, 1, 1}, TILE_DOUBLE_INNER_VERTICAL});
   cubeTiles.push_back({{1, 1, 1, 0, 1, 0, 1, 1, 1}, TILE_DOUBLE_CORNER_BOTTOM});
-  // cubeTiles.push_back({{1, 0, 1, 1, 1, 1, 1, 0, 1}, TILE_DOUBLE_INNER_HORIZONTAL});
   cubeTiles.push_back({{1, 0, 1, 1, 1, 1, 1, 0, 1}, TILE_INNER_TOP_ID});
 
   // 8 Tiles
   cubeTiles.push_back({{1, 1, 0, 1, 1, 1, 1, 1, 1}, TILE_INNER_CORNER_TOP_RIGHT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 1, 1, 0}, TILE_INNER_CORNER_BOTTOM_RIGHT_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 1, 1, 0}, TILE_FIELD_ID});
   cubeTiles.push_back({{0, 1, 1, 1, 1, 1, 1, 1, 1}, TILE_INNER_CORNER_TOP_LEFT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 0, 1, 1}, TILE_INNER_CORNER_BOTTOM_LEFT_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 0, 1, 1}, TILE_FIELD_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 0, 1, 1, 1}, TILE_INNER_RIGHT_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 0, 1, 1, 1}, TILE_INNER_CORNER_BOTTOM_RIGHT_ID});
-  // cubeTiles.push_back({{1, 1, 1, 0, 1, 1, 1, 1, 1}, TILE_INNER_LEFT_ID});
   cubeTiles.push_back({{1, 1, 1, 0, 1, 1, 1, 1, 1}, TILE_INNER_CORNER_BOTTOM_LEFT_ID});
   cubeTiles.push_back({{1, 0, 1, 1, 1, 1, 1, 1, 1}, TILE_INNER_TOP_ID});
-  // cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 1, 0, 1}, TILE_INNER_BOTTOM_ID});
   cubeTiles.push_back({{1, 1, 1, 1, 1, 1, 1, 0, 1}, TILE_FIELD_ID});
 
   for (int y = 0; y < height; y++) {

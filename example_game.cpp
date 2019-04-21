@@ -57,11 +57,7 @@ void example_game::startGame(int unused) {
   auto playerEntity = std::make_unique<player_entity>();
   player_entity *p = playerEntity.get();
 
-  // add enemy and make it follow player around
-  // auto enemyEntity = std::make_unique<enemy_entity>();
-  // enemyEntity->follow(playerEntity.get());
-
-  bure::event_manager::get().addEventCallback(SDL_KEYDOWN, [p](SDL_Event e) {
+  bure::event_manager::get().addEventCallback(SDL_KEYDOWN, [this, p](SDL_Event e) {
     auto m = bure::engine::get().getMap();
 
     if (e.key.keysym.scancode == SDL_SCANCODE_4) {
@@ -92,15 +88,26 @@ void example_game::startGame(int unused) {
         p->updateCamera();
       }
     }
+
+    if (e.key.keysym.scancode == SDL_SCANCODE_7) {
+      _godMode = true;
+    }
+
+    if (e.key.keysym.scancode == SDL_SCANCODE_8) {
+      _godMode = false;
+    }
   });
 
   bure::engine::get().addEntity(std::move(playerEntity));
+
+  // add enemy and make it follow player around
+  // auto enemyEntity = std::make_unique<enemy_entity>();
+  // enemyEntity->follow(playerEntity.get());
   // bure::engine::get().addEntity(std::move(enemyEntity));
 }
 
 bool example_game::canWalk(bure::map_coords mc) {
-  return true;
-
+  if (_godMode) return true;
   auto map = bure::engine::get().getMap();
   auto layer = map->getLayer(1);
   auto tile = layer.data[mc.x + (mc.y * map->getWidth())];

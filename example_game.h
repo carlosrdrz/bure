@@ -13,5 +13,7 @@ class example_game : public bure::game {
   bure::entities::entity* entityIn(bure::map_coords mc);
 
  private:
+   bool _godMode = false;
+
    void startGame(int unused);
 };
