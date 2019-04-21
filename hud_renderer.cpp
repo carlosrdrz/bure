@@ -3,8 +3,6 @@
 #include "engine.h"
 #include "utils/logger.h"
 
-namespace bure {
-
 void hud_renderer::render(int layer) {
   for (auto& entity : bure::engine::get().getEntities()) {
     auto& e = entity.get();
@@ -48,5 +46,3 @@ void hud_renderer::renderHealthBars(position_component& p, stats_component& s) {
 
   _graphics->drawRect(dst, color);
 }
-
-}  // namespace bure

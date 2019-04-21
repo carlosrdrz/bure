@@ -6,6 +6,8 @@
 #include "entities/enemy_entity.h"
 #include "entities/player_entity.h"
 #include "systems/movement_system.h"
+#include "game_map_renderer.h"
+#include "hud_renderer.h"
 #include "utils/logger.h"
 #include "utils/tiled_map_reader.h"
 #include "utils/map_generator.h"
@@ -33,6 +35,12 @@ void example_game::startGame(int unused) {
   // starts the actual game
   auto ui = bure::engine::get().getUIManager();
   ui->removeContainer(0);
+
+  // add renderer for the components we will use
+  auto gameMapRenderer = std::make_unique<bure::game_map_renderer>();
+  auto hudRenderer = std::make_unique<hud_renderer>();
+  bure::engine::get().addRenderer(std::move(gameMapRenderer));
+  bure::engine::get().addRenderer(std::move(hudRenderer));
 
   // read map
   auto map = map_generator::generate(48, 48, 3);

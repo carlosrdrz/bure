@@ -1,8 +1,6 @@
 #include "engine.h"
-#include "../hud_renderer.h"
 #include "components/map_position_component.h"
 #include "entity_renderer.h"
-#include "game_map_renderer.h"
 #include "graphics.h"
 #include "systems/drawing_system.h"
 #include "ui/ui_renderer.h"
@@ -16,28 +14,22 @@ void engine::init(std::unique_ptr<game> g, std::string resourcesPath, int width,
   _game = std::move(g);
   _resourcesPath = resourcesPath;
 
-  // initialize ui manager
-  _uiManager = std::make_shared<bure::ui::ui_manager>();
-
   // initialize camera and graphics
   _camera = {0, 0, width, height};
-  auto graphicsInstance =
-      std::make_unique<bure::graphics>(resourcesPath, width, height);
+  auto gr = std::make_unique<bure::graphics>(resourcesPath, width, height);
 
   // initialize drawing system
-  auto drawingSystem = std::make_unique<bure::systems::drawing_system>(
-      std::move(graphicsInstance));
+  auto ds = std::make_unique<bure::systems::drawing_system>(std::move(gr));
+  this->addSystem(std::move(ds));
+
+  // add ui renderer with manager
+  _uiManager = std::make_shared<bure::ui::ui_manager>();
   auto uiRenderer = std::make_unique<bure::ui::ui_renderer>(_uiManager);
+  addRenderer(std::move(uiRenderer));
+
+  // add entity renderer
   auto entityRenderer = std::make_unique<bure::entity_renderer>();
-  auto gameMapRenderer = std::make_unique<bure::game_map_renderer>();
-  drawingSystem->addRenderer(std::move(uiRenderer));
-  drawingSystem->addRenderer(std::move(entityRenderer));
-  drawingSystem->addRenderer(std::move(gameMapRenderer));
-  // move this
-  // how do we let ppl add their own renderers
-  // auto hudRenderer = std::make_unique<hud_renderer>();
-  // drawingSystem->addRenderer(std::move(hudRenderer));
-  this->addSystem(std::move(drawingSystem));
+  addRenderer(std::move(entityRenderer));
 
   // Register close callback
   bure::event_manager::get().addEventCallback(
@@ -56,6 +48,14 @@ void engine::addEntity(std::unique_ptr<entities::entity> e) {
   e->init();
   _entities.push_back(std::move(e));
 }
+
+void engine::addRenderer(std::unique_ptr<renderer> r) {
+  auto drawingSystem = getSystemByType<bure::systems::drawing_system>();
+  if (drawingSystem != nullptr) {
+    drawingSystem->addRenderer(std::move(r));
+  }
+}
+
 
 void engine::clearEntities() {
   // TODO(carlosrdrz): do we need to call here deinit methods or smth?
@@ -87,7 +87,9 @@ void engine::update() {
   _entitiesToRemove.clear();
 }
 
-ui::ui_manager* engine::getUIManager() { return _uiManager.get(); }
+ui::ui_manager* engine::getUIManager() {
+  return _uiManager.get();
+}
 
 game* engine::getGame() { return _game.get(); }
 

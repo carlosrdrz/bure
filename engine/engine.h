@@ -8,6 +8,7 @@
 #include "event_manager.h"
 #include "game.h"
 #include "game_map.h"
+#include "renderer.h"
 #include "systems/system.h"
 #include "types.h"
 #include "ui/ui_manager.h"
@@ -25,6 +26,17 @@ class engine {
   std::vector<std::reference_wrapper<entities::entity>> getEntities();
 
   void addSystem(std::unique_ptr<systems::system> s);
+  template <class T>
+  T* getSystemByType() {
+    for (auto& c : _systems) {
+      if (T* componentType = dynamic_cast<T*>(c.get())) {
+        return componentType;
+      }
+    }
+    return nullptr;
+  }
+
+  void addRenderer(std::unique_ptr<renderer> r);
 
   void setMap(std::unique_ptr<game_map> gm);
   game_map* getMap();
