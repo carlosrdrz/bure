@@ -332,6 +332,8 @@ void map_generator::drawTiles(int *pisable, int *dst, int width, int height) {
   cubeTiles.push_back({{0, 0, 0, 1, 0, 0, 1, 0, 1}, TILE_BORDERS_VAR4});
   cubeTiles.push_back({{0, 0, 1, 0, 0, 0, 1, 1, 0}, TILE_FIELD_TOP_ID});
   cubeTiles.push_back({{0, 1, 1, 0, 0, 0, 1, 0, 0}, TILE_OUTSIDE_CORNER_TOP_LEFT});
+  cubeTiles.push_back({{1, 1, 0, 0, 0, 0, 0, 0, 1}, TILE_FIELD_TOP_ID});
+  cubeTiles.push_back({{1, 0, 0, 0, 0, 0, 0, 1, 1}, TILE_OUTSIDE_CORNER_TOP_LEFT});
 
   // 4 Tiles
   cubeTiles.push_back({{0, 0, 0, 0, 1, 1, 0, 1, 1}, TILE_INNER_TOP_LEFT_ID});
