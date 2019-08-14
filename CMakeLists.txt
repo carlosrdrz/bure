@@ -78,11 +78,18 @@ add_executable(client
 add_executable(client-test
   test/map_generator_test.cpp)
 
-target_link_libraries(client client-lib bure-engine bure-ui)
 target_link_libraries(client
-        ${SDL2_LIBRARIES}
-        ${SDL2_IMAGE_LIBRARIES}
-        ${SDL2TTF_LIBRARY}
-        ${LibXMLPP_LIBRARIES})
+  client-lib
+  bure-engine
+  bure-ui
+  ${SDL2_LIBRARIES}
+  ${SDL2_IMAGE_LIBRARIES}
+  ${SDL2TTF_LIBRARY}
+  ${LibXMLPP_LIBRARIES})
 
-target_link_libraries(client-test client-lib bure-engine gtest gtest_main)
+target_link_libraries(client-test
+  client-lib
+  bure-engine
+  gtest
+  gtest_main
+  ${LibXMLPP_LIBRARIES})

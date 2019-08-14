@@ -1,8 +1,10 @@
 #pragma once
 
-#include "game.h"
+#include "engine/game_map.h"
 #include "entities/entity.h"
+#include "game.h"
 #include "types.h"
+#include "utils/map_generator.h"
 
 class example_game : public bure::game {
  public:
@@ -12,8 +14,11 @@ class example_game : public bure::game {
   bool anyEntityIn(bure::map_coords mc);
   bure::entities::entity* entityIn(bure::map_coords mc);
 
- private:
-   bool _godMode = false;
+  std::unique_ptr<bure::game_map> generateMap();
 
-   void startGame(int unused);
+ private:
+  bool _godMode = false;
+  std::unique_ptr<map_generator> _mapGenerator;
+
+  void startGame(int unused);
 };

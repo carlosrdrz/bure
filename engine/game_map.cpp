@@ -3,6 +3,8 @@
 #include "utils/logger.h"
 #include "components/solid_component.h"
 
+#include <stdio.h>
+
 namespace bure {
 
 game_map::~game_map() {
@@ -76,6 +78,18 @@ void game_map::addLayer(layer l) {
 
 void game_map::addTileset(tileset t) {
   _tilesets.push_back(t);
+}
+
+void game_map::printMap(int layerId) {
+  auto layer = getLayer(layerId);
+
+  for (int i = 0; i < getHeight(); i++) {
+    for (int j = 0; j < getWidth(); j++) {
+      printf("%02d ", layer.data[i * getHeight() + j]);
+    }
+
+    printf("\n");
+  }
 }
 
 }  // namespace bure

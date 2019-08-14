@@ -32,6 +32,8 @@ class game_map {
 
   tile getTileData(int tileGid);
 
+  void printMap(int layerId);
+
  private:
   float _scale = 1.0;
   int _width, _height;

@@ -1,16 +1,16 @@
 #include "example_game.h"
-#include "components/map_position_component.h"
 #include "components/animation_component.h"
+#include "components/map_position_component.h"
 #include "engine.h"
 #include "entities/background_entity.h"
 #include "entities/enemy_entity.h"
 #include "entities/player_entity.h"
-#include "systems/movement_system.h"
 #include "game_map_renderer.h"
 #include "hud_renderer.h"
+#include "systems/movement_system.h"
 #include "utils/logger.h"
-#include "utils/tiled_map_reader.h"
 #include "utils/map_generator.h"
+#include "utils/tiled_map_reader.h"
 
 void example_game::init() {
   auto backgroundEntity = std::make_unique<background_entity>();
@@ -25,10 +25,15 @@ void example_game::init() {
 
   auto b = std::make_unique<bure::ui::button>("START GAME");
   b->set(40, 40, 180, 40);
-  b->function = std::bind(&example_game::startGame, this, std::placeholders::_1);
+  b->function =
+      std::bind(&example_game::startGame, this, std::placeholders::_1);
 
   c->add(std::move(b));
   ui->addContainer(std::move(c));
+
+  // create map generator
+  _mapGenerator =
+      std::make_unique<map_generator>("resources/maps/generator_config.xml");
 }
 
 void example_game::startGame(int unused) {
@@ -43,7 +48,7 @@ void example_game::startGame(int unused) {
   bure::engine::get().addRenderer(std::move(hudRenderer));
 
   // read map
-  auto map = map_generator::generate(48, 48, 3);
+  auto map = this->generateMap();
   map->setScale(2.0);
 
   bure::engine::get().clearEntities();
@@ -55,13 +60,14 @@ void example_game::startGame(int unused) {
 
   // add player character
   auto playerEntity = std::make_unique<player_entity>();
-  player_entity *p = playerEntity.get();
+  player_entity* p = playerEntity.get();
 
-  bure::event_manager::get().addEventCallback(SDL_KEYDOWN, [this, p](SDL_Event e) {
+  bure::event_manager::get().addEventCallback(SDL_KEYDOWN, [this,
+                                                            p](SDL_Event e) {
     auto m = bure::engine::get().getMap();
 
     if (e.key.keysym.scancode == SDL_SCANCODE_4) {
-      auto n = map_generator::generate(48, 48, 3);
+      auto n = this->generateMap();
       n->setScale(m->getScale());
       bure::engine::get().setMap(std::move(n));
       p->updateCamera();
@@ -71,7 +77,8 @@ void example_game::startGame(int unused) {
       m->setScale(m->getScale() * 2);
       auto sc = p->getComponentByType<bure::components::animation_component>();
       sc->setScale(sc->getScale() * 2);
-      auto mp = p->getComponentByType<bure::components::map_position_component>();
+      auto mp =
+          p->getComponentByType<bure::components::map_position_component>();
       auto pc = p->getComponentByType<bure::components::position_component>();
       pc->setPosition(m->mapToWorld(mp->getPosition()));
       p->updateCamera();
@@ -80,9 +87,11 @@ void example_game::startGame(int unused) {
     if (e.key.keysym.scancode == SDL_SCANCODE_6) {
       if (m->getScale() >= 0.5) {
         m->setScale(m->getScale() / 2);
-        auto sc = p->getComponentByType<bure::components::animation_component>();
+        auto sc =
+            p->getComponentByType<bure::components::animation_component>();
         sc->setScale(sc->getScale() / 2);
-        auto mp = p->getComponentByType<bure::components::map_position_component>();
+        auto mp =
+            p->getComponentByType<bure::components::map_position_component>();
         auto pc = p->getComponentByType<bure::components::position_component>();
         pc->setPosition(m->mapToWorld(mp->getPosition()));
         p->updateCamera();
@@ -145,4 +154,8 @@ bure::entities::entity* example_game::entityIn(bure::map_coords mc) {
   }
 
   return nullptr;
+}
+
+std::unique_ptr<bure::game_map> example_game::generateMap() {
+  return _mapGenerator->generate(48, 48);
 }
