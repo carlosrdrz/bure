@@ -14,12 +14,14 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(LibXMLPP REQUIRED)
+find_package(GLIB REQUIRED)
 
 enable_testing()
 
 include_directories(${SDL2_INCLUDE_DIRS}
         ${SDL2_IMAGE_INCLUDE_DIRS}
         ${SDL2_TTF_INCLUDE_DIRS}
+        ${GLIB_INCLUDE_DIRS}
         ${LibXMLPP_INCLUDE_DIRS}
         ${gtest_SOURCE_DIR}/include
         ${gtest_SOURCE_DIR}
@@ -85,6 +87,7 @@ target_link_libraries(client
   ${SDL2_LIBRARIES}
   ${SDL2_IMAGE_LIBRARIES}
   ${SDL2TTF_LIBRARY}
+  ${GLIB_LIBRARY}
   ${LibXMLPP_LIBRARIES})
 
 target_link_libraries(client-test
