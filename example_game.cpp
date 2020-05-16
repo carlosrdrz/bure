@@ -1,4 +1,5 @@
 #include "example_game.h"
+
 #include "components/animation_component.h"
 #include "components/map_position_component.h"
 #include "engine.h"
@@ -107,12 +108,12 @@ void example_game::startGame(int unused) {
     }
   });
 
-  bure::engine::get().addEntity(std::move(playerEntity));
-
   // add enemy and make it follow player around
-  // auto enemyEntity = std::make_unique<enemy_entity>();
-  // enemyEntity->follow(playerEntity.get());
-  // bure::engine::get().addEntity(std::move(enemyEntity));
+  auto enemyEntity = std::make_unique<enemy_entity>();
+  enemyEntity->follow(playerEntity.get());
+
+  bure::engine::get().addEntity(std::move(playerEntity));
+  bure::engine::get().addEntity(std::move(enemyEntity));
 }
 
 bool example_game::canWalk(bure::map_coords mc) {

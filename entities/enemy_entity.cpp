@@ -1,4 +1,5 @@
 #include "enemy_entity.h"
+
 #include "../components/stats_component.h"
 #include "../example_game.h"
 #include "components/map_position_component.h"
@@ -10,7 +11,15 @@ using namespace bure::components;
 void enemy_entity::init() {
   character_entity::init();
 
-  setPosition({67, 42});
+  auto game = dynamic_cast<example_game*>(bure::engine::get().getGame());
+  int x, y;
+
+  do {
+    x = map_generator::random(0, 60);
+    y = map_generator::random(0, 60);
+  } while (!game->canWalk({x, y}));
+
+  setPosition({x, y});
   setVelocity(1);
 }
 
@@ -30,7 +39,8 @@ void enemy_entity::update() {
           std::unordered_set<bure::map_coords> options;
           std::unordered_set<bure::map_coords> result;
 
-          auto game = dynamic_cast<example_game*>(bure::engine::get().getGame());
+          auto game =
+              dynamic_cast<example_game*>(bure::engine::get().getGame());
           auto map = bure::engine::get().getMap();
 
           options.emplace(bure::map_coords{node.x, node.y - 1});
