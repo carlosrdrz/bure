@@ -14,7 +14,7 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(LibXMLPP REQUIRED)
-find_package(GLIB REQUIRED)
+find_package(Glib REQUIRED)
 
 enable_testing()
 

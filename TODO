@@ -12,3 +12,5 @@
 - must remove fire entities when they finish
 - expose some api to add new renderers
 - need something smarter to get the game class. hate to use dynamic_cast every time.
+- health bars do not scale with scaling
+- enemies dissapear when scaling

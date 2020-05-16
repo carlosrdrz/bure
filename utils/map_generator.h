@@ -3,6 +3,7 @@
 #include "game_map.h"
 
 #include <unordered_map>
+#include <memory>
 
 struct section {
   bure::map_coords p1, p2;
