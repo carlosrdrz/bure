@@ -54,11 +54,14 @@ class map_generator {
  public:
   map_generator(const std::string &file);
 
+  void reload();
   std::unique_ptr<bure::game_map> generate(int width, int height);
+  void redraw(bure::game_map *map);
 
   static int random(int min, int max);
 
  private:
+  std::string _dataFile;
   std::unordered_map<std::string, int> _tiles;
   std::vector<cube_tile> _cubeTiles;
   int _splites = 3;

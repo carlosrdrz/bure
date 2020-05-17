@@ -201,8 +201,8 @@
     <map data="101101101" tileName="FIELD_BOTH_HORIZONTAL" />
     <map data="111000111" tileName="FIELD_TOP" />
     <map data="111100110" tileName="FIELD_TOP" />
-    <map data="101111001" tileName="DOUBLE_INNER_HORIZONTAL" />
-    <map data="101111100" tileName="DOUBLE_INNER_HORIZONTAL" />
+    <map data="101111001" tileName="INNER_TOP" />
+    <map data="101111100" tileName="INNER_TOP" />
     <map data="100111101" tileName="INNER_TOP" />
     <map data="001111101" tileName="INNER_TOP" />
     <map data="111010110" tileName="DOUBLE_CORNER_BOTTOM" />
@@ -212,13 +212,13 @@
     <map data="100111110" tileName="INNER_TOP" />
     <map data="001111011" tileName="INNER_TOP" />
     <map data="110111100" tileName="INNER_CORNER_TOP_RIGHT" />
-    <map data="011111001" tileName="INNER_CORNER_TOP_LEFT_VAR2" />
+    <map data="011111001" tileName="INNER_CORNER_TOP_LEFT" />
     <map data="010110111" tileName="INNER_CORNER_TOP_LEFT_VAR3" />
     <map data="010011111" tileName="INNER_CORNER_TOP_RIGHT_VAR3" />
     <map data="111110010" tileName="INNER_CORNER_BOTTOM_RIGHT" />
     <map data="111011010" tileName="INNER_CORNER_BOTTOM_LEFT" />
     <map data="011111010" tileName="DOUBLE_CORNER_LEFT_VAR2" />
-    <map data="110111010" tileName="DOUBLE_CORNER_RIGHT_VAR2" />
+    <map data="110111010" tileName="INNER_CORNER_TOP_RIGHT" />
     <map data="010111011" tileName="DOUBLE_CORNER_TOP" />
     <map data="010111110" tileName="DOUBLE_CORNER_TOP" />
     <map data="011110110" tileName="INNER_CORNER_TOP_LEFT_VAR3" />
@@ -256,5 +256,10 @@
     <map data="111111101" tileName="FIELD" />
     <map data="100100001" tileName="FIELD" />
     <map data="100001111" tileName="FIELD" />
+    <map data="100110000" tileName="INNER_TOP" />
+    <map data="111001101" tileName="BORDERS_DOBLE" />
+    <map data="100100110" tileName="OUTSIDE_CORNER_BOTTOM_LEFT" />
+    <map data="011000110" tileName="FIELD_TOP" />
+    <map data="111100101" tileName="BORDERS_DOBLE" />
   </maps>
 </enricher>

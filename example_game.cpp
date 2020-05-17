@@ -109,6 +109,12 @@ void example_game::startGame(int unused) {
     if (e.key.keysym.scancode == SDL_SCANCODE_8) {
       _godMode = false;
     }
+
+    if (e.key.keysym.scancode == SDL_SCANCODE_9) {
+      auto* map = bure::engine::get().getMap();
+      _mapGenerator->reload();
+      _mapGenerator->redraw(map);
+    }
   });
 
   // add enemy and make it follow player around

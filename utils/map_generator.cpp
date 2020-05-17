@@ -20,11 +20,17 @@
 #define MAX_SPACE_IN_SECTION 0.6
 
 map_generator::map_generator(const std::string &file) {
+  this->_dataFile = file;
+  reload();
+}
+
+void map_generator::reload() {
   xmlpp::DomParser parser;
-  parser.parse_file(file);
+  parser.parse_file(_dataFile);
 
   if (!parser) {
-    bure::logger::error("could not load map enricher file %s", file.c_str());
+    bure::logger::error("could not load map enricher file %s",
+                        _dataFile.c_str());
   }
 
   // Get the root element
@@ -139,6 +145,13 @@ std::unique_ptr<bure::game_map> map_generator::generate(int w, int h) {
   map->addTileset(ts);
 
   return map;
+}
+
+void map_generator::redraw(bure::game_map *map) {
+  auto *skeletonLayerData = map->getLayer(1).data;
+  auto *mainLayerData = map->getLayer(0).data;
+  drawTiles(skeletonLayerData, mainLayerData, map->getWidth(), map->getHeight(),
+            _cubeTiles);
 }
 
 node *map_generator::sectionize(section s, int splites) {
