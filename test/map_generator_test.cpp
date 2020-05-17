@@ -1,7 +1,8 @@
-#include <gtest/gtest.h>
-#include <memory>
-
 #include "../utils/map_generator.h"
+
+#include <gtest/gtest.h>
+
+#include <memory>
 
 TEST(MapGeneratorTest, GeneratesMaps) {
   auto maxIterations = 15;

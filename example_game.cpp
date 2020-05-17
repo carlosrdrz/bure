@@ -13,12 +13,16 @@
 #include "utils/map_generator.h"
 #include "utils/tiled_map_reader.h"
 
+#define MAP_SCALE 2.0
+#define MAP_WIDTH 48
+#define MAP_HEIGHT 48
+
 void example_game::init() {
   auto backgroundEntity = std::make_unique<background_entity>();
   bure::engine::get().addEntity(std::move(backgroundEntity));
 
   // add button to start game
-  auto ui = bure::engine::get().getUIManager();
+  auto* ui = bure::engine::get().getUIManager();
   ui->setScale(2);
 
   auto c = std::make_unique<bure::ui::container>(510, 300, 260, 120);
@@ -26,8 +30,7 @@ void example_game::init() {
 
   auto b = std::make_unique<bure::ui::button>("START GAME");
   b->set(40, 40, 180, 40);
-  b->function =
-      std::bind(&example_game::startGame, this, std::placeholders::_1);
+  b->function = [this](int unused) { this->startGame(unused); };
 
   c->add(std::move(b));
   ui->addContainer(std::move(c));
@@ -39,7 +42,7 @@ void example_game::init() {
 
 void example_game::startGame(int unused) {
   // starts the actual game
-  auto ui = bure::engine::get().getUIManager();
+  auto* ui = bure::engine::get().getUIManager();
   ui->removeContainer(0);
 
   // add renderer for the components we will use
@@ -50,7 +53,7 @@ void example_game::startGame(int unused) {
 
   // read map
   auto map = this->generateMap();
-  map->setScale(2.0);
+  map->setScale(MAP_SCALE);
 
   bure::engine::get().clearEntities();
   bure::engine::get().setMap(std::move(map));
@@ -65,7 +68,7 @@ void example_game::startGame(int unused) {
 
   bure::event_manager::get().addEventCallback(SDL_KEYDOWN, [this,
                                                             p](SDL_Event e) {
-    auto m = bure::engine::get().getMap();
+    auto* m = bure::engine::get().getMap();
 
     if (e.key.keysym.scancode == SDL_SCANCODE_4) {
       auto n = this->generateMap();
@@ -117,7 +120,10 @@ void example_game::startGame(int unused) {
 }
 
 bool example_game::canWalk(bure::map_coords mc) {
-  if (_godMode) return true;
+  if (_godMode) {
+    return true;
+  }
+
   auto map = bure::engine::get().getMap();
   auto layer = map->getLayer(1);
   auto tile = layer.data[mc.x + (mc.y * map->getWidth())];
@@ -129,9 +135,12 @@ bool example_game::anyEntityIn(bure::map_coords mc) {
 
   for (auto& entity : entities) {
     auto& e = entity.get();
-    auto solid =
+    auto* solid =
         e.getComponentByType<bure::components::map_position_component>();
-    if (solid == nullptr) continue;
+
+    if (solid == nullptr) {
+      continue;
+    }
 
     if (solid->getPosition() == mc) {
       return true;
@@ -158,5 +167,5 @@ bure::entities::entity* example_game::entityIn(bure::map_coords mc) {
 }
 
 std::unique_ptr<bure::game_map> example_game::generateMap() {
-  return _mapGenerator->generate(48, 48);
+  return _mapGenerator->generate(MAP_WIDTH, MAP_HEIGHT);
 }

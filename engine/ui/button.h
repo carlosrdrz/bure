@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <functional>
+#include <string>
 
 #include "widget.h"
 
@@ -26,10 +26,10 @@ class button : public widget {
   std::string getTitle() const { return title; }
 
   void set(int x, int y, int w, int h) {
-      this->x = x;
-      this->y = y;
-      this->width = w;
-      this->height = h;
+    this->x = x;
+    this->y = y;
+    this->width = w;
+    this->height = h;
   }
 
   widget_type getType() const override { return widget_type::button; }

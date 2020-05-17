@@ -2,5 +2,6 @@
 *.DS_Store
 bure
 
-build
+build/*
 .idea
+.vscode

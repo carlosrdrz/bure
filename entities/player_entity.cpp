@@ -1,12 +1,13 @@
 #include "player_entity.h"
+
 #include "../components/stats_component.h"
 #include "../entities/enemy_entity.h"
+#include "../example_game.h"
+#include "../utils/map_generator.h"
 #include "components/map_position_component.h"
 #include "components/position_component.h"
 #include "engine.h"
 #include "fire_entity.h"
-#include "../example_game.h"
-#include "../utils/map_generator.h"
 
 using namespace bure::components;
 
@@ -20,7 +21,7 @@ void player_entity::init() {
   do {
     x = map_generator::random(0, 60);
     y = map_generator::random(0, 60);
-  } while (!game->canWalk({ x, y }));
+  } while (!game->canWalk({x, y}));
 
   setPosition({x, y});
   setVelocity(8);
@@ -47,8 +48,7 @@ void player_entity::updateCamera() {
 
   bure::engine::get().setCamera(
       {position.x + map->getTileWidth() / 2 - camera.width / 2,
-       position.y + map->getTileHeight() / 2 - camera.height / 2,
-       camera.width,
+       position.y + map->getTileHeight() / 2 - camera.height / 2, camera.width,
        camera.height});
 }
 

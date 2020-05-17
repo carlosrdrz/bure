@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
-#include "system.h"
 #include "../renderer.h"
+#include "system.h"
 
 namespace bure {
 namespace systems {

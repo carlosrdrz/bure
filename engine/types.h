@@ -36,13 +36,13 @@ struct map_coords {
   map_coords operator+(const direction& d) const {
     switch (d) {
       case direction::up:
-        return { this->x, this->y - 1 };
+        return {this->x, this->y - 1};
       case direction::down:
-        return { this->x, this->y + 1 };
+        return {this->x, this->y + 1};
       case direction::left:
-        return { this->x - 1, this->y };
+        return {this->x - 1, this->y};
       case direction::right:
-        return { this->x + 1, this->y };
+        return {this->x + 1, this->y};
       default:
         return *this;
     }

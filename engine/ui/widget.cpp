@@ -1,6 +1,7 @@
 #include "widget.h"
 
 #include <cassert>
+
 #include "utils/logger.h"
 
 namespace bure {
@@ -41,9 +42,7 @@ widget_type widget::getType() const {
   return widget_type::widget;
 }
 
-void widget::setLayer(int layer) {
-  _layer = layer;
-}
+void widget::setLayer(int layer) { _layer = layer; }
 
 int widget::getLayer() {
   if (parent == nullptr || _layer != 0) {

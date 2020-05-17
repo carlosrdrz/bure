@@ -1,23 +1,27 @@
 #pragma once
 
+#include <memory>
+#include <unordered_map>
+
 #include "game_map.h"
 
-#include <unordered_map>
-#include <memory>
+#define NO_RATIO 9999999
 
 struct section {
   bure::map_coords p1, p2;
 
-  int width() { return p2.x - p1.x; }
-  int height() { return p2.y - p1.y; }
-  bure::map_coords center() {
+  int width() const { return p2.x - p1.x; }
+  int height() const { return p2.y - p1.y; }
+  bure::map_coords center() const {
     auto x = p1.x + ((p2.x - p1.x) / 2);
     auto y = p1.y + ((p2.y - p1.y) / 2);
     return {x, y};
   }
-  int space() { return width() * height(); }
-  int ratio() {
-    if (width() == 0 || height() == 0) return 9999999;
+  int space() const { return width() * height(); }
+  int ratio() const {
+    if (width() == 0 || height() == 0) {
+      return NO_RATIO;
+    }
 
     auto bigger = std::max(width(), height());
     auto smaller = std::min(width(), height());
@@ -48,7 +52,7 @@ struct cube_tile {
 
 class map_generator {
  public:
-  map_generator(std::string file);
+  map_generator(const std::string &file);
 
   std::unique_ptr<bure::game_map> generate(int width, int height);
 
@@ -59,9 +63,10 @@ class map_generator {
   std::vector<cube_tile> _cubeTiles;
   int _splites = 3;
 
-  void drawPaths(node *n, int *layer, int steps, int width);
-  void drawRooms(std::vector<section> &rooms, int *layer, int width);
-  void drawTiles(int *skeleton, int *result, int width, int height);
+  static void drawPaths(node *n, int *layer, int steps, int width);
+  static void drawRooms(std::vector<section> &rooms, int *layer, int width);
+  static void drawTiles(int *skeleton, int *result, int width, int height,
+                        const std::vector<cube_tile> &cubeTiles);
 
   static node *sectionize(section s, int splites);
   static section randomRoom(node *n);

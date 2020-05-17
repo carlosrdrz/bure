@@ -2,11 +2,11 @@
 
 #include <memory>
 
-#include "renderer.h"
-#include "ui_manager.h"
+#include "button.h"
 #include "container.h"
 #include "label.h"
-#include "button.h"
+#include "renderer.h"
+#include "ui_manager.h"
 
 namespace bure {
 namespace ui {

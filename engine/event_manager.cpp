@@ -1,26 +1,29 @@
 #include "event_manager.h"
-#include "utils/logger.h"
+
 #include "utils/config.h"
+#include "utils/logger.h"
 
 namespace bure {
 
-event_manager* event_manager::_instance;
+event_manager *event_manager::_instance;
 
 event_manager::event_manager() {
   scale = bure::config::instance.getFloatValueOf("scale", 1.0);
-  SDL_SetEventFilter([](void *userdata, SDL_Event *e) {
-    switch (e->type) {
-        case SDL_QUIT:
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
-          return 1;
-          break;
-    }
+  SDL_SetEventFilter(
+      [](void *userdata, SDL_Event *e) {
+        switch (e->type) {
+          case SDL_QUIT:
+          case SDL_MOUSEBUTTONDOWN:
+          case SDL_MOUSEBUTTONUP:
+          case SDL_KEYDOWN:
+          case SDL_KEYUP:
+            return 1;
+            break;
+        }
 
-    return 0;
-  }, nullptr);
+        return 0;
+      },
+      nullptr);
 }
 
 void event_manager::pollEvent() {

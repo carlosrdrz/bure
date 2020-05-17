@@ -1,8 +1,10 @@
 #include "tiled_map_reader.h"
-#include "utils/logger.h"
 
 #include <libxml++/libxml++.h>
+
 #include <fstream>
+
+#include "utils/logger.h"
 
 std::unique_ptr<bure::game_map> tiled_map_reader::read(std::string file) {
   xmlpp::DomParser parser;

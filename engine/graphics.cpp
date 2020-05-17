@@ -1,6 +1,7 @@
+#include "graphics.h"
+
 #include <algorithm>
 
-#include "graphics.h"
 #include "utils/config.h"
 #include "utils/logger.h"
 
@@ -8,8 +9,8 @@
 
 namespace bure {
 // todo: fix basepath
-graphics::graphics(std::string basePath, int width, int height) :
-  basePath(basePath) {
+graphics::graphics(std::string basePath, int width, int height)
+    : basePath(basePath) {
   atexit(SDL_Quit);
 
   // Init SDL
@@ -23,7 +24,8 @@ graphics::graphics(std::string basePath, int width, int height) :
   auto resY = height * scale;
 
   Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI & SDL_WINDOW_OPENGL;
-  if (config::instance.getBoolValueOf("fullscreen")) flags |= SDL_WINDOW_FULLSCREEN;
+  if (config::instance.getBoolValueOf("fullscreen"))
+    flags |= SDL_WINDOW_FULLSCREEN;
   window = SDL_CreateWindow("Bure", SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, resX, resY, flags);
   renderer = SDL_CreateRenderer(window, -1, 0);
@@ -35,7 +37,8 @@ graphics::graphics(std::string basePath, int width, int height) :
   if (TTF_Init() < 0) logger::error(SDL_GetError());
 
   fontSize = 16;
-  font = TTF_OpenFont((basePath + "resources/pixel_font.ttf").c_str(), fontSize);
+  font =
+      TTF_OpenFont((basePath + "resources/pixel_font.ttf").c_str(), fontSize);
   if (!font) logger::error(TTF_GetError());
 }
 
@@ -48,7 +51,7 @@ graphics::~graphics() {
 }
 
 void graphics::clean() {
-  setRenderColor({ 0, 0, 0, 255 });
+  setRenderColor({0, 0, 0, 255});
   SDL_RenderClear(renderer);
 }
 
@@ -86,13 +89,13 @@ void graphics::drawText(std::string text, int x, int y, int size, color c) {
 }
 
 void graphics::drawTextCentered(std::string text, int x, int y, int size,
-                                 color c) {
+                                color c) {
   auto cachedText = getCachedText(text, size, c);
   auto textSurface = cachedText.surface;
   int xCenter = x - textSurface->w / 2;
   int yCenter = y - textSurface->h / 2;
   drawFullTexture(cachedText.texture,
-                  { xCenter, yCenter, textSurface->w, textSurface->h });
+                  {xCenter, yCenter, textSurface->w, textSurface->h});
 }
 
 void graphics::flipBuffer() { SDL_RenderPresent(renderer); }
@@ -134,10 +137,11 @@ cached_text graphics::getCachedText(std::string text, int size, color c) {
 
   // TODO(carlosrdrz): we are not removing this memory here
   if (size != this->fontSize) this->openFont(size);
-  auto surface = TTF_RenderText_Solid(font, text.c_str(), {(Uint8)c.r, (Uint8)c.g, (Uint8)c.b});
+  auto surface = TTF_RenderText_Solid(font, text.c_str(),
+                                      {(Uint8)c.r, (Uint8)c.g, (Uint8)c.b});
   auto texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-  struct cached_text entry = { text, texture, surface };
+  struct cached_text entry = {text, texture, surface};
   _cached_texts[text] = entry;
   return _cached_texts[text];
 }

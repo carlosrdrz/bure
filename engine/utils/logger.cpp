@@ -1,8 +1,9 @@
 #include "logger.h"
 
 #include <stdio.h>
-#include <ctime>
+
 #include <cstdarg>
+#include <ctime>
 #include <iomanip>
 #include <iostream>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <list>
+#include <memory>
 
 #include "../components/component.h"
 
@@ -27,7 +27,7 @@ class entity {
   entity* getParent() const;
   std::list<entity*> getChildren() const;
   void addChild(std::unique_ptr<entity> e);
-  void removeChild(entity *e);
+  void removeChild(entity* e);
 
   void setLayer(int layer);
   int getLayer();
@@ -67,7 +67,7 @@ class entity {
  private:
   std::list<std::unique_ptr<bure::components::component>> _components;
   std::list<std::unique_ptr<entity>> _children;
-  entity *_parent;
+  entity* _parent;
 
   // higher layers means it will be rendered later
   int _layer = 0;

@@ -4,7 +4,7 @@
 #include "types.h"
 
 class stats_component : public bure::components::component {
- using component::component;
+  using component::component;
 
  public:
   int getHP();
@@ -14,6 +14,6 @@ class stats_component : public bure::components::component {
   void setMaxHP(int hp);
 
  private:
-   int _hp = 100;
-   int _max_hp = 100;
+  int _hp = 100;
+  int _max_hp = 100;
 };

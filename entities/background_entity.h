@@ -5,7 +5,7 @@
 using namespace bure::entities;
 
 class background_entity : public entity {
- using entity::entity;
+  using entity::entity;
 
- void init() override;
+  void init() override;
 };

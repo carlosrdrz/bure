@@ -1,7 +1,7 @@
+#include "ui_manager.h"
+
 #include <functional>
 #include <set>
-
-#include "ui_manager.h"
 
 namespace bure {
 namespace ui {

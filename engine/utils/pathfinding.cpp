@@ -1,9 +1,10 @@
 #include "pathfinding.h"
-#include "engine.h"
-#include "logger.h"
 
 #include <cmath>
 #include <limits>
+
+#include "engine.h"
+#include "logger.h"
 
 #define MAX_ITERATIONS 1000
 

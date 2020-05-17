@@ -10,7 +10,7 @@ namespace bure {
 
 typedef uint_fast64_t cb_handler;
 typedef std::function<void(SDL_Event e)> cb_callback;
-struct cb_struct  {
+struct cb_struct {
   cb_handler handler;
   cb_callback callback;
   SDL_EventType event_type;

@@ -7,7 +7,7 @@ namespace bure {
 namespace components {
 
 class animation_component : public component {
- using component::component;
+  using component::component;
 
  public:
   void addSprite(sprite_component s);

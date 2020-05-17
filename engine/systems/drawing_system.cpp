@@ -7,8 +7,7 @@ drawing_system::drawing_system(std::unique_ptr<bure::graphics> gr) {
   _graphics = std::move(gr);
 }
 
-void drawing_system::init() {
-}
+void drawing_system::init() {}
 
 void drawing_system::update() {
   _graphics->clean();

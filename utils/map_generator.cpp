@@ -1,38 +1,48 @@
 #include "map_generator.h"
-#include "utils/logger.h"
-#include "utils/pathfinding.h"
 
 #include <libxml++/libxml++.h>
+
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <random>
 
+#include "utils/logger.h"
+#include "utils/pathfinding.h"
+
 #define MAX_ITERATIONS 1000
 #define PADDING 10
 #define DEFAULT_TILE 5
+#define CUBE_DATA_LENGTH 9
+#define TILE_WIDTH 32
+#define TILE_HEIGHT 32
+#define MAX_RATIO 2.22
+#define MAX_SPACE_IN_SECTION 0.6
 
-map_generator::map_generator(std::string file) {
+map_generator::map_generator(const std::string &file) {
   xmlpp::DomParser parser;
   parser.parse_file(file);
 
-  if (!parser)
+  if (!parser) {
     bure::logger::error("could not load map enricher file %s", file.c_str());
+  }
 
   // Get the root element
-  const auto rootNode = parser.get_document()->get_root_node();
-  auto tilesNode = rootNode->get_first_child("tiles");
-  auto mapsNode = rootNode->get_first_child("maps");
+  const auto *rootNode = parser.get_document()->get_root_node();
+  const auto *tilesNode = rootNode->get_first_child("tiles");
+  const auto *mapsNode = rootNode->get_first_child("maps");
 
   // Read tiles
   auto tileNodes = tilesNode->get_children("tile");
-  for (const auto &tileNode : tileNodes) {
-    auto node = dynamic_cast<xmlpp::Element *>(tileNode);
-    if (!node) continue;
+  for (auto &tileNode : tileNodes) {
+    const auto *node = dynamic_cast<const xmlpp::Element *>(tileNode);
+    if (node == nullptr) {
+      continue;
+    }
 
-    auto nameAttr = node->get_attribute("name");
-    auto idAttr = node->get_attribute("id");
-    if (nameAttr && idAttr) {
+    const auto *nameAttr = node->get_attribute("name");
+    const auto *idAttr = node->get_attribute("id");
+    if (nameAttr != nullptr && idAttr != nullptr) {
       auto name = nameAttr->get_value();
       auto id = idAttr->get_value();
       _tiles[name] = std::stoi(std::string(id));
@@ -42,28 +52,42 @@ map_generator::map_generator(std::string file) {
   // Read maps
   auto mapNodes = mapsNode->get_children("map");
   for (const auto &mapNode : mapNodes) {
-    auto node = dynamic_cast<xmlpp::Element *>(mapNode);
-    if (!node) continue;
+    const auto *node = dynamic_cast<const xmlpp::Element *>(mapNode);
+    if (node == nullptr) {
+      continue;
+    }
 
-    auto dataAttr = node->get_attribute("data");
-    auto tileNameAttr = node->get_attribute("tileName");
-    if (dataAttr && tileNameAttr) {
+    const auto *dataAttr = node->get_attribute("data");
+    const auto *tileNameAttr = node->get_attribute("tileName");
+    if (dataAttr != nullptr && tileNameAttr != nullptr) {
       auto data = dataAttr->get_value();
       auto tileName = tileNameAttr->get_value();
       auto tileId = _tiles[tileName];
 
       // TODO: what if tiles not contain tileName
-      if (data.length() != 9) {
+      if (data.length() != CUBE_DATA_LENGTH) {
         bure::logger::error("error reading enricher data %s tileName %d",
                             data.c_str(), tileId);
         continue;
       }
 
+      // clang-format off
+      // Ignoring format and linter here for readability
+      // We are transforming the string data read from the cube data
+      // into actual numbers that we can use in a cube
+      // TODO: Does this even work with other file encodings, like unicode? Probably not
       struct cube readCube {
-        data[0] - '0', data[1] - '0', data[2] - '0', data[3] - '0',
-            data[4] - '0', data[5] - '0', data[6] - '0', data[7] - '0',
-            data[8] - '0'
+        data[0] - '0', // NOLINT
+        data[1] - '0', // NOLINT
+        data[2] - '0', // NOLINT
+        data[3] - '0', // NOLINT
+        data[4] - '0', // NOLINT
+        data[5] - '0', // NOLINT
+        data[6] - '0', // NOLINT
+        data[7] - '0', // NOLINT
+        data[8] - '0', // NOLINT
       };
+      // clang-format on
 
       _cubeTiles.push_back({readCube, tileId});
     }
@@ -74,10 +98,11 @@ std::unique_ptr<bure::game_map> map_generator::generate(int w, int h) {
   auto width = w + PADDING * 2;
   auto height = h + PADDING * 2;
 
-  auto map = std::make_unique<bure::game_map>(width, height, 32, 32);
+  auto map =
+      std::make_unique<bure::game_map>(width, height, TILE_WIDTH, TILE_HEIGHT);
 
-  auto mainLayerData = new int[height * width];
-  auto skeletonLayerData = new int[height * width];
+  auto *mainLayerData = new int[height * width];
+  auto *skeletonLayerData = new int[height * width];
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
@@ -87,12 +112,12 @@ std::unique_ptr<bure::game_map> map_generator::generate(int w, int h) {
   }
 
   auto s = section({{PADDING, PADDING}, {width - PADDING, height - PADDING}});
-  auto tree = sectionize(s, _splites);
+  auto *tree = sectionize(s, _splites);
   auto rooms = generateRooms(tree);
 
   drawRooms(rooms, skeletonLayerData, width);
   drawPaths(tree, skeletonLayerData, _splites, width);
-  drawTiles(skeletonLayerData, mainLayerData, width, height);
+  drawTiles(skeletonLayerData, mainLayerData, width, height, _cubeTiles);
 
   bure::layer mainLayer = {0, "terrain", mainLayerData, true};
   map->addLayer(mainLayer);
@@ -100,8 +125,16 @@ std::unique_ptr<bure::game_map> map_generator::generate(int w, int h) {
   bure::layer skeletonLayer = {1, "pisable", skeletonLayerData, false};
   map->addLayer(skeletonLayer);
 
+  // clang-format off
   bure::tileset ts = {
-      0, "terrain_tileset", "../sprites/tileset_dungeon_mod.png", 1, 8, 32};
+      0,                                      // NOLINT: ID
+      "terrain_tileset",                      // NOLINT: Name
+      "../sprites/tileset_dungeon_mod.png",   // NOLINT: File
+      1,                                      // NOLINT: First GID
+      8,                                      // NOLINT: Tileset width
+      32                                      // NOLINT: Tileset height
+  };
+  // clang-format on
 
   map->addTileset(ts);
 
@@ -109,7 +142,8 @@ std::unique_ptr<bure::game_map> map_generator::generate(int w, int h) {
 }
 
 node *map_generator::sectionize(section s, int splites) {
-  section section_left, section_right;
+  section section_left;
+  section section_right;
   auto iter = 0;
 
   if (splites == 0) {
@@ -133,14 +167,13 @@ node *map_generator::sectionize(section s, int splites) {
     }
   } while (!validSection(section_left) || !validSection(section_right));
 
-  auto node_left = sectionize(section_left, splites - 1);
-  auto node_right = sectionize(section_right, splites - 1);
+  auto *node_left = sectionize(section_left, splites - 1);
+  auto *node_right = sectionize(section_right, splites - 1);
   return new node({s, s, node_left, node_right, splites});
 }
 
 bool map_generator::validSection(section s) {
-  static float max_ratio = 2.22;
-  return s.width() >= 4 && s.height() >= 4 && s.ratio() < max_ratio;
+  return s.width() >= 4 && s.height() >= 4 && s.ratio() < MAX_RATIO;
 }
 
 int map_generator::random(int min, int max) {
@@ -152,6 +185,9 @@ int map_generator::random(int min, int max) {
 
 std::vector<section> map_generator::generateRooms(node *n) {
   std::vector<section> results;
+  if (n == nullptr) {
+    return results;
+  }
 
   if (n->left == nullptr && n->right == nullptr) {
     results.push_back(randomRoom(n));
@@ -198,7 +234,7 @@ section map_generator::randomRoom(node *n) {
     auto p2y = random(center.y, s.p2.y);
     room = {{p1x, p1y}, {p2x, p2y}};
   } while (!validSection(room) || !isInSection(center, room) ||
-           static_cast<float>(room.space()) / s.space() < 0.6);
+           (room.space() * 1.0) / s.space() < MAX_SPACE_IN_SECTION);
 
   n->room = room;
   return room;
@@ -214,7 +250,7 @@ void map_generator::drawPaths(node *n, int *layer, int steps, int width) {
   for (int i = steps; i > 0; i--) {
     auto nodes = getFromLeafs(n, i);
 
-    for (auto node : nodes) {
+    for (auto *node : nodes) {
       auto leftCenter = node->left->section.center();
       auto rightCenter = node->right->section.center();
 
@@ -244,14 +280,15 @@ void map_generator::drawRooms(std::vector<section> &rooms, int *layer,
 
 unsigned int map_generator::getTile(int *layer, int x, int y, int width,
                                     int height) {
-  if (x < 0 || x >= width || y < 0 || y >= height)
+  if (x < 0 || x >= width || y < 0 || y >= height) {
     return 0;
-  else
-    return layer[y * width + x];
+  }
+
+  return layer[y * width + x];
 }
 
-void map_generator::drawTiles(int *skeleton, int *result, int width,
-                              int height) {
+void map_generator::drawTiles(int *skeleton, int *result, int width, int height,
+                              const std::vector<cube_tile> &cubeTiles) {
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
       cube c = {
@@ -266,7 +303,7 @@ void map_generator::drawTiles(int *skeleton, int *result, int width,
           getTile(skeleton, x + 1, y + 1, width, height),
       };
 
-      for (const auto &ct : _cubeTiles) {
+      for (const auto &ct : cubeTiles) {
         if (c == ct.tileCube) {
           result[y * width + x] = ct.tileId;
         }

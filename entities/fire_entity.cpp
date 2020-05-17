@@ -1,4 +1,5 @@
 #include "fire_entity.h"
+
 #include "components/animation_component.h"
 #include "components/position_component.h"
 #include "engine.h"

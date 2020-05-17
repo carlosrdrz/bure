@@ -1,4 +1,7 @@
 #include "character_entity.h"
+
+#include <random>
+
 #include "../components/movement_component.h"
 #include "../components/stats_component.h"
 #include "../example_game.h"
@@ -7,8 +10,6 @@
 #include "components/position_component.h"
 #include "components/solid_component.h"
 #include "engine.h"
-
-#include <random>
 
 using namespace bure::components;
 
@@ -231,9 +232,7 @@ void character_entity::stopWalkingAnimation() {
   }
 }
 
-bure::direction character_entity::getDirection() {
-  return _facingDirection;
-}
+bure::direction character_entity::getDirection() { return _facingDirection; }
 
 void character_entity::setDirection(bure::direction d) {
   _facingDirection = d;

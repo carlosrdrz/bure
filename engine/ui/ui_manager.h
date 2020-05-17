@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "button.h"
 #include "container.h"
@@ -16,7 +16,7 @@ class ui_manager {
   void addContainer(std::unique_ptr<container> c);
 
   void removeContainer(int in);
-  void removeContainer(container *p);
+  void removeContainer(container* p);
 
   bool containerExists(container* p);
 

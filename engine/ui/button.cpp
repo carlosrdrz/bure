@@ -1,4 +1,5 @@
 #include "button.h"
+
 #include "utils/logger.h"
 
 using namespace std::placeholders;
@@ -6,23 +7,22 @@ using namespace std::placeholders;
 namespace bure {
 namespace ui {
 
-button::button() : press{0}, parameter{0} {
-}
+button::button() : press{0}, parameter{0} {}
 
 button::button(std::string t) : title(t) { button(); }
 
 void button::init() {
   _down_handler = bure::event_manager::get().addEventCallback(
-    SDL_MOUSEBUTTONDOWN, std::bind(&button::onClickDown, this, _1));
+      SDL_MOUSEBUTTONDOWN, std::bind(&button::onClickDown, this, _1));
   _up_handler = bure::event_manager::get().addEventCallback(
-    SDL_MOUSEBUTTONUP, std::bind(&button::onClickUp, this, _1));
+      SDL_MOUSEBUTTONUP, std::bind(&button::onClickUp, this, _1));
 }
 
 void button::deinit() {
-  bure::event_manager::get().removeEventCallback(
-    SDL_MOUSEBUTTONDOWN, _down_handler);
-  bure::event_manager::get().removeEventCallback(
-    SDL_MOUSEBUTTONUP, _up_handler);
+  bure::event_manager::get().removeEventCallback(SDL_MOUSEBUTTONDOWN,
+                                                 _down_handler);
+  bure::event_manager::get().removeEventCallback(SDL_MOUSEBUTTONUP,
+                                                 _up_handler);
 }
 
 void button::onClickDown(SDL_Event e) {

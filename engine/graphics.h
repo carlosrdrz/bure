@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+
 #include <list>
 #include <string>
 
@@ -57,15 +58,15 @@ class graphics {
   cached_sprite getCachedSprite(sprite_id id);
   cached_text getCachedText(std::string text, int size, color c);
 
-  void drawFullTexture(SDL_Texture *txt, rect r);
+  void drawFullTexture(SDL_Texture* txt, rect r);
   void setRenderColor(color c);
   SDL_Rect rectToSDLRect(rect r);
   void openFont(int size);
 
   std::string basePath;
-  SDL_Window *window;
-  SDL_Renderer *renderer;
-  TTF_Font *font;
+  SDL_Window* window;
+  SDL_Renderer* renderer;
+  TTF_Font* font;
   int fontSize;
   float scale;
 

@@ -7,7 +7,7 @@ namespace bure {
 namespace components {
 
 class position_component : public component {
- using component::component;
+  using component::component;
 
  public:
   void setPosition(bure::world_coords wc);

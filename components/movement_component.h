@@ -4,7 +4,7 @@
 #include "types.h"
 
 class movement_component : public bure::components::component {
- using component::component;
+  using component::component;
 
  public:
   int getVelocity();
@@ -14,6 +14,6 @@ class movement_component : public bure::components::component {
   void setDirection(bure::direction d);
 
  private:
-   bure::direction _direction = bure::direction::none;
-   int _velocity = 2;
+  bure::direction _direction = bure::direction::none;
+  int _velocity = 2;
 };

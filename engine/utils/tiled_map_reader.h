@@ -1,7 +1,7 @@
-#include "game_map.h"
-
 #include <memory>
 #include <string>
+
+#include "game_map.h"
 
 class tiled_map_reader {
  public:

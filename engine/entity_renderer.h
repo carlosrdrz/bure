@@ -1,9 +1,9 @@
 #pragma once
 
-#include "components/position_component.h"
 #include "components/animation_component.h"
-#include "components/sprite_component.h"
 #include "components/component.h"
+#include "components/position_component.h"
+#include "components/sprite_component.h"
 #include "renderer.h"
 
 using namespace bure::components;

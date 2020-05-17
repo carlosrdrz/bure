@@ -33,12 +33,14 @@ void entity_renderer::renderSprite(position_component& p, sprite_component& s) {
   auto camera = bure::engine::get().getCamera();
   auto position = p.getPosition();
 
+  // clang-format off
   bure::rect dst = {
     position.x - camera.x,
     position.y - camera.y,
     static_cast<int>(s.getWidth() * s.getScale()),
-    static_cast<int>(s.getHeight() * s.getScale())
+    static_cast<int>(s.getHeight() * s.getScale()),
   };
+  // clang-format off
 
   _graphics->drawSprite(s.getSpriteID(), s.getSrcRect(), dst);
 }

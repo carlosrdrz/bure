@@ -4,10 +4,7 @@
 
 namespace bure {
 
-enum level {
-  debug,
-  error
-};
+enum level { debug, error };
 
 class logger {
  public:

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "types.h"
-
+#include <algorithm>
+#include <functional>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <functional>
-#include <algorithm>
+
+#include "types.h"
 
 namespace bure {
 

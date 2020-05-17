@@ -1,4 +1,5 @@
 #include "engine.h"
+
 #include "components/map_position_component.h"
 #include "entity_renderer.h"
 #include "graphics.h"
@@ -56,7 +57,6 @@ void engine::addRenderer(std::unique_ptr<renderer> r) {
   }
 }
 
-
 void engine::clearEntities() {
   // TODO(carlosrdrz): do we need to call here deinit methods or smth?
   _entities.clear();
@@ -87,9 +87,7 @@ void engine::update() {
   _entitiesToRemove.clear();
 }
 
-ui::ui_manager* engine::getUIManager() {
-  return _uiManager.get();
-}
+ui::ui_manager* engine::getUIManager() { return _uiManager.get(); }
 
 game* engine::getGame() { return _game.get(); }
 

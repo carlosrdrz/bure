@@ -9,7 +9,7 @@ namespace bure {
 namespace components {
 
 class sprite_component : public component {
- using component::component;
+  using component::component;
 
  public:
   void setAll(sprite_id spriteId, rect src, int width, int height);

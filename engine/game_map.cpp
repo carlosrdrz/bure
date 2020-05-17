@@ -1,9 +1,10 @@
-#include "engine.h"
 #include "game_map.h"
-#include "utils/logger.h"
-#include "components/solid_component.h"
 
 #include <stdio.h>
+
+#include "components/solid_component.h"
+#include "engine.h"
+#include "utils/logger.h"
 
 namespace bure {
 
@@ -21,9 +22,7 @@ int game_map::getHeight() { return _height; }
 int game_map::getTileWidth() { return _tileWidth * _scale; }
 int game_map::getTileHeight() { return _tileHeight * _scale; }
 
-layer game_map::getLayer(int layerId) {
-  return _layers.at(layerId);
-}
+layer game_map::getLayer(int layerId) { return _layers.at(layerId); }
 
 tile game_map::getTileData(int tileGid) {
   if (_tiles.count(tileGid) > 0) return _tiles[tileGid];
@@ -55,30 +54,20 @@ tile game_map::getTileData(int tileGid) {
 }
 
 world_coords game_map::mapToWorld(map_coords m) {
-  return {
-    m.x * getTileWidth(),
-    m.y * getTileHeight()
-  };
+  return {m.x * getTileWidth(), m.y * getTileHeight()};
 }
 
 map_coords game_map::worldToMap(world_coords s) {
-  return {
-    s.x / getTileWidth(),
-    s.y / getTileHeight()
-  };
+  return {s.x / getTileWidth(), s.y / getTileHeight()};
 }
 
 bool game_map::isWithinLimits(map_coords m) {
   return m.x >= 0 && m.x < getWidth() && m.y >= 0 && m.y < getHeight();
 }
 
-void game_map::addLayer(layer l) {
-    _layers.push_back(l);
-}
+void game_map::addLayer(layer l) { _layers.push_back(l); }
 
-void game_map::addTileset(tileset t) {
-  _tilesets.push_back(t);
-}
+void game_map::addTileset(tileset t) { _tilesets.push_back(t); }
 
 void game_map::printMap(int layerId) {
   auto layer = getLayer(layerId);

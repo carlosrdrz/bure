@@ -1,4 +1,5 @@
 #include "background_entity.h"
+
 #include "components/position_component.h"
 #include "components/sprite_component.h"
 

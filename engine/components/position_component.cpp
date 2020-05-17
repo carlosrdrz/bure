@@ -3,9 +3,7 @@
 namespace bure {
 namespace components {
 
-void position_component::setPosition(bure::world_coords wc) {
-  _position = wc;
-}
+void position_component::setPosition(bure::world_coords wc) { _position = wc; }
 
 bure::world_coords position_component::getPosition() {
   return getAbsolutePosition();

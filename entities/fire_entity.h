@@ -6,7 +6,7 @@
 using namespace bure::entities;
 
 class fire_entity : public entity {
- using entity::entity;
+  using entity::entity;
 
  public:
   void init() override;

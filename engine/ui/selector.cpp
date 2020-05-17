@@ -1,7 +1,7 @@
+#include "selector.h"
+
 #include <list>
 #include <string>
-
-#include "selector.h"
 
 namespace bure {
 namespace ui {

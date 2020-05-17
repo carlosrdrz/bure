@@ -35,8 +35,8 @@ void game_map_renderer::render(int layer) {
       auto tileGid = mapLayer.data[(x + (y * map->getWidth()))];
 
       if (tileGid != 0 && mapLayer.visible) {
-        renderTile(map->getTileData(tileGid), abs_x, abs_y,
-                   map->getTileWidth(), map->getTileHeight());
+        renderTile(map->getTileData(tileGid), abs_x, abs_y, map->getTileWidth(),
+                   map->getTileHeight());
       }
 
       abs_x += map->getTileWidth();
@@ -47,7 +47,8 @@ void game_map_renderer::render(int layer) {
   }
 }
 
-void game_map_renderer::renderTile(tile t, int x, int y, int width, int height) {
+void game_map_renderer::renderTile(tile t, int x, int y, int width,
+                                   int height) {
   rect src, dst;
 
   src.x = t.srcX;

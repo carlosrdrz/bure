@@ -1,5 +1,6 @@
-#include "libxml++/libxml++.h"
 #include "config.h"
+
+#include "libxml++/libxml++.h"
 #include "logger.h"
 
 namespace bure {
@@ -35,7 +36,7 @@ float config::getFloatValueOf(std::string of, float defaultValue) {
   try {
     auto configValue = configs.at(of);
     return stof(configValue, nullptr);
-  } catch (std::out_of_range &e) {
+  } catch (std::out_of_range& e) {
     return defaultValue;
   }
 }

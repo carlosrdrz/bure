@@ -4,8 +4,6 @@
 
 namespace bure {
 
-void renderer::init(std::shared_ptr<bure::graphics> gr) {
-  _graphics = gr;
-}
+void renderer::init(std::shared_ptr<bure::graphics> gr) { _graphics = gr; }
 
 }  // namespace bure

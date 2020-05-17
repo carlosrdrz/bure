@@ -1,2 +1,2 @@
-Checks: '*'
-HeaderFilter: '*.h'
+Checks: 'modernize*,diagnostic-*,analyzer-*,readability-*,performance-*,-modernize-use-trailing-return-type'
+HeaderFilterRegex: '*.h'
