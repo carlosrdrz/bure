@@ -7,6 +7,10 @@
 #include <iomanip>
 #include <iostream>
 
+#include "backward.hpp"
+
+using namespace backward;
+
 namespace bure {
 
 void logger::log(level l, std::string format, va_list args) {
@@ -21,6 +25,9 @@ void logger::log(level l, std::string format, va_list args) {
       break;
     case level::error:
       std::cout << " [ERROR] ";
+      break;
+    case level::fatal:
+      std::cout << " [FATAL] ";
       break;
   }
 
@@ -40,6 +47,20 @@ void logger::error(std::string format...) {
   va_start(args, format);
   log(level::error, format, args);
   va_end(args);
+}
+
+void logger::fatal(std::string format...) {
+  va_list args;
+  va_start(args, format);
+  log(level::fatal, format, args);
+  va_end(args);
+
+  Printer p;
+  StackTrace st;
+  st.load_here(32);
+  st.skip_n_firsts(3);
+  p.print(st);
+  exit(1);
 }
 
 }  // namespace bure

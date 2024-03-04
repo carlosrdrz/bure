@@ -5,8 +5,9 @@
 
 #include "engine.h"
 #include "logger.h"
+#include "backward.hpp"
 
-#define MAX_ITERATIONS 1000
+#define MAX_ITERATIONS 10
 
 namespace bure {
 
@@ -27,8 +28,7 @@ std::vector<map_coords> pathfinding::a_star(map_coords start,
 
   while (!openSet.empty()) {
     if (iter++ > MAX_ITERATIONS) {
-      bure::logger::error("max iterations reached in a_star()");
-      exit(1);
+      bure::logger::fatal("max iterations reached in a_star()");
     }
 
     auto current = lowest_fscore(fScore, openSet);

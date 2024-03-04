@@ -36,8 +36,8 @@ void example_game::init() {
   ui->addContainer(std::move(c));
 
   // create map generator
-  _mapGenerator =
-      std::make_unique<map_generator>("resources/maps/generator_config.xml");
+  _mapGenerator = std::make_unique<map_generator>(
+      "/home/crodriguez/dev/bure/resources/maps/generator_config.xml");
 }
 
 void example_game::startGame(int unused) {

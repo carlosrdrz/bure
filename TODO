@@ -14,3 +14,4 @@
 - need something smarter to get the game class. hate to use dynamic_cast every time.
 - health bars do not scale with scaling
 - enemies dissapear when scaling
+- smaller compilation units

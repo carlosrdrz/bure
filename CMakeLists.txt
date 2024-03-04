@@ -7,6 +7,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(./engine/test/lib/googletest-1.8.0/googletest)
+add_subdirectory(./vendor/backward-cpp)
 
 include(FindPackageHandleStandardArgs)
 
@@ -23,6 +24,7 @@ include_directories(${SDL2_INCLUDE_DIRS}
         ${SDL2_TTF_INCLUDE_DIRS}
         ${GLIB_INCLUDE_DIRS}
         ${LibXMLPP_INCLUDE_DIRS}
+        ${BACKWARD_INCLUDE_DIRS}
         ${gtest_SOURCE_DIR}/include
         ${gtest_SOURCE_DIR}
         engine)
@@ -58,8 +60,7 @@ add_library(bure-engine
   engine/renderer.cpp
   engine/entity_renderer.cpp
   engine/game_map_renderer.cpp
-  engine/game.cpp
-  backward.cpp)
+  engine/game.cpp)
 
 add_library(client-lib
   example_game.cpp
@@ -88,7 +89,9 @@ target_link_libraries(client
   ${SDL2_IMAGE_LIBRARIES}
   ${SDL2TTF_LIBRARY}
   ${GLIB_LIBRARY}
-  ${LibXMLPP_LIBRARIES})
+  ${LibXMLPP_LIBRARIES}
+  Backward::Interface
+  Backward::Object)
 
 target_link_libraries(client-test
   client-lib
